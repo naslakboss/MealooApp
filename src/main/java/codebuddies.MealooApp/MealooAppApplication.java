@@ -13,7 +13,7 @@ public class MealooAppApplication {
 		SpringApplication.run(MealooAppApplication.class, args);
 	}
 
-	@GetMapping("/")
+	@GetMapping("/hey")
 	public String writesth(){
 		return "its finally works";
 	}
