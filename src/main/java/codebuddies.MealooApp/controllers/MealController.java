@@ -29,13 +29,13 @@ public class MealController {
     @EventListener(ApplicationReadyEvent.class)
     public void fillDB(){
 
-        Product milk = productService.findByName("Eggs");
-        Product beef = productService.findByName("Bread");
+        Product milk = productService.findByName("Milk");
+        Product beef = productService.findByName("Beef");
 
         Set<Product> list = new HashSet<>();
         list.add(milk);
         list.add(beef);
-        Meal meal = new Meal(2,  "milk-beef", list, 99, "HARD");
+        Meal meal = new Meal(2L, "Milk-beef", list, 22, "HARD");
 
         mealService.save(meal);
     }
