@@ -25,22 +25,22 @@ public class ProductController {
     ProductService productService;
 
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void fillDB() {
-
-        Product egg = new Product("Eggs", 1, 140,
-                new Macronutrients(13, 1, 10));
-        Product bread = new Product("Bread", 3, 264,
-                new Macronutrients(9, 50, 3));
-        Product milk = new Product("Milk", 4, 100,
-                new Macronutrients(3, 4, 4));
-        Product beef = new Product("Beef", 30, 300,
-                new Macronutrients(30, 5, 30));
-        productService.save(egg);
-        productService.save(bread);
-        productService.save(milk);
-        productService.save(beef);
-    }
+//    @EventListener(ApplicationReadyEvent.class)
+//    public void fillDB() {
+//
+//        Product egg = new Product("Eggs", 1, 140,
+//                new Macronutrients(13, 1, 10));
+//        Product bread = new Product("Bread", 3, 264,
+//                new Macronutrients(9, 50, 3));
+//        Product milk = new Product("Milk", 4, 100,
+//                new Macronutrients(3, 4, 4));
+//        Product beef = new Product("Beef", 30, 300,
+//                new Macronutrients(30, 5, 30));
+//        productService.save(egg);
+//        productService.save(bread);
+//        productService.save(milk);
+//        productService.save(beef);
+//    }
 
 
     @GetMapping("")

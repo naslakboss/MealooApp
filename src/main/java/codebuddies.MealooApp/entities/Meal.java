@@ -11,12 +11,12 @@ import java.util.Set;
 public class Meal {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "mealtest")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "meal", fetch = FetchType.EAGER)
     private Set<Product> products;
 
     private int price;
@@ -27,11 +27,27 @@ public class Meal {
     public Meal() {
     }
 
-    public Meal(String name, Set<Product> products, int price, String mealDifficulty) {
+//    public Meal(String name, Set<Product> products, int price, String mealDifficulty) {
+//        this.name = name;
+//        this.products = products;
+//        this.price = price;
+//        this.mealDifficulty = mealDifficulty;
+//    }
+
+    public Meal(long id, String name, Set<Product> products, int price, String mealDifficulty) {
+        this.id = id;
         this.name = name;
         this.products = products;
         this.price = price;
         this.mealDifficulty = mealDifficulty;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {

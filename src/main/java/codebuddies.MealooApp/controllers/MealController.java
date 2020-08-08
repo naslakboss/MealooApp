@@ -26,21 +26,19 @@ public class MealController {
     @Autowired
     ProductService productService;
 
-//    @EventListener(ApplicationReadyEvent.class)
-//    public void fillDB(){
-//
-//        Product egg = new Product("Eggs", 1, 140,
-//                new Macronutrients(13, 1, 10));
-//        Product bread = new Product("Bread",3, 264,
-//                new Macronutrients(9, 50, 3));
-//        Set<Product> list = new HashSet<>();
-//        productService.save(egg);
-//        productService.save(bread);
-//        list.add(egg);
-//        list.add(bread);
-//        Meal meal = new Meal("Scrambled-eggs", list, 5, "EASY");
-//        mealService.save(meal);
-//    }
+    @EventListener(ApplicationReadyEvent.class)
+    public void fillDB(){
+
+        Product milk = productService.findByName("Eggs");
+        Product beef = productService.findByName("Bread");
+
+        Set<Product> list = new HashSet<>();
+        list.add(milk);
+        list.add(beef);
+        Meal meal = new Meal(2,  "milk-beef", list, 99, "HARD");
+
+        mealService.save(meal);
+    }
 
     @GetMapping("")
     public ResponseEntity<List<Meal>> findAllMeals(){

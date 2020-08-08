@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MealRepository extends JpaRepository<Meal, String> {
 
+    Meal save(Meal meal);
+
     boolean existsByName(String name);
 
     Meal findByName(String name);

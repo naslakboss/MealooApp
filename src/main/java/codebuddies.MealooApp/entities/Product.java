@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
     private long id;
 
@@ -25,9 +25,9 @@ public class Product {
 
 //    private ProductType productType;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "meal_id")
-    private Meal mealtest;
+    private Meal meal;
 
     public Product() {
     }
@@ -48,12 +48,12 @@ public class Product {
         this.id = id;
     }
 
-    public Meal getMealtest() {
-        return mealtest;
+    public Meal getMeal() {
+        return meal;
     }
 
-    public void setMealtest(Meal mealtest) {
-        this.mealtest = mealtest;
+    public void setMeal(Meal mealtest) {
+        this.meal = meal;
     }
 
     public String getName() {
