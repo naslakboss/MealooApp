@@ -36,9 +36,9 @@ public class ProductService {
         if(product.getCaloriesPer100g() != 0){
             foundedProduct.setCaloriesPer100g(product.getCaloriesPer100g());
         }
-        if(product.getProductType()!=null){
-            foundedProduct.setProductType(product.getProductType());
-        }
+//        if(product.getProductType()!=null){
+//            foundedProduct.setProductType(product.getProductType());
+//        }
         if(newMacro.getCarbohydratesPer100g()!= 0){
             macro.setCarbohydratesPer100g(newMacro.getCarbohydratesPer100g());
         }

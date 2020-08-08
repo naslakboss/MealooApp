@@ -1,11 +1,12 @@
 package codebuddies.MealooApp.repositories;
 
 import codebuddies.MealooApp.entities.Meal;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+
 @Repository
-public interface MealRepository extends MongoRepository<Meal, String> {
+public interface MealRepository extends JpaRepository<Meal, String> {
 
     boolean existsByName(String name);
 

@@ -3,13 +3,18 @@ package codebuddies.MealooApp.controllers;
 import codebuddies.MealooApp.entities.*;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 import codebuddies.MealooApp.services.MealService;
+import codebuddies.MealooApp.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/meal")
@@ -18,15 +23,22 @@ public class MealController {
     @Autowired
     MealService mealService;
 
+    @Autowired
+    ProductService productService;
+
 //    @EventListener(ApplicationReadyEvent.class)
 //    public void fillDB(){
 //
 //        Product egg = new Product("Eggs", 1, 140,
-//                new Macronutrients(13, 1, 10), "DAIRY");
+//                new Macronutrients(13, 1, 10));
 //        Product bread = new Product("Bread",3, 264,
-//                new Macronutrients(9, 50, 3), "GRAINS");
-//        List<Product> productsList = Arrays.asList(egg, bread);
-//        Meal meal = new Meal("Scrambled-eggs", productsList, 5, "EASY");
+//                new Macronutrients(9, 50, 3));
+//        Set<Product> list = new HashSet<>();
+//        productService.save(egg);
+//        productService.save(bread);
+//        list.add(egg);
+//        list.add(bread);
+//        Meal meal = new Meal("Scrambled-eggs", list, 5, "EASY");
 //        mealService.save(meal);
 //    }
 

@@ -1,11 +1,14 @@
 package codebuddies.MealooApp.entities;
 
-import org.springframework.data.mongodb.core.mapping.Document;
 
 
+import javax.persistence.Embeddable;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Objects;
 
-@Document
+@Embeddable
 public class Macronutrients {
 
     private int proteinPer100g;
@@ -22,6 +25,7 @@ public class Macronutrients {
         this.carbohydratesPer100g = carbohydratesPer100g;
         this.fatPer100g = fatPer100g;
     }
+
 
     public int getProteinPer100g() {
         return proteinPer100g;

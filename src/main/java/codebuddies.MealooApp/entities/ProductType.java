@@ -1,16 +1,22 @@
 package codebuddies.MealooApp.entities;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.*;
+
+@Entity
 public class ProductType {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "product_type_id")
+    private int productTypeId;
+
     private String type;
 
     private String description;
 
-    public ProductType() {
+    public ProductType(String type) {
+        this.type = type;
     }
 
     public ProductType(String type, String description) {
@@ -18,16 +24,20 @@ public class ProductType {
         this.description = description;
     }
 
-    public ProductType(String type) {
-        this.type = type;
+    public int getProductTypeId() {
+        return productTypeId;
     }
 
-    public String getProductType() {
+    public void setProductTypeId(int productTypeId) {
+        this.productTypeId = productTypeId;
+    }
+
+    public String getType() {
         return type;
     }
 
-    public void setProductType(String productType) {
-        this.type = productType;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getDescription() {

@@ -1,19 +1,23 @@
 package codebuddies.MealooApp.entities;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 
-import java.util.List;
+
+import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
-@Document
+@Entity
 public class Meal {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
     private String name;
 
-    private List<Product> products;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "mealtest")
+    private Set<Product> products;
 
     private int price;
 
@@ -23,7 +27,7 @@ public class Meal {
     public Meal() {
     }
 
-    public Meal(String name, List<Product> products, int price, String mealDifficulty) {
+    public Meal(String name, Set<Product> products, int price, String mealDifficulty) {
         this.name = name;
         this.products = products;
         this.price = price;
@@ -38,11 +42,11 @@ public class Meal {
         this.name = name;
     }
 
-    public List<Product> getProducts() {
+    public Set<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(Set<Product> products) {
         this.products = products;
     }
 

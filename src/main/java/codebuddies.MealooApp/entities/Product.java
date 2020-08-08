@@ -1,38 +1,59 @@
 package codebuddies.MealooApp.entities;
 
-import org.hibernate.validator.constraints.UniqueElements;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 
-@Document
 
+@Entity
 public class Product {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
+    private long id;
+
     private String name;
 
     private int price;
 
     private int caloriesPer100g;
 
+    @Embedded
     private Macronutrients macronutrients;
 
-    private ProductType productType;
+//    private ProductType productType;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "meal_id")
+    private Meal mealtest;
 
     public Product() {
     }
 
-    public Product(String name, int price, int caloriesPer100g, Macronutrients macronutrients, ProductType productType) {
+    public Product(String name, int price, int caloriesPer100g, Macronutrients macronutrients) {
         this.name = name;
         this.price = price;
         this.caloriesPer100g = caloriesPer100g;
         this.macronutrients = macronutrients;
-        this.productType = productType;
+//        this.productType = productType;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Meal getMealtest() {
+        return mealtest;
+    }
+
+    public void setMealtest(Meal mealtest) {
+        this.mealtest = mealtest;
     }
 
     public String getName() {
@@ -67,13 +88,13 @@ public class Product {
         this.macronutrients = macronutrients;
     }
 
-    public ProductType getProductType() {
-        return productType;
-    }
-
-    public void setProductType(ProductType productType) {
-        this.productType = productType;
-    }
+//    public ProductType getProductType() {
+//        return productType;
+//    }
+//
+//    public void setProductType(ProductType productType) {
+//        this.productType = productType;
+//    }
 
     @Override
     public String toString() {
@@ -82,25 +103,25 @@ public class Product {
                 ", price=" + price +
                 ", caloriesPer100g=" + caloriesPer100g +
                 ", macronutrients=" + macronutrients +
-                ", productType=" + productType +
+//                ", productType=" + productType +
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
-        return price == product.price &&
-                caloriesPer100g == product.caloriesPer100g &&
-                Objects.equals(name, product.name) &&
-                Objects.equals(macronutrients, product.macronutrients) &&
-                Objects.equals(productType, product.productType);
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        Product product = (Product) o;
+//        return price == product.price &&
+//                caloriesPer100g == product.caloriesPer100g &&
+//                Objects.equals(name, product.name) &&
+//                Objects.equals(macronutrients, product.macronutrients) //&&
+//                Objects.equals(productType, product.productType);
+//    }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, price, caloriesPer100g, macronutrients, productType);
+        return Objects.hash(name, price, caloriesPer100g, macronutrients );
     }
 
 }
