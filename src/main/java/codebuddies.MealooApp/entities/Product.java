@@ -1,7 +1,10 @@
 package codebuddies.MealooApp.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -10,9 +13,8 @@ import java.util.Objects;
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
-    private long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     private String name;
 
@@ -23,37 +25,29 @@ public class Product {
     @Embedded
     private Macronutrients macronutrients;
 
-//    private ProductType productType;
+    private ProductType productType;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "meal_id")
-    private Meal meal;
+    @ManyToMany(mappedBy = "products")
+    @JsonIgnoreProperties("products")
+    private List<Meal> meals;
 
     public Product() {
     }
 
-    public Product(String name, int price, int caloriesPer100g, Macronutrients macronutrients) {
+    public Product(String name, int price, int caloriesPer100g, Macronutrients macronutrients, ProductType productType) {
         this.name = name;
         this.price = price;
         this.caloriesPer100g = caloriesPer100g;
         this.macronutrients = macronutrients;
-//        this.productType = productType;
+        this.productType = productType;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
-    }
-
-    public Meal getMeal() {
-        return meal;
-    }
-
-    public void setMeal(Meal mealtest) {
-        this.meal = meal;
     }
 
     public String getName() {
@@ -88,40 +82,44 @@ public class Product {
         this.macronutrients = macronutrients;
     }
 
-//    public ProductType getProductType() {
-//        return productType;
-//    }
-//
-//    public void setProductType(ProductType productType) {
-//        this.productType = productType;
-//    }
+
+    public List<Meal> getMeals() {
+        return meals;
+    }
+
+    public void setMeals(List<Meal> meals) {
+        this.meals = meals;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return price == product.price &&
+                caloriesPer100g == product.caloriesPer100g &&
+                Objects.equals(id, product.id) &&
+                Objects.equals(name, product.name) &&
+                Objects.equals(macronutrients, product.macronutrients) &&
+                productType == product.productType &&
+                Objects.equals(meals, product.meals);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, caloriesPer100g, macronutrients, productType, meals);
+    }
 
     @Override
     public String toString() {
         return "Product{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", price=" + price +
                 ", caloriesPer100g=" + caloriesPer100g +
                 ", macronutrients=" + macronutrients +
-//                ", productType=" + productType +
+                ", productType=" + productType +
+                ", meals=" + meals +
                 '}';
     }
-
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        Product product = (Product) o;
-//        return price == product.price &&
-//                caloriesPer100g == product.caloriesPer100g &&
-//                Objects.equals(name, product.name) &&
-//                Objects.equals(macronutrients, product.macronutrients) //&&
-//                Objects.equals(productType, product.productType);
-//    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, price, caloriesPer100g, macronutrients );
-    }
-
 }

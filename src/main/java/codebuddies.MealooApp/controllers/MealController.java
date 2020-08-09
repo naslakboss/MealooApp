@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,16 +29,14 @@ public class MealController {
 
 //    @EventListener(ApplicationReadyEvent.class)
 //    public void fillDB(){
-//
-//        Product milk = productService.findByName("Milk");
 //        Product beef = productService.findByName("Beef");
+//        Product bread = productService.findByName("Bread");
+////        Product eggs = productService.findByName("Eggs");
+//        List<Product> productList = Arrays.asList(beef, bread);
 //
-//        Set<Product> list = new HashSet<>();
-//        list.add(milk);
-//        list.add(beef);
-//        Meal meal = new Meal(2L, "Milk-beef", list, 22, "HARD");
+//        Meal meal2 = new Meal(8L,"beefbread", productList, 13, MealDifficulty.MEDIUM);
+//        mealService.save(meal2);
 //
-//        mealService.save(meal);
 //    }
 
     @GetMapping("")

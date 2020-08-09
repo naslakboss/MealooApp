@@ -3,7 +3,12 @@ package codebuddies.MealooApp.entities;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -11,30 +16,24 @@ import java.util.Set;
 public class Meal {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @NotNull
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "meal", fetch = FetchType.EAGER)
-    private Set<Product> products;
+    @ManyToMany
+    @JsonIgnoreProperties("meals")
+    private List<Product> products;
 
     private int price;
 
-    private String mealDifficulty;
-
+    private MealDifficulty mealDifficulty;
 
     public Meal() {
     }
 
-//    public Meal(String name, Set<Product> products, int price, String mealDifficulty) {
-//        this.name = name;
-//        this.products = products;
-//        this.price = price;
-//        this.mealDifficulty = mealDifficulty;
-//    }
-
-    public Meal(long id, String name, Set<Product> products, int price, String mealDifficulty) {
+    public Meal(Long id,String name, List<Product> products, int price, MealDifficulty mealDifficulty) {
         this.id = id;
         this.name = name;
         this.products = products;
@@ -50,6 +49,10 @@ public class Meal {
         this.id = id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -58,11 +61,11 @@ public class Meal {
         this.name = name;
     }
 
-    public Set<Product> getProducts() {
+    public List<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(Set<Product> products) {
+    public void setProducts(List<Product> products) {
         this.products = products;
     }
 
@@ -74,22 +77,12 @@ public class Meal {
         this.price = price;
     }
 
-    public String getMealDifficulty() {
+    public MealDifficulty getMealDifficulty() {
         return mealDifficulty;
     }
 
-    public void setMealDifficulty(String mealDifficulty) {
+    public void setMealDifficulty(MealDifficulty mealDifficulty) {
         this.mealDifficulty = mealDifficulty;
-    }
-
-    @Override
-    public String toString() {
-        return "Meal{" +
-                "name='" + name + '\'' +
-                ", products=" + products +
-                ", price=" + price +
-                ", mealDifficulty=" + mealDifficulty +
-                '}';
     }
 
     @Override
@@ -98,13 +91,15 @@ public class Meal {
         if (o == null || getClass() != o.getClass()) return false;
         Meal meal = (Meal) o;
         return price == meal.price &&
+                Objects.equals(id, meal.id) &&
                 Objects.equals(name, meal.name) &&
                 Objects.equals(products, meal.products) &&
-                Objects.equals(mealDifficulty, meal.mealDifficulty);
+                mealDifficulty == meal.mealDifficulty;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, products, price, mealDifficulty);
+        return Objects.hash(id, name, products, price, mealDifficulty);
     }
+
 }

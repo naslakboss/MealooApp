@@ -24,18 +24,18 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-
+//     Fill database
 //    @EventListener(ApplicationReadyEvent.class)
 //    public void fillDB() {
 //
 //        Product egg = new Product("Eggs", 1, 140,
-//                new Macronutrients(13, 1, 10));
+//                new Macronutrients(13, 1, 10), ProductType.DAIRY);
 //        Product bread = new Product("Bread", 3, 264,
-//                new Macronutrients(9, 50, 3));
+//                new Macronutrients(9, 50, 3), ProductType.GRAINS);
 //        Product milk = new Product("Milk", 4, 100,
-//                new Macronutrients(3, 4, 4));
+//                new Macronutrients(3, 4, 4), ProductType.DAIRY);
 //        Product beef = new Product("Beef", 30, 300,
-//                new Macronutrients(30, 5, 30));
+//                new Macronutrients(30, 5, 30), ProductType.MEAT);
 //        productService.save(egg);
 //        productService.save(bread);
 //        productService.save(milk);
