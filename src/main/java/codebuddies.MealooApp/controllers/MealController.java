@@ -10,6 +10,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Arrays;
@@ -27,17 +28,17 @@ public class MealController {
     @Autowired
     ProductService productService;
 
-//    @EventListener(ApplicationReadyEvent.class)
-//    public void fillDB(){
-//        Product beef = productService.findByName("Beef");
-//        Product bread = productService.findByName("Bread");
-////        Product eggs = productService.findByName("Eggs");
-//        List<Product> productList = Arrays.asList(beef, bread);
-//
-//        Meal meal2 = new Meal(8L,"beefbread", productList, 13, MealDifficulty.MEDIUM);
-//        mealService.save(meal2);
-//
-//    }
+    @EventListener(ApplicationReadyEvent.class)
+    public void fillDB(){
+        Product beef = productService.findByName("Beef");
+        Product bread = productService.findByName("Bread");
+        Product eggs = productService.findByName("Eggs");
+        List<Product> productList = Arrays.asList(beef, bread, eggs);
+
+        Meal meal2 = new Meal(12L,"beefbreadegg", productList, 13, MealDifficulty.EASY);
+        mealService.save(meal2);
+
+    }
 
     @GetMapping("")
     public ResponseEntity<List<Meal>> findAllMeals(){
@@ -62,7 +63,7 @@ public class MealController {
         Meal patchedMeal = mealService.findByName(name);
         return patchedMeal != null ? ResponseEntity.ok(mealService.updateByName(name, meal)) : ResponseEntity.notFound().build();
     }
-
+    @Transactional
     @DeleteMapping("/delete/{name}")
     public ResponseEntity deleteByName(@PathVariable String name){
         if(!mealService.existsByName(name)){

@@ -74,33 +74,5 @@ public class ProductController {
         }
         return ResponseEntity.ok("Product " + name + " was successfully deleted from Repository");
     }
-//     ProductType - MongoDB could not handle ENUM types so i need to make small class with only one parameter
-
-//    @GetMapping("/product-type")
-//    public ResponseEntity<List<ProductType>> displayAllProductTypes() {
-//        return ResponseEntity.ok(productTypeService.findAll());
-//    }
-
-//    @PostMapping("/product-type/add")
-//    ResponseEntity<ProductType> addNewProductType(@RequestBody @Valid ProductType productType) {
-//        if(productTypeService.existsByName(productType.getType())) throw new EntityAlreadyFoundException("Product Type");
-//        return ResponseEntity.created(URI.create("/" + productType.getType())).body(productType);
-//    }
-
-//    @PatchMapping("/product-type/patch/{name}")
-//    ResponseEntity<ProductType> patchProductByName(@PathVariable String name, @RequestBody @Valid ProductType productType){
-//        ProductType patchedProductType = productTypeService.findByName(name);
-//        return productTypeService != null ? ResponseEntity.ok(productTypeService.patchByName(name, productType)) : ResponseEntity.notFound().build();
-//    }
-
-//    @DeleteMapping("/product-type/delete/{name}")
-//    ResponseEntity deleteProductTypeByName(@PathVariable String name) {
-//        if (!productTypeService.existsByName(name)) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        productTypeService.deleteByName(name);
-//        return ResponseEntity.ok("Product Type : " + name + " is successfully deleted from repository");
-//
-//    }
 }
 
