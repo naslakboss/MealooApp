@@ -1,10 +1,15 @@
 package codebuddies.MealooApp.controllers;
 
 import codebuddies.MealooApp.entities.meal.Meal;
+import codebuddies.MealooApp.entities.meal.MealDifficulty;
+import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 import codebuddies.MealooApp.services.MealService;
 import codebuddies.MealooApp.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +33,7 @@ public class MealController {
 //        Product beef = productService.findByName("Beef");
 ////        Product bread = productService.findByName("Bread");
 //        Product eggs = productService.findByName("Eggs");
-////        List<Product> productList = Arrays.asList(beef, eggs);
+//        List<Product> productList = Arrays.asList(beef, eggs);
 //
 //        Meal meal2 = new Meal(2L,"beefegg", productList, 8, MealDifficulty.MEDIUM);
 //        mealService.save(meal2);

@@ -1,11 +1,15 @@
 package codebuddies.MealooApp.controllers;
 
+import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.product.Product;
+import codebuddies.MealooApp.entities.product.ProductType;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 import codebuddies.MealooApp.services.ProductService;
 //import mealoapp.MealooAppp.services.ProductTypeService;
 //import codebuddies.MealooApp.services.ProductTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +27,7 @@ public class ProductController {
 //     Fill database
 //    @EventListener(ApplicationReadyEvent.class)
 //    public void fillDB() {
-
+//
 //        Product egg = new Product("Eggs", 1, 140,
 //                new Macronutrients(13, 1, 10), ProductType.DAIRY);
 //        Product bread = new Product("Bread", 3, 264,
