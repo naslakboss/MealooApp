@@ -102,4 +102,8 @@ public class Meal {
         return Objects.hash(id, name, products, price, mealDifficulty);
     }
 
+    public Object showMealDetailsByName(Meal searchedMeal) {
+       return searchedMeal.getProducts().stream().map(product -> product.getMacronutrients())
+                .mapToInt(macronutrients -> macronutrients.getFatPer100g()).sum();
+    }
 }

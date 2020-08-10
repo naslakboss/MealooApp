@@ -27,7 +27,7 @@ public class ProductController {
 //     Fill database
 //    @EventListener(ApplicationReadyEvent.class)
 //    public void fillDB() {
-//
+
 //        Product egg = new Product("Eggs", 1, 140,
 //                new Macronutrients(13, 1, 10), ProductType.DAIRY);
 //        Product bread = new Product("Bread", 3, 264,

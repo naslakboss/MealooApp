@@ -28,17 +28,17 @@ public class MealController {
     @Autowired
     ProductService productService;
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void fillDB(){
-        Product beef = productService.findByName("Beef");
-        Product bread = productService.findByName("Bread");
-        Product eggs = productService.findByName("Eggs");
-        List<Product> productList = Arrays.asList(beef, bread, eggs);
-
-        Meal meal2 = new Meal(12L,"beefbreadegg", productList, 13, MealDifficulty.EASY);
-        mealService.save(meal2);
-
-    }
+//    @EventListener(ApplicationReadyEvent.class)
+//    public void fillDB(){
+//        Product beef = productService.findByName("Beef");
+////        Product bread = productService.findByName("Bread");
+//        Product eggs = productService.findByName("Eggs");
+////        List<Product> productList = Arrays.asList(beef, eggs);
+//
+//        Meal meal2 = new Meal(2L,"beefegg", productList, 8, MealDifficulty.MEDIUM);
+//        mealService.save(meal2);
+//
+//    }
 
     @GetMapping("")
     public ResponseEntity<List<Meal>> findAllMeals(){
@@ -49,6 +49,15 @@ public class MealController {
     public ResponseEntity<Meal> findMealByName(@PathVariable String name){
         Meal searchedMeal = mealService.findByName(name);
         return searchedMeal != null ? ResponseEntity.ok(searchedMeal) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/details/{name}")
+    public ResponseEntity<Object> findMealDetails(@PathVariable String name){
+        Meal searchedMeal = mealService.findByName(name);
+        if(searchedMeal == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(searchedMeal.showMealDetailsByName(searchedMeal));
     }
 
     @PostMapping("/add")
