@@ -8,9 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Meal {
@@ -102,8 +100,21 @@ public class Meal {
         return Objects.hash(id, name, products, price, mealDifficulty);
     }
 
-    public Object showMealDetailsByName(Meal searchedMeal) {
-       return searchedMeal.getProducts().stream().map(product -> product.getMacronutrients())
-                .mapToInt(macronutrients -> macronutrients.getFatPer100g()).sum();
+    public Map<String, Integer> showMealDetailsByName(Meal searchedMeal) {
+
+        int totalCalories = searchedMeal.getProducts().stream().
+                mapToInt(Product::getCaloriesPer100g).sum();
+        int totalProteins = searchedMeal.getProducts().stream().map(Product::getMacronutrients)
+                .mapToInt(Macronutrients::getProteinPer100g).sum();
+        int totalCarbohydrates = searchedMeal.getProducts().stream().map(Product::getMacronutrients)
+                .mapToInt(Macronutrients::getCarbohydratesPer100g).sum();
+        int totalFats = searchedMeal.getProducts().stream().map(Product::getMacronutrients)
+                .mapToInt(Macronutrients::getFatPer100g).sum();
+        Map<String, Integer> details = new HashMap<>();
+        details.put("Calories", totalCalories);
+        details.put("Proteins", totalProteins);
+        details.put("Carbohydrates", totalCarbohydrates);
+        details.put("Fats", totalFats);
+        return details;
     }
 }

@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/meal")
@@ -52,7 +49,7 @@ public class MealController {
     }
 
     @GetMapping("/details/{name}")
-    public ResponseEntity<Object> findMealDetails(@PathVariable String name){
+    public ResponseEntity<Map<String, Integer>> findMealDetails(@PathVariable String name){
         Meal searchedMeal = mealService.findByName(name);
         if(searchedMeal == null){
             return ResponseEntity.notFound().build();
