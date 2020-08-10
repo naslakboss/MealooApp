@@ -1,12 +1,10 @@
 package codebuddies.MealooApp.controllers;
 
-import codebuddies.MealooApp.entities.*;
+import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 import codebuddies.MealooApp.services.MealService;
 import codebuddies.MealooApp.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

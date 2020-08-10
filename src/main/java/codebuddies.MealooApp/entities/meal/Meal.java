@@ -1,9 +1,11 @@
-package codebuddies.MealooApp.entities;
+package codebuddies.MealooApp.entities.meal;
 
 
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import codebuddies.MealooApp.entities.product.Macronutrients;
+import codebuddies.MealooApp.entities.product.Product;
+import codebuddies.MealooApp.entities.user.FoodDiary;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -27,6 +29,9 @@ public class Meal {
     private int price;
 
     private MealDifficulty mealDifficulty;
+
+    @ManyToOne
+    private FoodDiary foodDiary;
 
     public Meal() {
     }

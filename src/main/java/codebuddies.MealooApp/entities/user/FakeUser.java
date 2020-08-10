@@ -1,7 +1,6 @@
-package codebuddies.MealooApp.entities;
+package codebuddies.MealooApp.entities.user;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class FakeUser {
@@ -10,13 +9,19 @@ public class FakeUser {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String nick;
+    private String username;
 
-    private List<Meal> meals;
+    private String password;
 
-    private MealSettings mealSettings;
+    private String email;
+
+    private NutritionSettings nutritionSettings;
+
+    @OneToOne
+    private FoodDiary foodDiary;
 
     @Embedded
     private FakeUserDetails fakeUserDetails = new FakeUserDetails();
+
 
 }

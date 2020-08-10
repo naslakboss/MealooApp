@@ -1,15 +1,11 @@
 package codebuddies.MealooApp.controllers;
 
-import codebuddies.MealooApp.entities.Macronutrients;
-import codebuddies.MealooApp.entities.Product;
-import codebuddies.MealooApp.entities.ProductType;
+import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 import codebuddies.MealooApp.services.ProductService;
 //import mealoapp.MealooAppp.services.ProductTypeService;
 //import codebuddies.MealooApp.services.ProductTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,7 +52,7 @@ public class ProductController {
 
     @PostMapping("/add")
     public ResponseEntity<Product> addProduct(@RequestBody @Valid Product product) {
-        if(productService.existsByName(product.getName())) throw new EntityAlreadyFoundException("Product");
+        if(productService.existsByName(product.getName())) throw new EntityAlreadyFoundException("codebuddies.MealooApp/entities/product");
         return ResponseEntity.created(URI.create("/" + product.getName())).body(product);
     }
 
@@ -72,7 +68,7 @@ public class ProductController {
         if (!productService.existsByName(name)) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok("Product " + name + " was successfully deleted from Repository");
+        return ResponseEntity.ok("codebuddies.MealooApp/entities/product " + name + " was successfully deleted from Repository");
     }
 }
 

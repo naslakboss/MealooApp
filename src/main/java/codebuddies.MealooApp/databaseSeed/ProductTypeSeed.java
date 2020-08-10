@@ -1,6 +1,6 @@
 package codebuddies.MealooApp.databaseSeed;
 //
-//import codebuddies.MealooApp.entities.ProductType;
+//import codebuddies.MealooApp.entities.ProductP.ProductType;
 //import codebuddies.MealooApp.repositories.ProductTypeRepository;
 //import org.springframework.stereotype.Service;
 //

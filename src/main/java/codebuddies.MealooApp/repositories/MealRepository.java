@@ -1,6 +1,6 @@
 package codebuddies.MealooApp.repositories;
 
-import codebuddies.MealooApp.entities.Meal;
+import codebuddies.MealooApp.entities.meal.Meal;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

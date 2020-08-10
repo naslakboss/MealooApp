@@ -1,6 +1,6 @@
-package codebuddies.MealooApp.entities;
+package codebuddies.MealooApp.entities.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import codebuddies.MealooApp.entities.meal.Meal;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;

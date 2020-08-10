@@ -1,6 +1,6 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.entities.Meal;
+import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.repositories.MealRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

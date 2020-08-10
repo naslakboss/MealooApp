@@ -1,6 +1,6 @@
 package codebuddies.MealooApp.config;
 
-import codebuddies.MealooApp.entities.MealDifficulty;
+import codebuddies.MealooApp.entities.meal.MealDifficulty;
 import org.springframework.core.convert.converter.Converter;
 
 public class StringToEnumConverterForMealDifficulty implements Converter<String, MealDifficulty> {

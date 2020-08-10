@@ -1,7 +1,7 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.entities.Macronutrients;
-import codebuddies.MealooApp.entities.Product;
+import codebuddies.MealooApp.entities.product.Macronutrients;
+import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
