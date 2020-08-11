@@ -24,6 +24,32 @@ public class FakeUser {
     @Embedded
     private FakeUserDetails fakeUserDetails = new FakeUserDetails();
 
+    public FakeUser() {
+    }
+
+    // There sould be builder pattern but we switch to oauth2 later
+
+
+    public FakeUser(Long id, String username, String password, String email, NutritionSettings nutritionSettings) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.nutritionSettings = nutritionSettings;
+    }
+
+    public FakeUser(Long id, String username, String password, String email,
+                    NutritionSettings nutritionSettings, FoodDiary foodDiary,
+                    FakeUserDetails fakeUserDetails) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.nutritionSettings = nutritionSettings;
+        this.foodDiary = foodDiary;
+        this.fakeUserDetails = fakeUserDetails;
+    }
+
     public Long getId() {
         return id;
     }

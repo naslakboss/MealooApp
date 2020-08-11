@@ -16,10 +16,19 @@ public class FoodDiary {
     @OneToMany(mappedBy = "foodDiary")
     private List<Meal> listOfMeals;
 
-    private LocalDate date;
+    public LocalDate date;
 
     @OneToOne(mappedBy = "foodDiary")
     private FakeUser fakeUser;
+
+    public FoodDiary() {
+    }
+
+    public FoodDiary (List<Meal> listOfMeals, LocalDate date, FakeUser fakeUser) {
+        this.listOfMeals = listOfMeals;
+        this.date = date;
+        this.fakeUser = fakeUser;
+    }
 
     public Long getId() {
         return id;

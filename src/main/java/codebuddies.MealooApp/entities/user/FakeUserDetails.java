@@ -32,6 +32,17 @@ public class FakeUserDetails {
 
     }
 
+    public FakeUserDetails() {
+    }
+
+    public FakeUserDetails(Integer height, Integer weight, Integer age, Sex sex, PhysicalActivity physicalActivity) {
+        this.height = height;
+        this.weight = weight;
+        this.age = age;
+        this.sex = sex;
+        this.physicalActivity = physicalActivity;
+    }
+
     public int getHeight() {
         return height;
     }
