@@ -95,6 +95,7 @@ public class FakeUserService {
         mealsList.put("Total Daily Proteins :", totalProteins);
         mealsList.put("Total Daily Carbohydrates :", totalCarbohydrates);
         mealsList.put("Total Daily Fats :", totalFats);
+        // need to refractor this
 
 
         return mealsList;
