@@ -25,8 +25,8 @@ public class ProductController {
     ProductService productService;
 
 //     Fill database
-//    @EventListener(ApplicationReadyEvent.class)
-//    public void fillDB() {
+    @EventListener(ApplicationReadyEvent.class)
+    public void fillDB() {
 //
 //        Product egg = new Product("Eggs", 1, 140,
 //                new Macronutrients(13, 1, 10), ProductType.DAIRY);
@@ -40,7 +40,10 @@ public class ProductController {
 //        productService.save(bread);
 //        productService.save(milk);
 //        productService.save(beef);
-//    }
+//        Product strawberry = new Product("Strawberry", 5, 33,
+//                        new Macronutrients(2, 12, 2), ProductType.DAIRY);
+//        productService.save(strawberry);
+    }
 
 
     @GetMapping("")
@@ -57,6 +60,7 @@ public class ProductController {
     @PostMapping("/add")
     public ResponseEntity<Product> addProduct(@RequestBody @Valid Product product) {
         if(productService.existsByName(product.getName())) throw new EntityAlreadyFoundException("codebuddies.MealooApp/entities/product");
+        productService.save(product);
         return ResponseEntity.created(URI.create("/" + product.getName())).body(product);
     }
 
