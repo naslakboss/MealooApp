@@ -31,6 +31,7 @@ public class Product {
     @JsonIgnoreProperties("products")
     private List<Meal> meals;
 
+
     public Product() {
     }
 

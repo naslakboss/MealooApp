@@ -16,6 +16,7 @@ public class FakeUserService {
 
     @Autowired
     FakeUserRepository fakeUserRepository;
+    // Wstrzykiwanie przez konstruktor
 
     @Autowired
     MealService mealService;
