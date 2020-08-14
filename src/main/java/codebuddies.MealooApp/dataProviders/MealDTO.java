@@ -1,12 +1,10 @@
 package codebuddies.MealooApp.dataProviders;
 
 import codebuddies.MealooApp.entities.meal.MealDifficulty;
-<<<<<<< HEAD
 import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.entities.user.FoodDiary;
-=======
->>>>>>> 8ccc978de9fcf129a012357032660726e917fd3f
+
 
 import java.util.List;
 
