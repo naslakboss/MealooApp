@@ -1,5 +1,7 @@
 package codebuddies.MealooApp.controllers;
 
+import codebuddies.MealooApp.dataProviders.ProductDTO;
+import codebuddies.MealooApp.dataProviders.ProductFacade;
 import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.entities.product.ProductType;
@@ -21,10 +23,17 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
 
-    @Autowired
     ProductService productService;
 
-//     Fill database
+    ProductFacade productFacade;
+
+    @Autowired
+    public ProductController(ProductService productService, ProductFacade productFacade) {
+        this.productService = productService;
+        this.productFacade = productFacade;
+    }
+
+    //     Fill database
     @EventListener(ApplicationReadyEvent.class)
     public void fillDB() {
 //
@@ -47,13 +56,13 @@ public class ProductController {
 
 
     @GetMapping("")
-    public ResponseEntity<List<Product>> findAllProducts() {
-        return ResponseEntity.ok(productService.findAll());
+    public ResponseEntity<List<ProductDTO>> findAllProducts() {
+        return ResponseEntity.ok(productFacade.getAllProducts());
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<Product> findProductByName(@PathVariable String name) {
-        Product searchedProduct = productService.findByName(name);
+    public ResponseEntity<ProductDTO> findProductByName(@PathVariable String name) {
+        ProductDTO searchedProduct = productFacade.getProductByName(name);
         return searchedProduct != null ? ResponseEntity.ok(searchedProduct) : ResponseEntity.notFound().build();
     }
 
