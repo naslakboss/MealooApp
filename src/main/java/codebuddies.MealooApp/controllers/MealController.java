@@ -1,5 +1,7 @@
 package codebuddies.MealooApp.controllers;
 
+import codebuddies.MealooApp.dataProviders.MealDTO;
+import codebuddies.MealooApp.dataProviders.MealFacade;
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.meal.MealDifficulty;
 import codebuddies.MealooApp.entities.product.Product;
@@ -28,18 +30,21 @@ public class MealController {
     @Autowired
     ProductService productService;
 
+    @Autowired
+    MealFacade mealFacade;
+
 //    @EventListener(ApplicationReadyEvent.class)
 //    public void fillDB(){
 //    }
 
     @GetMapping("")
-    public ResponseEntity<List<Meal>> findAllMeals(){
-        return ResponseEntity.ok(mealService.findAll());
+    public ResponseEntity<List<MealDTO>> findAllMeals(){
+        return ResponseEntity.ok(mealFacade.getAll());
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<Meal> findMealByName(@PathVariable String name){
-        Meal searchedMeal = mealService.findByName(name);
+    public ResponseEntity<MealDTO> findMealByName(@PathVariable String name){
+        MealDTO searchedMeal = mealFacade.getByName(name);
         return searchedMeal != null ? ResponseEntity.ok(searchedMeal) : ResponseEntity.notFound().build();
     }
 
