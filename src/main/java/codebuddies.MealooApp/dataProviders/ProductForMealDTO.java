@@ -12,9 +12,10 @@ public class ProductForMealDTO {
     public ProductForMealDTO() {
     }
 
-    public ProductForMealDTO(String name, int price) {
+    public ProductForMealDTO(String name, int price, int caloriesPer100g) {
         this.name = name;
         this.price = price;
+        this.caloriesPer100g = caloriesPer100g;
 
     }
 
