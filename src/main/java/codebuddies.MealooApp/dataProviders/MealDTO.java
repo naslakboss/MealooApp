@@ -2,9 +2,6 @@ package codebuddies.MealooApp.dataProviders;
 
 import codebuddies.MealooApp.entities.meal.MealDifficulty;
 import codebuddies.MealooApp.entities.product.Macronutrients;
-import codebuddies.MealooApp.entities.product.Product;
-import codebuddies.MealooApp.entities.user.FoodDiary;
-
 
 import java.util.List;
 
@@ -12,20 +9,28 @@ public class MealDTO {
 
     String name;
 
-    List<ProductDTO> products;
+    List<ProductForMealDTO> products;
 
     int price;
 
     MealDifficulty mealDifficulty;
 
+    Macronutrients macronutrients;
+
+    int totalCalories;
+
     public MealDTO() {
     }
 
-    public MealDTO(String name, List<ProductDTO> products, int price, MealDifficulty mealDifficulty) {
+    public MealDTO(String name, List<ProductForMealDTO> products, int price,
+                   MealDifficulty mealDifficulty, Macronutrients macronutrients, int totalCalories) {
         this.name = name;
         this.products = products;
         this.price = price;
-        this.mealDifficulty = mealDifficulty;;
+        this.mealDifficulty = mealDifficulty;
+        this.macronutrients = macronutrients;
+        this.totalCalories = totalCalories;
+
     }
 
     public String getName() {
@@ -36,11 +41,11 @@ public class MealDTO {
         this.name = name;
     }
 
-    public List<ProductDTO> getProducts() {
+    public List<ProductForMealDTO> getProducts() {
         return products;
     }
 
-    public void setProducts(List<ProductDTO> products) {
+    public void setProducts(List<ProductForMealDTO> products) {
         this.products = products;
     }
 
@@ -60,4 +65,19 @@ public class MealDTO {
         this.mealDifficulty = mealDifficulty;
     }
 
+    public Macronutrients getMacronutrients() {
+        return macronutrients;
+    }
+
+    public void setMacronutrients(Macronutrients macronutrients) {
+        this.macronutrients = macronutrients;
+    }
+
+    public int getTotalCalories() {
+        return totalCalories;
+    }
+
+    public void setTotalCalories(int totalCalories) {
+        this.totalCalories = totalCalories;
+    }
 }

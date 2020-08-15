@@ -35,6 +35,12 @@ public class MealController {
 
 //    @EventListener(ApplicationReadyEvent.class)
 //    public void fillDB(){
+//        Product milk = productService.findByName("Milk");
+//        Product strawberries = productService.findByName("Strawberries");
+//        Product oats = productService.findByName("Oats");
+//        List<Product> products = Arrays.asList(milk, strawberries, oats);
+//        Meal meal = new Meal(13L, "strawmilkoats", products, 25, MealDifficulty.HARD);
+//        mealService.save(meal);
 //    }
 
     @GetMapping("")

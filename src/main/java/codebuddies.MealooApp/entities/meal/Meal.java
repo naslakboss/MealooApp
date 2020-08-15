@@ -30,6 +30,10 @@ public class Meal {
 
     private MealDifficulty mealDifficulty;
 
+    private Macronutrients macronutrients;
+
+    private int totalCalories;
+
     @ManyToOne
     private FoodDiary foodDiary;
 
@@ -42,6 +46,8 @@ public class Meal {
         this.products = products;
         this.price = price;
         this.mealDifficulty = mealDifficulty;
+        macronutrients = calculateMacronutrients();
+        totalCalories = calculateCalories();
     }
 
     public long getId() {
@@ -86,6 +92,55 @@ public class Meal {
 
     public void setMealDifficulty(MealDifficulty mealDifficulty) {
         this.mealDifficulty = mealDifficulty;
+    }
+
+    public Macronutrients getMacronutrients() {
+        return macronutrients;
+    }
+
+    public void setMacronutrients(Macronutrients macronutrients) {
+        this.macronutrients = macronutrients;
+    }
+
+    public int getTotalCalories() {
+        return totalCalories;
+    }
+
+    public void setTotalCalories(int totalCalories) {
+        this.totalCalories = totalCalories;
+    }
+
+    public FoodDiary getFoodDiary() {
+        return foodDiary;
+    }
+
+    public void setFoodDiary(FoodDiary foodDiary) {
+        this.foodDiary = foodDiary;
+    }
+
+    public Macronutrients calculateMacronutrients(){
+        Macronutrients macronutrients = new Macronutrients();
+        int totalCarbohydrates = products.stream().map(Product::getMacronutrients)
+                .mapToInt(Macronutrients::getCarbohydratesPer100g).sum();
+        int totalProteins = products.stream().map(Product::getMacronutrients)
+                .mapToInt(Macronutrients::getProteinPer100g).sum();
+        int totalFats = products.stream().map(Product::getMacronutrients)
+                .mapToInt(Macronutrients::getFatPer100g).sum();
+        macronutrients.setCarbohydratesPer100g(totalCarbohydrates);
+        macronutrients.setProteinPer100g(totalProteins);
+        macronutrients.setFatPer100g(totalFats);
+        return macronutrients;
+    }
+
+    private int calculateCalories() {
+        int totalCarbohydratesCalories = products.stream().map(Product::getMacronutrients)
+                .mapToInt(Macronutrients::getCarbohydratesPer100g).sum() * 4;
+        int totalProteinsCalories = products.stream().map(Product::getMacronutrients)
+                .mapToInt(Macronutrients::getProteinPer100g).sum() * 4;
+        int totalFatsCalories = products.stream().map(Product::getMacronutrients)
+                .mapToInt(Macronutrients::getFatPer100g).sum() * 9;
+        int totalCalories = totalCarbohydratesCalories + totalProteinsCalories + totalFatsCalories;
+        return totalCalories;
     }
 
     @Override
