@@ -33,7 +33,7 @@ public class ProductController {
         this.productFacade = productFacade;
     }
 
-    //     Fill database
+//         Fill database
 //    @EventListener(ApplicationReadyEvent.class)
 //    public void fillDB() {
 //
@@ -52,6 +52,16 @@ public class ProductController {
 //        Product strawberry = new Product("Strawberry", 5, 33,
 //                        new Macronutrients(2, 12, 2), ProductType.DAIRY);
 //        productService.save(strawberry);
+//
+//        Product piers = new Product("ChickenBreast", 2, 170,
+//                new Macronutrients(31, 0, 4), ProductType.MEAT);
+//        Product rice = new Product("WhiteRice", 1, 360,
+//                new Macronutrients(7, 80, 1), ProductType.GRAINS);
+//        Product paprika = new Product("Paprika", 3, 28,
+//                new Macronutrients(1, 7, 1), ProductType.VEGETABLES);
+//        productService.save(piers);
+//        productService.save(rice);
+//        productService.save(paprika);
 //    }
 
 

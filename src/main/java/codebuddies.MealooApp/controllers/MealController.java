@@ -40,6 +40,12 @@ public class MealController {
 //        Product pesta = productService.findByName("Pesta");
 //        Product beef = productService.findByName("Beef");
 //        Product strawberry = productService.findByName("Strawberry");
+//        Product chicken = productService.findByName("ChickenBreast");
+//        Product rice = productService.findByName("WhiteRice");
+//        Product paprika = productService.findByName("Paprika");
+//        List<Product> listOne = Arrays.asList(chicken, rice, paprika);
+//        Meal meal = new Meal(20L, "ChickenRiceAndPaprika", listOne, 12, MealDifficulty.MEDIUM);
+//        mealService.save(meal);
 //
 //        List<Product> products1 = Arrays.asList(bread, egg);
 //        Meal meal1 = new Meal(13L, "BreadWithEgg", products1, 15, MealDifficulty.EASY);

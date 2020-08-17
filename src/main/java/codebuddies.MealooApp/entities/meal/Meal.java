@@ -123,11 +123,11 @@ public class Meal {
     public Macronutrients calculateMacronutrients(){
         Macronutrients macronutrients = new Macronutrients();
         int totalCarbohydrates = products.stream().map(Product::getMacronutrients)
-                .mapToInt(Macronutrients::getCarbohydratesPer100g).sum();
+                .mapToInt(Macronutrients::getCarbohydratesPer100g).sum() / products.size();
         int totalProteins = products.stream().map(Product::getMacronutrients)
-                .mapToInt(Macronutrients::getProteinPer100g).sum();
+                .mapToInt(Macronutrients::getProteinPer100g).sum() / products.size();
         int totalFats = products.stream().map(Product::getMacronutrients)
-                .mapToInt(Macronutrients::getFatPer100g).sum();
+                .mapToInt(Macronutrients::getFatPer100g).sum() / products.size();
         macronutrients.setCarbohydratesPer100g(totalCarbohydrates);
         macronutrients.setProteinPer100g(totalProteins);
         macronutrients.setFatPer100g(totalFats);
@@ -142,7 +142,7 @@ public class Meal {
         int totalFatsCalories = products.stream().map(Product::getMacronutrients)
                 .mapToInt(Macronutrients::getFatPer100g).sum() * 9;
         int totalCalories = totalCarbohydratesCalories + totalProteinsCalories + totalFatsCalories;
-        return totalCalories;
+        return totalCalories / products.size();
     }
 
     @Override
