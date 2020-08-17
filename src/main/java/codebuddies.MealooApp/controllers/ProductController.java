@@ -34,8 +34,8 @@ public class ProductController {
     }
 
     //     Fill database
-    @EventListener(ApplicationReadyEvent.class)
-    public void fillDB() {
+//    @EventListener(ApplicationReadyEvent.class)
+//    public void fillDB() {
 //
 //        Product egg = new Product("Eggs", 1, 140,
 //                new Macronutrients(13, 1, 10), ProductType.DAIRY);
@@ -52,7 +52,7 @@ public class ProductController {
 //        Product strawberry = new Product("Strawberry", 5, 33,
 //                        new Macronutrients(2, 12, 2), ProductType.DAIRY);
 //        productService.save(strawberry);
-    }
+//    }
 
 
     @GetMapping("")

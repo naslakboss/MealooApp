@@ -38,9 +38,17 @@ public class Product {
     public Product(String name, int price, int caloriesPer100g, Macronutrients macronutrients, ProductType productType) {
         this.name = name;
         this.price = price;
-        this.caloriesPer100g = caloriesPer100g;
         this.macronutrients = macronutrients;
+        this.caloriesPer100g = calculateCaloriesPer100g(this.caloriesPer100g);
         this.productType = productType;
+    }
+
+    public int calculateCaloriesPer100g(int caloriesPer100g){
+        if(caloriesPer100g == 0) {
+            return (macronutrients.getCarbohydratesPer100g() * 4) +
+                    (macronutrients.getFatPer100g() * 9) + (macronutrients.getProteinPer100g() * 4);
+        }
+        return caloriesPer100g;
     }
 
     public Long getId() {

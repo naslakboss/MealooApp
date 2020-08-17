@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FakeUserRepository extends JpaRepository<FakeUser, Long> {
     FakeUser findByUsername(String username);
+
 }

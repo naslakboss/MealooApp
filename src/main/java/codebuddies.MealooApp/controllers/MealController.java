@@ -35,12 +35,23 @@ public class MealController {
 
 //    @EventListener(ApplicationReadyEvent.class)
 //    public void fillDB(){
-//        Product milk = productService.findByName("Milk");
-//        Product strawberries = productService.findByName("Strawberries");
-//        Product oats = productService.findByName("Oats");
-//        List<Product> products = Arrays.asList(milk, strawberries, oats);
-//        Meal meal = new Meal(13L, "strawmilkoats", products, 25, MealDifficulty.HARD);
-//        mealService.save(meal);
+//        Product bread = productService.findByName("Bread");
+//        Product egg = productService.findByName("Eggs");
+//        Product pesta = productService.findByName("Pesta");
+//        Product beef = productService.findByName("Beef");
+//        Product strawberry = productService.findByName("Strawberry");
+//
+//        List<Product> products1 = Arrays.asList(bread, egg);
+//        Meal meal1 = new Meal(13L, "BreadWithEgg", products1, 15, MealDifficulty.EASY);
+//        mealService.save(meal1);
+//
+//        List<Product> products2 = Arrays.asList(pesta, beef);
+//        Meal meal2 = new Meal(14L, "PastaAndBeef", products2, 20, MealDifficulty.EASY);
+//        mealService.save(meal2);
+//
+//        List<Product> products3 = Arrays.asList(pesta, strawberry);
+//        Meal meal3 = new Meal(15L, "PastaWithStrawberries", products3, 15, MealDifficulty.EASY);
+//        mealService.save(meal3);
 //    }
 
     @GetMapping("")

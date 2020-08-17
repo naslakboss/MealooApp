@@ -2,14 +2,14 @@ package codebuddies.MealooApp.services;
 
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.user.FakeUser;
+import codebuddies.MealooApp.entities.user.FoodDiary;
 import codebuddies.MealooApp.repositories.FakeUserRepository;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class FakeUserService {
@@ -20,6 +20,9 @@ public class FakeUserService {
 
     @Autowired
     MealService mealService;
+
+    @Autowired
+    FoodDiaryService foodDiaryService;
 
     public List<FakeUser> findAll() {
         return fakeUserRepository.findAll();
@@ -43,7 +46,7 @@ public class FakeUserService {
         int totalFats = 0;
 
         Meal meal1 = meals.get(0);
-        mealsList.put("First Meal:" , meal1);
+        mealsList.put("First Meal:", meal1);
         mealsList.put("Recipe for meal 1:", "Smash beef and eat raw");
         Map<String, Integer> meal1Details = meal1.showMealDetailsByName(meal1);
         mealsList.put("Details of first meal :", meal1Details);
@@ -54,7 +57,7 @@ public class FakeUserService {
 
 
         Meal meal2 = meals.get(1);
-        mealsList.put("Second Meal:" , meal2);
+        mealsList.put("Second Meal:", meal2);
         mealsList.put("Recipe for meal 2:", "Example desc 1");
         Map<String, Integer> meal2Details = meal2.showMealDetailsByName(meal2);
         mealsList.put("Details of second meal:", meal2Details);
@@ -64,7 +67,7 @@ public class FakeUserService {
         totalFats += meal2.showMealDetailsByName(meal2).get("Fats");
 
         Meal meal3 = meals.get(2);
-        mealsList.put("Third Meal:" , meal3);
+        mealsList.put("Third Meal:", meal3);
         mealsList.put("Recipe for meal 3:", "Example desc 2");
         Map<String, Integer> meal3Details = meal3.showMealDetailsByName(meal3);
         mealsList.put("Details of third :", meal3Details);
@@ -74,7 +77,7 @@ public class FakeUserService {
         totalFats += meal3.showMealDetailsByName(meal3).get("Fats");
 
         Meal meal4 = meals.get(3);
-        mealsList.put("Fourth Meal:" , meal4);
+        mealsList.put("Fourth Meal:", meal4);
         mealsList.put("Recipe for meal 4:", "It's complicated algorithm");
         Map<String, Integer> meal4Details = meal4.showMealDetailsByName(meal4);
         mealsList.put("Details of fourth:", meal4Details);
@@ -84,7 +87,7 @@ public class FakeUserService {
         totalFats += meal4.showMealDetailsByName(meal4).get("Fats");
 
         Meal meal5 = meals.get(4);
-        mealsList.put("Fifth Meal:" , meal5);
+        mealsList.put("Fifth Meal:", meal5);
         mealsList.put("Recipe for meal 5:", "And takes a lot of time to render data xD");
         Map<String, Integer> meal5Details = meal5.showMealDetailsByName(meal5);
         mealsList.put("Details of fifth:", meal5Details);
@@ -102,4 +105,22 @@ public class FakeUserService {
         return mealsList;
 
     }
+
+    public FakeUser addMealToDiary(String username, Meal meal, LocalDate date) {
+        FakeUser user = fakeUserRepository.findByUsername(username);
+
+        FoodDiary foodDiary = foodDiaryService.findByDate(date);
+
+        user.addDiary(foodDiary);
+
+        foodDiary.setListOfMeals(Collections.singletonList(meal));
+
+        fakeUserRepository.save(user);
+
+        foodDiaryService.save(foodDiary);
+
+        return user;
+    }
+
+
 }

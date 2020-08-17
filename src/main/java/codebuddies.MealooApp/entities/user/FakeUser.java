@@ -1,6 +1,9 @@
 package codebuddies.MealooApp.entities.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class FakeUser {
@@ -18,8 +21,9 @@ public class FakeUser {
     @Embedded
     private NutritionSettings nutritionSettings;
 
-    @OneToOne
-    private FoodDiary foodDiary;
+    @OneToMany(mappedBy = "fakeUser")
+    @JsonIgnoreProperties("fakeUser")
+    private List<FoodDiary> foodDiaries;
 
     @Embedded
     private FakeUserDetails fakeUserDetails = new FakeUserDetails();
@@ -39,14 +43,13 @@ public class FakeUser {
     }
 
     public FakeUser(Long id, String username, String password, String email,
-                    NutritionSettings nutritionSettings, FoodDiary foodDiary,
+                    NutritionSettings nutritionSettings,
                     FakeUserDetails fakeUserDetails) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.nutritionSettings = nutritionSettings;
-        this.foodDiary = foodDiary;
         this.fakeUserDetails = fakeUserDetails;
     }
 
@@ -90,12 +93,12 @@ public class FakeUser {
         this.nutritionSettings = nutritionSettings;
     }
 
-    public FoodDiary getFoodDiary() {
-        return foodDiary;
+    public List<FoodDiary> getFoodDiariers() {
+        return foodDiaries;
     }
 
-    public void setFoodDiary(FoodDiary foodDiary) {
-        this.foodDiary = foodDiary;
+    public void setFoodDiaries(List<FoodDiary> foodDiaries) {
+        this.foodDiaries = foodDiaries;
     }
 
     public FakeUserDetails getFakeUserDetails() {
@@ -104,5 +107,9 @@ public class FakeUser {
 
     public void setFakeUserDetails(FakeUserDetails fakeUserDetails) {
         this.fakeUserDetails = fakeUserDetails;
+    }
+
+    public void addDiary(FoodDiary foodDiary) {
+        foodDiaries.add(foodDiary);
     }
 }

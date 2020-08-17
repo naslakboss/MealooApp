@@ -1,6 +1,8 @@
 package codebuddies.MealooApp.entities.user;
 
 import codebuddies.MealooApp.entities.meal.Meal;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,12 +15,14 @@ public class FoodDiary {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(mappedBy = "foodDiary")
+    @ManyToMany
+    @JsonIgnoreProperties("foodDiaries")
     private List<Meal> listOfMeals;
 
     public LocalDate date;
 
-    @OneToOne(mappedBy = "foodDiary")
+    @ManyToOne
+    @JsonIgnore
     private FakeUser fakeUser;
 
     public FoodDiary() {
@@ -28,6 +32,10 @@ public class FoodDiary {
         this.listOfMeals = listOfMeals;
         this.date = date;
         this.fakeUser = fakeUser;
+    }
+
+    public void addMeal(Meal meal){
+        listOfMeals.add(meal);
     }
 
     public Long getId() {
@@ -58,7 +66,7 @@ public class FoodDiary {
         return fakeUser;
     }
 
-    public void setFakeUser(FakeUser fakeUser) {
+    public void setFakeUser(FakeUser fakeUsers) {
         this.fakeUser = fakeUser;
     }
 }

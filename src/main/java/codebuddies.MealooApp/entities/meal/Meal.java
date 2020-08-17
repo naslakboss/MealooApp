@@ -6,6 +6,7 @@ package codebuddies.MealooApp.entities.meal;
 import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.entities.user.FoodDiary;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -34,8 +35,9 @@ public class Meal {
 
     private int totalCalories;
 
-    @ManyToOne
-    private FoodDiary foodDiary;
+    @ManyToMany(mappedBy = "listOfMeals")
+    @JsonIgnore
+    private List<FoodDiary> foodDiaries;
 
     public Meal() {
     }
@@ -110,12 +112,12 @@ public class Meal {
         this.totalCalories = totalCalories;
     }
 
-    public FoodDiary getFoodDiary() {
-        return foodDiary;
+    public List<FoodDiary> getFoodDiaries() {
+        return foodDiaries;
     }
 
-    public void setFoodDiary(FoodDiary foodDiary) {
-        this.foodDiary = foodDiary;
+    public void setFoodDiaries(List<FoodDiary> foodDiaries) {
+        this.foodDiaries = foodDiaries;
     }
 
     public Macronutrients calculateMacronutrients(){
