@@ -7,6 +7,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class FoodDiaryFacade {
 
@@ -32,5 +35,17 @@ public class FoodDiaryFacade {
     public FoodDiaryDTO findDiaryOfGivenDay(String name, String date){
         FakeUser user = fakeUserService.findByUsername(name);
         return modelMapper.map(foodDiaryService.findDiaryOfGivenDate(user, date), FoodDiaryDTO.class);
+    }
+
+    public FoodDiaryDTO createNewFoodDiary(String username){
+        FakeUser user = fakeUserService.findByUsername(username);
+        return modelMapper.map(foodDiaryService.createNewFoodDiary(user), FoodDiaryDTO.class);
+    }
+
+    public List<FoodDiaryDTO> getAllDiariesForGivenUser(String username){
+        FakeUser user = fakeUserService.findByUsername(username);
+        return foodDiaryService.findAllDiariesForUser(user).stream()
+                .map(foodDiary -> modelMapper.map(foodDiary, FoodDiaryDTO.class))
+                    .collect(Collectors.toList());
     }
 }

@@ -10,6 +10,8 @@ import codebuddies.MealooApp.services.FoodDiaryService;
 import codebuddies.MealooApp.services.MealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -30,15 +32,9 @@ public class ClientController {
     FoodDiaryFacade foodDiaryFacade;
 
 
-    @GetMapping("/testListOfMeals")
-    public Object getMealsAndRecipesForWholeDay(){
-        return userService.getMealsAndRecipes();
-    }
-
     @GetMapping("/getAllDiaries/{username}")
-    public List<FoodDiary> getAllDiariesForGivenUser(@PathVariable String username){
-        FakeUser user = userService.findByUsername(username);
-        return diaryService.findAllDiariesForUser(user);
+    public List<FoodDiaryDTO> getAllDiariesForGivenUser(@PathVariable String username){
+        return foodDiaryFacade.getAllDiariesForGivenUser(username);
     }
 
     @GetMapping("/getTodayDiary/{username}")
@@ -52,23 +48,26 @@ public class ClientController {
     }
 
     @PostMapping("/createNewFoodDiary/{username}")
-    public FoodDiary createNewDiary(@PathVariable String username){
-        FakeUser user = userService.findByUsername(username);
-        return diaryService.createNewFoodDiary(user);
+    public FoodDiaryDTO createNewDiary(@PathVariable String username){
+        return foodDiaryFacade.createNewFoodDiary(username);
     }
 
     @PostMapping("/addMeal/{username}/{name}")
-    public FoodDiary addMealToDiary(@PathVariable String username, @PathVariable String name){
+    public FoodDiaryDTO addMealToDiary(@PathVariable String username, @PathVariable String name){
         FakeUser user = userService.findByUsername(username);
         Meal meal = mealService.findByName(name);
-        return diaryService.addFoodToTodayDiary(user, meal);
+        diaryService.addFoodToTodayDiary(user, meal);
+        String presentDate = LocalDate.now().toString();
+        return foodDiaryFacade.findDiaryOfGivenDay(username, presentDate);
     }
 
     @DeleteMapping("/deleteMeal/{username}/{name}")
-    public FoodDiary deleteMealFromDiary(@PathVariable String username, @PathVariable String name){
+    public FoodDiaryDTO deleteMealFromDiary(@PathVariable String username, @PathVariable String name){
         FakeUser user = userService.findByUsername(username);
         Meal mealToDelete = mealService.findByName(name);
-        return diaryService.deleteMealFromTodayDiary(user, mealToDelete);
+        diaryService.deleteMealFromTodayDiary(user, mealToDelete);
+        String presentDate = LocalDate.now().toString();
+        return  foodDiaryFacade.findDiaryOfGivenDay(username, presentDate);
     }
 
 
