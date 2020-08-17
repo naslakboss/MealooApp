@@ -2,6 +2,7 @@ package codebuddies.MealooApp.services;
 
 
 import codebuddies.MealooApp.entities.meal.Meal;
+import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.user.FakeUser;
 import codebuddies.MealooApp.entities.user.FoodDiary;
 import codebuddies.MealooApp.repositories.FoodDiaryRepository;
@@ -60,6 +61,9 @@ public class FoodDiaryService {
             Random random = new Random();
             Long idBean = (long)random.nextInt(500);
             newFoodDiary.setId((idBean));
+            newFoodDiary.setTotalPrice(0);
+            newFoodDiary.setTotalCalories(0);
+            newFoodDiary.setMacronutrients(new Macronutrients(0,0,0));
             foodDiaryRepository.save(newFoodDiary);
             return newFoodDiary;
         }
@@ -67,7 +71,7 @@ public class FoodDiaryService {
     }
 
     public FoodDiary findTodayDiary(FakeUser user) {
-        LocalDate date = LocalDate.now();
+       LocalDate date = LocalDate.now();
        Optional<FoodDiary> todayFoodDiary = findAllDiariesForUser(user).stream()
                .filter(foodDiary -> foodDiary.getDate().isEqual(date)).findFirst();
        if(todayFoodDiary.isPresent()){
@@ -81,6 +85,10 @@ public class FoodDiaryService {
     public FoodDiary addFoodToTodayDiary(FakeUser user, Meal meal) {
         FoodDiary diary = findTodayDiary(user);
         diary.getListOfMeals().add(meal);
+
+        diary.setMacronutrients(diary.calculateMacronutrients());
+        diary.setTotalCalories(diary.calculateCalories());
+        diary.setTotalPrice(diary.calculatePrice());
         foodDiaryRepository.save(diary);
         return diary;
     }
@@ -88,6 +96,11 @@ public class FoodDiaryService {
     public FoodDiary deleteMealFromTodayDiary(FakeUser user, Meal mealToDelete) {
         FoodDiary diary = findTodayDiary(user);
         diary.getListOfMeals().remove(mealToDelete);
+
+        diary.setMacronutrients(diary.calculateMacronutrients());
+        diary.setTotalCalories(diary.calculateCalories());
+        diary.setTotalPrice(diary.calculatePrice());
+
         foodDiaryRepository.save(diary);
         return diary;
     }

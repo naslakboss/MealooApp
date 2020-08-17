@@ -1,20 +1,17 @@
 package codebuddies.MealooApp.controllers;
 
+import codebuddies.MealooApp.dataProviders.FoodDiaryDTO;
+import codebuddies.MealooApp.dataProviders.FoodDiaryFacade;
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.user.FakeUser;
 import codebuddies.MealooApp.entities.user.FoodDiary;
-import codebuddies.MealooApp.repositories.MealRepository;
 import codebuddies.MealooApp.services.FakeUserService;
 import codebuddies.MealooApp.services.FoodDiaryService;
 import codebuddies.MealooApp.services.MealService;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 import java.util.List;
-import java.util.NoSuchElementException;
+
 
 @RestController
 @RequestMapping("/client")
@@ -29,6 +26,9 @@ public class ClientController {
     @Autowired
     MealService mealService;
 
+    @Autowired
+    FoodDiaryFacade foodDiaryFacade;
+
 
     @GetMapping("/testListOfMeals")
     public Object getMealsAndRecipesForWholeDay(){
@@ -42,15 +42,13 @@ public class ClientController {
     }
 
     @GetMapping("/getTodayDiary/{username}")
-    public FoodDiary getTodayDiary(@PathVariable String username) {
-        FakeUser user = userService.findByUsername(username);
-        return diaryService.findTodayDiary(user);
+    public FoodDiaryDTO getTodayDiary(@PathVariable String username) {
+        return  foodDiaryFacade.findTodayDiary(username);
     }
 
     @GetMapping("/getDiaryOfGivenDay/{username}/{date}")
-    public FoodDiary getDiaryOfGivenDay(@PathVariable String username, @PathVariable String date){
-        FakeUser user = userService.findByUsername(username);
-        return diaryService.findDiaryOfGivenDate(user, date);
+    public FoodDiaryDTO getDiaryOfGivenDay(@PathVariable String username, @PathVariable String date){
+        return foodDiaryFacade.findDiaryOfGivenDay(username, date);
     }
 
     @PostMapping("/createNewFoodDiary/{username}")

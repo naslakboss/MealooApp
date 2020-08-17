@@ -19,6 +19,7 @@ public class Product {
     private String name;
 
     private int price;
+    // todo add price in several currencies
 
     private int caloriesPer100g;
 

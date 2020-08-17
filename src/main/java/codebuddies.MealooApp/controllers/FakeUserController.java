@@ -42,7 +42,8 @@ public class FakeUserController {
 //                    ,new NutritionSettings(4000)
 //                        , new FakeUserDetails(100, 50, 30, Sex.MALE, PhysicalActivity.HIGH));
 //        fakeUserService.save(fakeUser);
-//     FakeUser user = fakeUserService.findByUsername("test");
+
+//        FakeUser user = fakeUserService.findByUsername("test");
 //        Meal mealo = mealService.findByName("strawmilkoats");
 //
 //        LocalDate date = LocalDate.of(2020, 8,11);

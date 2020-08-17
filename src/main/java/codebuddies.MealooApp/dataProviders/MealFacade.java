@@ -23,7 +23,7 @@ public class MealFacade {
 
     public MealDTO getByName(String name){
         return  modelMapper.map(mealService.findByName(name), MealDTO.class);
-        // todo add total macro and kalories
+        // todo add total macro and calories
     }
 
     public List<MealDTO> getAll(){
