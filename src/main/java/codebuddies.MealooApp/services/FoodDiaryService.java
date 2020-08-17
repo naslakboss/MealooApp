@@ -91,4 +91,14 @@ public class FoodDiaryService {
         foodDiaryRepository.save(diary);
         return diary;
     }
+
+    public FoodDiary findDiaryOfGivenDate(FakeUser user, String date) {
+        LocalDate parsedDate = LocalDate.parse(date);
+        Optional<FoodDiary> diary = findAllDiariesForUser(user).stream()
+                .filter(foodDiary -> foodDiary.getDate().isEqual(parsedDate)).findFirst();
+        if(diary.isEmpty()){
+            throw new IllegalArgumentException("Dairy of given date is not exist");
+        }
+        return diary.get();
+    }
 }

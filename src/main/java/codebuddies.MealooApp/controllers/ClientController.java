@@ -39,13 +39,6 @@ public class ClientController {
     public List<FoodDiary> getAllDiariesForGivenUser(@PathVariable String username){
         FakeUser user = userService.findByUsername(username);
         return diaryService.findAllDiariesForUser(user);
-
-    }
-
-    @GetMapping("/createNewFoodDiary/{username}")
-    public FoodDiary createNewDiary(@PathVariable String username){
-        FakeUser user = userService.findByUsername(username);
-        return diaryService.createNewFoodDiary(user);
     }
 
     @GetMapping("/getTodayDiary/{username}")
@@ -54,7 +47,17 @@ public class ClientController {
         return diaryService.findTodayDiary(user);
     }
 
+    @GetMapping("/getDiaryOfGivenDay/{username}/{date}")
+    public FoodDiary getDiaryOfGivenDay(@PathVariable String username, @PathVariable String date){
+        FakeUser user = userService.findByUsername(username);
+        return diaryService.findDiaryOfGivenDate(user, date);
+    }
 
+    @PostMapping("/createNewFoodDiary/{username}")
+    public FoodDiary createNewDiary(@PathVariable String username){
+        FakeUser user = userService.findByUsername(username);
+        return diaryService.createNewFoodDiary(user);
+    }
 
     @PostMapping("/addMeal/{username}/{name}")
     public FoodDiary addMealToDiary(@PathVariable String username, @PathVariable String name){
