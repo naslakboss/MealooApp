@@ -2,7 +2,6 @@ package codebuddies.MealooApp.entities.user;
 
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.product.Macronutrients;
-import codebuddies.MealooApp.entities.product.Product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -25,21 +24,21 @@ public class FoodDiary {
 
     @ManyToOne
     @JsonIgnore
-    private FakeUser fakeUser;
+    private MealooUser mealooUser;
 
     private Macronutrients macronutrients;
 
     private int totalCalories;
 
-    private int totalPrice;
+    private float totalPrice;
 
     public FoodDiary() {
     }
 
-    public FoodDiary (List<Meal> listOfMeals, LocalDate date, FakeUser fakeUser) {
+    public FoodDiary (List<Meal> listOfMeals, LocalDate date, MealooUser mealooUser) {
         this.listOfMeals = listOfMeals;
         this.date = date;
-        this.fakeUser = fakeUser;
+        this.mealooUser = mealooUser;
         macronutrients = calculateMacronutrients();
         totalCalories = calculateCalories();
         totalPrice = calculatePrice();
@@ -73,12 +72,12 @@ public class FoodDiary {
         this.date = date;
     }
 
-    public FakeUser getFakeUser() {
-        return fakeUser;
+    public MealooUser getFakeUser() {
+        return mealooUser;
     }
 
-    public void setFakeUser(FakeUser fakeUsers) {
-        this.fakeUser = fakeUser;
+    public void setFakeUser(MealooUser mealooUsers) {
+        this.mealooUser = mealooUser;
     }
 
     public Macronutrients getMacronutrients() {
@@ -97,16 +96,16 @@ public class FoodDiary {
         this.totalCalories = totalCalories;
     }
 
-    public int getTotalPrice() {
+    public float getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(int totalPrice) {
+    public void setTotalPrice(float totalPrice) {
         this.totalPrice = totalPrice;
     }
 
-    public int calculatePrice() {
-        return listOfMeals.stream().mapToInt(Meal::getPrice).sum();
+    public float calculatePrice() {
+        return (float)listOfMeals.stream().mapToDouble(Meal::getPrice).sum();
     }
 
     public int calculateCalories(){
@@ -119,12 +118,12 @@ public class FoodDiary {
         int totalCarbohydrates = listOfMeals.stream().map(Meal::getMacronutrients)
                 .mapToInt(Macronutrients::getCarbohydratesPer100g).sum();
         int totalProteins = listOfMeals.stream().map(Meal::getMacronutrients)
-                .mapToInt(Macronutrients::getProteinPer100g).sum();
+                .mapToInt(Macronutrients::getProteinsPer100g).sum();
         int totalFats = listOfMeals.stream().map(Meal::getMacronutrients)
-                .mapToInt(Macronutrients::getFatPer100g).sum();
+                .mapToInt(Macronutrients::getFatsPer100g).sum();
         macronutrients.setCarbohydratesPer100g(totalCarbohydrates);
-        macronutrients.setProteinPer100g(totalProteins);
-        macronutrients.setFatPer100g(totalFats);
+        macronutrients.setProteinsPer100g(totalProteins);
+        macronutrients.setFatsPer100g(totalFats);
         return macronutrients;
     }
 

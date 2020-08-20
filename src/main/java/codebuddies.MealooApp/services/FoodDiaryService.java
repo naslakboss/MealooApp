@@ -3,32 +3,27 @@ package codebuddies.MealooApp.services;
 
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.product.Macronutrients;
-import codebuddies.MealooApp.entities.user.FakeUser;
+import codebuddies.MealooApp.entities.user.MealooUser;
 import codebuddies.MealooApp.entities.user.FoodDiary;
 import codebuddies.MealooApp.repositories.FoodDiaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-
 
 @Service
 public class FoodDiaryService {
 
-    @Autowired
-    FoodDiaryRepository foodDiaryRepository;
+    private FoodDiaryRepository foodDiaryRepository;
 
     @Autowired
-    MealService mealService;
-
-    @Autowired
-    FakeUserService userService;
+    public FoodDiaryService(FoodDiaryRepository foodDiaryRepository) {
+        this.foodDiaryRepository = foodDiaryRepository;
+    }
 
     public FoodDiary save(FoodDiary diary) {
         return foodDiaryRepository.save(diary);
@@ -42,13 +37,12 @@ public class FoodDiaryService {
         return findByDate(date);
     }
 
-    public List<FoodDiary> findAllDiariesForUser(FakeUser user) {
-
+    public List<FoodDiary> findAllDiariesForUser(MealooUser user) {
         return foodDiaryRepository.findAll().stream()
                 .filter(foodDiary -> foodDiary.getFakeUser()==user).collect(Collectors.toList());
     }
 
-    public FoodDiary createNewFoodDiary(FakeUser user){
+    public FoodDiary createNewFoodDiary(MealooUser user){
         LocalDate date = LocalDate.now();
         Optional<FoodDiary> checkIfExists = findAllDiariesForUser(user).stream()
                 .filter(foodDiary -> foodDiary.getDate().isEqual(date)).findFirst();
@@ -70,7 +64,7 @@ public class FoodDiaryService {
 
     }
 
-    public FoodDiary findTodayDiary(FakeUser user) {
+    public FoodDiary findTodayDiary(MealooUser user) {
        LocalDate date = LocalDate.now();
        Optional<FoodDiary> todayFoodDiary = findAllDiariesForUser(user).stream()
                .filter(foodDiary -> foodDiary.getDate().isEqual(date)).findFirst();
@@ -82,7 +76,7 @@ public class FoodDiaryService {
        }
     }
 
-    public FoodDiary addFoodToTodayDiary(FakeUser user, Meal meal) {
+    public FoodDiary addFoodToTodayDiary(MealooUser user, Meal meal) {
         FoodDiary diary = findTodayDiary(user);
         diary.getListOfMeals().add(meal);
 
@@ -93,7 +87,7 @@ public class FoodDiaryService {
         return diary;
     }
 
-    public FoodDiary deleteMealFromTodayDiary(FakeUser user, Meal mealToDelete) {
+    public FoodDiary deleteMealFromTodayDiary(MealooUser user, Meal mealToDelete) {
         FoodDiary diary = findTodayDiary(user);
         diary.getListOfMeals().remove(mealToDelete);
 
@@ -105,7 +99,7 @@ public class FoodDiaryService {
         return diary;
     }
 
-    public FoodDiary findDiaryOfGivenDate(FakeUser user, String date) {
+    public FoodDiary findDiaryOfGivenDate(MealooUser user, String date) {
         LocalDate parsedDate = LocalDate.parse(date);
         Optional<FoodDiary> diary = findAllDiariesForUser(user).stream()
                 .filter(foodDiary -> foodDiary.getDate().isEqual(parsedDate)).findFirst();

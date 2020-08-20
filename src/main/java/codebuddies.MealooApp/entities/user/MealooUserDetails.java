@@ -4,7 +4,7 @@ import javax.persistence.Embeddable;
 import java.util.Objects;
 
 @Embeddable
-public class FakeUserDetails {
+public class MealooUserDetails {
     /**
      * This data will be used to calculate BMI for given USER
      */
@@ -18,13 +18,13 @@ public class FakeUserDetails {
 
     private PhysicalActivity physicalActivity;
 
-    public int calculateBMI(Integer height, Integer weight){
-        return weight / (height * height);
+    public double calculateBMI(){
+        return weight * 10000/ (height * height);
     }
 
-    public int calculateCaloricDemand(Integer age, Sex sex, Integer height, Integer weight, PhysicalActivity physicalActivity){
+    public int calculateCaloricDemand(){
         if(sex == Sex.MALE){
-           int maleDemand = (66 + (14 * weight) + (5 * height) - (7 * age)) * (physicalActivity.getMultiplier()/10);
+           int maleDemand = (66 + (18 * weight) + (9 * height) - (8 * age)) * (physicalActivity.getMultiplier()/10);
            return maleDemand;
         }
         int femaleDemand  = (655 + (10 * weight) + (2 * height) - (5 * age)) * (physicalActivity.getMultiplier()/10);
@@ -32,10 +32,10 @@ public class FakeUserDetails {
 
     }
 
-    public FakeUserDetails() {
+    public MealooUserDetails() {
     }
 
-    public FakeUserDetails(Integer height, Integer weight, Integer age, Sex sex, PhysicalActivity physicalActivity) {
+    public MealooUserDetails(Integer height, Integer weight, Integer age, Sex sex, PhysicalActivity physicalActivity) {
         this.height = height;
         this.weight = weight;
         this.age = age;
@@ -43,27 +43,27 @@ public class FakeUserDetails {
         this.physicalActivity = physicalActivity;
     }
 
-    public int getHeight() {
+    public Integer getHeight() {
         return height;
     }
 
-    public void setHeight(int height) {
+    public void setHeight(Integer height) {
         this.height = height;
     }
 
-    public int getWeight() {
+    public Integer getWeight() {
         return weight;
     }
 
-    public void setWeight(int weight) {
+    public void setWeight(Integer weight) {
         this.weight = weight;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 
@@ -85,7 +85,7 @@ public class FakeUserDetails {
 
     @Override
     public String toString() {
-        return "FakeUserDetails{" +
+        return "MealooUserDetails{" +
                 "height=" + height +
                 ", weight=" + weight +
                 ", age=" + age +
@@ -98,7 +98,7 @@ public class FakeUserDetails {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FakeUserDetails that = (FakeUserDetails) o;
+        MealooUserDetails that = (MealooUserDetails) o;
         return height == that.height &&
                 weight == that.weight &&
                 age == that.age &&

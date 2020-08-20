@@ -1,33 +1,25 @@
 package codebuddies.MealooApp.entities.meal;
 
-
-
-
+import codebuddies.MealooApp.entities.product.Ingredient;
 import codebuddies.MealooApp.entities.product.Macronutrients;
-import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.entities.user.FoodDiary;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.*;
 
 @Entity
 public class Meal {
 
     @Id
-    @NotNull
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
 
     @ManyToMany
-    @JsonIgnoreProperties("meals")
-    private List<Product> products;
+    private List<Ingredient> ingredients;
 
-    private int price;
+    private double price;
 
     private MealDifficulty mealDifficulty;
 
@@ -42,11 +34,11 @@ public class Meal {
     public Meal() {
     }
 
-    public Meal(Long id,String name, List<Product> products, int price, MealDifficulty mealDifficulty) {
+    public Meal(long id, String name, List<Ingredient> ingredients, MealDifficulty mealDifficulty) {
         this.id = id;
         this.name = name;
-        this.products = products;
-        this.price = price;
+        this.ingredients = ingredients;
+        this.price = calculatePrice();
         this.mealDifficulty = mealDifficulty;
         macronutrients = calculateMacronutrients();
         totalCalories = calculateCalories();
@@ -72,19 +64,19 @@ public class Meal {
         this.name = name;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public List<Ingredient> getIngredients() {
+        return ingredients;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -120,29 +112,46 @@ public class Meal {
         this.foodDiaries = foodDiaries;
     }
 
-    public Macronutrients calculateMacronutrients(){
-        Macronutrients macronutrients = new Macronutrients();
-        int totalCarbohydrates = products.stream().map(Product::getMacronutrients)
-                .mapToInt(Macronutrients::getCarbohydratesPer100g).sum() / products.size();
-        int totalProteins = products.stream().map(Product::getMacronutrients)
-                .mapToInt(Macronutrients::getProteinPer100g).sum() / products.size();
-        int totalFats = products.stream().map(Product::getMacronutrients)
-                .mapToInt(Macronutrients::getFatPer100g).sum() / products.size();
-        macronutrients.setCarbohydratesPer100g(totalCarbohydrates);
-        macronutrients.setProteinPer100g(totalProteins);
-        macronutrients.setFatPer100g(totalFats);
-        return macronutrients;
+    private double calculatePrice(){
+        double totalPrice = 0;
+        for(int i = 0; i < ingredients.size(); i++){
+            totalPrice  += (ingredients.get(i).getProduct().getPrice() * ingredients.get(i).getAmount()/1000);
+        }
+        return totalPrice;
+    }
+
+    private int calculateCarbohydrates(){
+        int totalCarbohydrates = 0;
+        for(int i = 0; i < ingredients.size() ; i++){
+            totalCarbohydrates += ingredients.get(i).getProduct().getMacronutrients().getCarbohydratesPer100g()
+                    * ingredients.get(i).getAmount()  / 100;
+        }
+        return totalCarbohydrates;
+    }
+    private int calculareProteins(){
+        int totalProteins = 0;
+        for(int i = 0; i < ingredients.size(); i++){
+            totalProteins += ingredients.get(i).getProduct().getMacronutrients().getProteinsPer100g()
+                    * ingredients.get(i).getAmount() / 100;
+        }
+        return totalProteins;
+    }
+    private int calculateFats(){
+        int totalFats = 0;
+        for(int i = 0; i < ingredients.size() ; i++){
+            totalFats += ingredients.get(i).getProduct().getMacronutrients().getFatsPer100g()
+                    * ingredients.get(i).getAmount() / 100;
+        }
+        return totalFats;
+    }
+
+    private Macronutrients calculateMacronutrients(){
+        return new Macronutrients(calculareProteins(), calculateCarbohydrates(), calculateFats());
     }
 
     private int calculateCalories() {
-        int totalCarbohydratesCalories = products.stream().map(Product::getMacronutrients)
-                .mapToInt(Macronutrients::getCarbohydratesPer100g).sum() * 4;
-        int totalProteinsCalories = products.stream().map(Product::getMacronutrients)
-                .mapToInt(Macronutrients::getProteinPer100g).sum() * 4;
-        int totalFatsCalories = products.stream().map(Product::getMacronutrients)
-                .mapToInt(Macronutrients::getFatPer100g).sum() * 9;
-        int totalCalories = totalCarbohydratesCalories + totalProteinsCalories + totalFatsCalories;
-        return totalCalories / products.size();
+        return (calculateCarbohydrates() * 4) + (calculareProteins() * 4) + (calculateFats() * 9);
+
     }
 
     @Override
@@ -151,32 +160,31 @@ public class Meal {
         if (o == null || getClass() != o.getClass()) return false;
         Meal meal = (Meal) o;
         return price == meal.price &&
+                totalCalories == meal.totalCalories &&
                 Objects.equals(id, meal.id) &&
                 Objects.equals(name, meal.name) &&
-                Objects.equals(products, meal.products) &&
-                mealDifficulty == meal.mealDifficulty;
+                Objects.equals(ingredients, meal.ingredients) &&
+                mealDifficulty == meal.mealDifficulty &&
+                Objects.equals(macronutrients, meal.macronutrients) &&
+                Objects.equals(foodDiaries, meal.foodDiaries);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, products, price, mealDifficulty);
+        return Objects.hash(id, name, ingredients, price, mealDifficulty, macronutrients, totalCalories, foodDiaries);
     }
 
-    public Map<String, Integer> showMealDetailsByName(Meal searchedMeal) {
-
-        int totalCalories = searchedMeal.getProducts().stream().
-                mapToInt(Product::getCaloriesPer100g).sum();
-        int totalProteins = searchedMeal.getProducts().stream().map(Product::getMacronutrients)
-                .mapToInt(Macronutrients::getProteinPer100g).sum();
-        int totalCarbohydrates = searchedMeal.getProducts().stream().map(Product::getMacronutrients)
-                .mapToInt(Macronutrients::getCarbohydratesPer100g).sum();
-        int totalFats = searchedMeal.getProducts().stream().map(Product::getMacronutrients)
-                .mapToInt(Macronutrients::getFatPer100g).sum();
-        Map<String, Integer> details = new HashMap<>();
-        details.put("Calories", totalCalories);
-        details.put("Proteins", totalProteins);
-        details.put("Carbohydrates", totalCarbohydrates);
-        details.put("Fats", totalFats);
-        return details;
+    @Override
+    public String toString() {
+        return "Meal{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", ingredients=" + ingredients +
+                ", price=" + price +
+                ", mealDifficulty=" + mealDifficulty +
+                ", macronutrients=" + macronutrients +
+                ", totalCalories=" + totalCalories +
+                ", foodDiaries=" + foodDiaries +
+                '}';
     }
 }

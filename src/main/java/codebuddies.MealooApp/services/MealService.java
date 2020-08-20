@@ -35,8 +35,8 @@ public class MealService {
         if(meal.getPrice() != 0){
             foundedMeal.setPrice(meal.getPrice());
         }
-        if(meal.getProducts() != null){
-            foundedMeal.setProducts(meal.getProducts());
+        if(meal.getIngredients() != null){
+            foundedMeal.setIngredients(meal.getIngredients());
         }
         if(meal.getMealDifficulty()!=null){
             foundedMeal.setMealDifficulty(meal.getMealDifficulty());

@@ -33,11 +33,10 @@ public class ProductController {
         this.productFacade = productFacade;
     }
 
-//         Fill database
 //    @EventListener(ApplicationReadyEvent.class)
 //    public void fillDB() {
 //
-//        Product egg = new Product("Eggs", 1, 140,
+//        Product egg = new Product("Eggs", 10, 155,
 //                new Macronutrients(13, 1, 10), ProductType.DAIRY);
 //        Product bread = new Product("Bread", 3, 264,
 //                new Macronutrients(9, 50, 3), ProductType.GRAINS);
@@ -45,12 +44,18 @@ public class ProductController {
 //                new Macronutrients(3, 4, 4), ProductType.DAIRY);
 //        Product beef = new Product("Beef", 30, 300,
 //                new Macronutrients(30, 5, 30), ProductType.MEAT);
+//        Product chicken = new Product("Chicken", 15, 100,
+//                new Macronutrients(22, 0, 1), ProductType.MEAT);
+//        Product pasta = new Product("Pasta", 8, 343,
+//                new Macronutrients(12, 65, 2), ProductType.MEAT);
+//        Product strawberry = new Product("Strawberry", 5, 33,
+//                new Macronutrients(2, 12, 2), ProductType.DAIRY);
 //        productService.save(egg);
 //        productService.save(bread);
 //        productService.save(milk);
 //        productService.save(beef);
-//        Product strawberry = new Product("Strawberry", 5, 33,
-//                        new Macronutrients(2, 12, 2), ProductType.DAIRY);
+//        productService.save(chicken);
+//        productService.save(pasta);
 //        productService.save(strawberry);
 //
 //        Product piers = new Product("ChickenBreast", 2, 170,

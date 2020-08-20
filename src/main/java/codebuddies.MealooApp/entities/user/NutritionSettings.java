@@ -1,7 +1,10 @@
 package codebuddies.MealooApp.entities.user;
 
+import codebuddies.MealooApp.entities.product.ProductType;
+
 import javax.persistence.Embeddable;
-import javax.persistence.Embedded;
+import javax.persistence.OneToMany;
+import java.util.List;
 import java.util.Objects;
 
 @Embeddable
@@ -17,11 +20,13 @@ public class NutritionSettings {
         this.dailyCaloricGoal = dailyCaloricGoal;
     }
 
+
     public NutritionSettings() {
     }
 
-    public NutritionSettings(int dailyCaloricGoal) {
+    public NutritionSettings(int dailyCaloricGoal){
         this.dailyCaloricGoal = dailyCaloricGoal;
+
     }
 
     @Override

@@ -1,18 +1,18 @@
 package codebuddies.MealooApp.dataProviders;
 
-public class ProductForMealDTO {
+public class ProductForIngredientDTO {
 
     String name;
 
-    int price;
+    double price;
 
     int caloriesPer100g;
 
 
-    public ProductForMealDTO() {
+    public ProductForIngredientDTO() {
     }
 
-    public ProductForMealDTO(String name, int price, int caloriesPer100g) {
+    public ProductForIngredientDTO(String name, double price, int caloriesPer100g) {
         this.name = name;
         this.price = price;
         this.caloriesPer100g = caloriesPer100g;
@@ -27,11 +27,11 @@ public class ProductForMealDTO {
         this.name = name;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
