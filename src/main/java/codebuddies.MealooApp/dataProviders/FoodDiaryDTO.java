@@ -16,13 +16,13 @@ public class FoodDiaryDTO {
 
     int totalCalories;
 
-    int totalPrice;
+    double totalPrice;
 
     public FoodDiaryDTO() {
     }
 
     public FoodDiaryDTO(LocalDate date, List<MealDTO> listOfMeals
-            , Macronutrients macronutrients, int totalCalories, int totalPrice) {
+            , Macronutrients macronutrients, int totalCalories, double totalPrice) {
         this.date = date;
         this.listOfMeals = listOfMeals;
         this.macronutrients = macronutrients;
@@ -62,11 +62,11 @@ public class FoodDiaryDTO {
         this.totalCalories = totalCalories;
     }
 
-    public int getTotalPrice() {
+    public double getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(int totalPrice) {
+    public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
 }

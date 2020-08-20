@@ -36,17 +36,17 @@ public class ProductService {
         if(product.getCaloriesPer100g() != 0){
             foundedProduct.setCaloriesPer100g(product.getCaloriesPer100g());
         }
-//        if(product.getProductType()!=null){
-//            foundedProduct.setProductType(product.getProductType());
-//        }
+        if(product.getProductType()!=null){
+            foundedProduct.setProductType(product.getProductType());
+        }
         if(newMacro.getCarbohydratesPer100g()!= 0){
             macro.setCarbohydratesPer100g(newMacro.getCarbohydratesPer100g());
         }
-        if(newMacro.getProteinPer100g()!= 0){
-            macro.setCarbohydratesPer100g(newMacro.getProteinPer100g());
+        if(newMacro.getProteinsPer100g()!= 0){
+            macro.setCarbohydratesPer100g(newMacro.getProteinsPer100g());
         }
-        if(newMacro.getFatPer100g()!= 0){
-            macro.setFatPer100g(newMacro.getCarbohydratesPer100g());
+        if(newMacro.getFatsPer100g()!= 0){
+            macro.setFatsPer100g(newMacro.getCarbohydratesPer100g());
         }
         foundedProduct.setMacronutrients(newMacro);
         return foundedProduct;

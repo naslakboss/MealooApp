@@ -1,7 +1,7 @@
 package codebuddies.MealooApp.dataProviders;
 
-import codebuddies.MealooApp.entities.user.FakeUser;
-import codebuddies.MealooApp.services.FakeUserService;
+import codebuddies.MealooApp.entities.user.MealooUser;
+import codebuddies.MealooApp.services.MealooUserService;
 import codebuddies.MealooApp.services.FoodDiaryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,35 +15,35 @@ public class FoodDiaryFacade {
 
     private FoodDiaryService foodDiaryService;
 
-    private FakeUserService fakeUserService;
+    private MealooUserService mealooUserService;
 
     private ModelMapper modelMapper;
 
     @Autowired
 
-    public FoodDiaryFacade(FoodDiaryService foodDiaryService, FakeUserService fakeUserService, ModelMapper modelMapper) {
+    public FoodDiaryFacade(FoodDiaryService foodDiaryService, MealooUserService mealooUserService, ModelMapper modelMapper) {
         this.foodDiaryService = foodDiaryService;
-        this.fakeUserService = fakeUserService;
+        this.mealooUserService = mealooUserService;
         this.modelMapper = modelMapper;
     }
 
     public FoodDiaryDTO findTodayDiary(String name){
-        FakeUser user = fakeUserService.findByUsername(name);
+        MealooUser user = mealooUserService.findByUsername(name);
         return modelMapper.map(foodDiaryService.findTodayDiary(user), FoodDiaryDTO.class);
     }
 
     public FoodDiaryDTO findDiaryOfGivenDay(String name, String date){
-        FakeUser user = fakeUserService.findByUsername(name);
+        MealooUser user = mealooUserService.findByUsername(name);
         return modelMapper.map(foodDiaryService.findDiaryOfGivenDate(user, date), FoodDiaryDTO.class);
     }
 
     public FoodDiaryDTO createNewFoodDiary(String username){
-        FakeUser user = fakeUserService.findByUsername(username);
+        MealooUser user = mealooUserService.findByUsername(username);
         return modelMapper.map(foodDiaryService.createNewFoodDiary(user), FoodDiaryDTO.class);
     }
 
     public List<FoodDiaryDTO> getAllDiariesForGivenUser(String username){
-        FakeUser user = fakeUserService.findByUsername(username);
+        MealooUser user = mealooUserService.findByUsername(username);
         return foodDiaryService.findAllDiariesForUser(user).stream()
                 .map(foodDiary -> modelMapper.map(foodDiary, FoodDiaryDTO.class))
                     .collect(Collectors.toList());

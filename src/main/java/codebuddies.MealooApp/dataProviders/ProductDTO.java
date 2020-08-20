@@ -7,7 +7,7 @@ public class ProductDTO {
 
     private String name;
 
-    private int price;
+    private double price;
 
     private int caloriesPer100g;
 
@@ -18,7 +18,7 @@ public class ProductDTO {
     public ProductDTO() {
     }
 
-    public ProductDTO(String name, int price) {
+    public ProductDTO(String name, double price, int caloriesPer100g, Macronutrients macronutrients, ProductType productType) {
         this.name = name;
         this.price = price;
         this.caloriesPer100g = caloriesPer100g;
@@ -34,11 +34,11 @@ public class ProductDTO {
         this.name = name;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 

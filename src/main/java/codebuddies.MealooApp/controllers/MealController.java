@@ -4,17 +4,17 @@ import codebuddies.MealooApp.dataProviders.MealDTO;
 import codebuddies.MealooApp.dataProviders.MealFacade;
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.meal.MealDifficulty;
+import codebuddies.MealooApp.entities.product.Ingredient;
 import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
+import codebuddies.MealooApp.repositories.IngredientRepository;
 import codebuddies.MealooApp.services.MealService;
 import codebuddies.MealooApp.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
@@ -24,34 +24,65 @@ import java.util.*;
 @RequestMapping("/meal")
 public class MealController {
 
-    @Autowired
-    MealService mealService;
+    private MealService mealService;
+
+
+    private MealFacade mealFacade;
+
+    private ProductService productService;
+
+    private IngredientRepository ingredientRepository;
 
     @Autowired
-    ProductService productService;
-
-    @Autowired
-    MealFacade mealFacade;
+    public MealController(MealService mealService, MealFacade mealFacade,
+                          ProductService productService, IngredientRepository ingredientRepository) {
+        this.mealService = mealService;
+        this.mealFacade = mealFacade;
+        this.productService = productService;
+        this.ingredientRepository = ingredientRepository;
+    }
 
 //    @EventListener(ApplicationReadyEvent.class)
-//    public void fillDB(){
+//    public void testNewMeal(){
+//
 //        Product bread = productService.findByName("Bread");
-//        Product egg = productService.findByName("Eggs");
-//        Product pesta = productService.findByName("Pesta");
+//        Product egg = productService.findByName("Egg");
+//        Product milk = productService.findByName("Milk");
 //        Product beef = productService.findByName("Beef");
+//        Product chicken = productService.findByName("Chicken");
+//        Product pasta = productService.findByName("Pasta");
 //        Product strawberry = productService.findByName("Strawberry");
 //
-//        List<Product> products1 = Arrays.asList(bread, egg);
-//        Meal meal1 = new Meal(13L, "BreadWithEgg", products1, 15, MealDifficulty.EASY);
-//        mealService.save(meal1);
+//        Ingredient breadI = new Ingredient(300, bread);
+//        Ingredient milkI = new Ingredient(500, milk);
+//        Ingredient beefI = new Ingredient(400, beef);
+//        Ingredient chickenI = new Ingredient(600, chicken);
+//        Ingredient pastaI = new Ingredient(200, pasta);
+//        Ingredient strawberryI = new Ingredient(1000, strawberry);
 //
-//        List<Product> products2 = Arrays.asList(pesta, beef);
-//        Meal meal2 = new Meal(14L, "PastaAndBeef", products2, 20, MealDifficulty.EASY);
-//        mealService.save(meal2);
+//        ingredientRepository.save(breadI);
+//        ingredientRepository.save(milkI);
+//        ingredientRepository.save(beefI);
+//        ingredientRepository.save(chickenI);
+//        ingredientRepository.save(pastaI);
+//        ingredientRepository.save(strawberryI);
 //
-//        List<Product> products3 = Arrays.asList(pesta, strawberry);
-//        Meal meal3 = new Meal(15L, "PastaWithStrawberries", products3, 15, MealDifficulty.EASY);
-//        mealService.save(meal3);
+//        Ingredient milkIn = ingredientRepository.findById(milkI.getId()).get();
+//        Ingredient beefIn = ingredientRepository.findById(beefI.getId()).get();
+//        Ingredient chickenIn = ingredientRepository.findById(chickenI.getId()).get();
+//        Ingredient pastaIn = ingredientRepository.findById(pastaI.getId()).get();
+//        Ingredient strawberryIn = ingredientRepository.findById(strawberryI.getId()).get();
+//
+//        List<Ingredient>  pastaAndChicken = Arrays.asList(pastaIn,chickenIn);
+//        Meal newMeal2 = new Meal(11L,"PastaAndChicken", pastaAndChicken, MealDifficulty.MEDIUM);
+//        mealService.save(newMeal2);
+//
+//        List<Ingredient>  milkAndStrawberry = Arrays.asList(milkIn,strawberryIn);
+//        Meal newMeal3 = new Meal(12L,"MilkAndStrawberry", milkAndStrawberry, MealDifficulty.HARD);
+//        mealService.save(newMeal3);
+//
+//        Meal newMeal4 = new Meal(13L, "OnlyBeef", Collections.singletonList(beefIn), MealDifficulty.INSANE);
+//        mealService.save(newMeal4);
 //    }
 
     @GetMapping("")
@@ -61,17 +92,7 @@ public class MealController {
 
     @GetMapping("/{name}")
     public ResponseEntity<MealDTO> findMealByName(@PathVariable String name){
-        MealDTO searchedMeal = mealFacade.getByName(name);
-        return searchedMeal != null ? ResponseEntity.ok(searchedMeal) : ResponseEntity.notFound().build();
-    }
-
-    @GetMapping("/details/{name}")
-    public ResponseEntity<Map<String, Integer>> findMealDetails(@PathVariable String name){
-        Meal searchedMeal = mealService.findByName(name);
-        if(searchedMeal == null){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(searchedMeal.showMealDetailsByName(searchedMeal));
+        return ResponseEntity.ok(mealFacade.getByName(name));
     }
 
     @PostMapping("/add")

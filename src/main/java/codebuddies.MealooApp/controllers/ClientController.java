@@ -3,11 +3,11 @@ package codebuddies.MealooApp.controllers;
 import codebuddies.MealooApp.dataProviders.FoodDiaryDTO;
 import codebuddies.MealooApp.dataProviders.FoodDiaryFacade;
 import codebuddies.MealooApp.entities.meal.Meal;
-import codebuddies.MealooApp.entities.user.FakeUser;
-import codebuddies.MealooApp.entities.user.FoodDiary;
-import codebuddies.MealooApp.services.FakeUserService;
+import codebuddies.MealooApp.entities.user.MealooUser;
+import codebuddies.MealooApp.services.MealooUserService;
 import codebuddies.MealooApp.services.FoodDiaryService;
 import codebuddies.MealooApp.services.MealService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,18 +19,22 @@ import java.util.List;
 @RequestMapping("/client")
 public class ClientController {
 
-    @Autowired
-    FakeUserService userService;
+    private MealooUserService userService;
+
+    private FoodDiaryService diaryService;
+
+    private MealService mealService;
+
+    private FoodDiaryFacade foodDiaryFacade;
 
     @Autowired
-    FoodDiaryService diaryService;
-
-    @Autowired
-    MealService mealService;
-
-    @Autowired
-    FoodDiaryFacade foodDiaryFacade;
-
+    public ClientController(MealooUserService userService, FoodDiaryService diaryService
+            ,MealService mealService, FoodDiaryFacade foodDiaryFacade) {
+        this.userService = userService;
+        this.diaryService = diaryService;
+        this.mealService = mealService;
+        this.foodDiaryFacade = foodDiaryFacade;
+    }
 
     @GetMapping("/getAllDiaries/{username}")
     public List<FoodDiaryDTO> getAllDiariesForGivenUser(@PathVariable String username){
@@ -54,7 +58,7 @@ public class ClientController {
 
     @PostMapping("/addMeal/{username}/{name}")
     public FoodDiaryDTO addMealToDiary(@PathVariable String username, @PathVariable String name){
-        FakeUser user = userService.findByUsername(username);
+        MealooUser user = userService.findByUsername(username);
         Meal meal = mealService.findByName(name);
         diaryService.addFoodToTodayDiary(user, meal);
         String presentDate = LocalDate.now().toString();
@@ -63,7 +67,7 @@ public class ClientController {
 
     @DeleteMapping("/deleteMeal/{username}/{name}")
     public FoodDiaryDTO deleteMealFromDiary(@PathVariable String username, @PathVariable String name){
-        FakeUser user = userService.findByUsername(username);
+        MealooUser user = userService.findByUsername(username);
         Meal mealToDelete = mealService.findByName(name);
         diaryService.deleteMealFromTodayDiary(user, mealToDelete);
         String presentDate = LocalDate.now().toString();

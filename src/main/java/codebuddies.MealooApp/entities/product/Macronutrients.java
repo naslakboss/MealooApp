@@ -1,35 +1,33 @@
 package codebuddies.MealooApp.entities.product;
 
-
-
 import javax.persistence.Embeddable;
 import java.util.Objects;
 
 @Embeddable
 public class Macronutrients {
 
-    private int proteinPer100g;
+    private int proteinsPer100g;
 
     private int carbohydratesPer100g;
 
-    private int fatPer100g;
+    private int fatsPer100g;
 
     public Macronutrients() {
     }
 
-    public Macronutrients(int proteinPer100g, int carbohydratesPer100g, int fatPer100g) {
-        this.proteinPer100g = proteinPer100g;
+    public Macronutrients(int proteinsPer100g, int carbohydratesPer100g, int fatPer100g) {
+        this.proteinsPer100g = proteinsPer100g;
         this.carbohydratesPer100g = carbohydratesPer100g;
-        this.fatPer100g = fatPer100g;
+        this.fatsPer100g = fatPer100g;
     }
 
 
-    public int getProteinPer100g() {
-        return proteinPer100g;
+    public int getProteinsPer100g() {
+        return proteinsPer100g;
     }
 
-    public void setProteinPer100g(int proteinPer100g) {
-        this.proteinPer100g = proteinPer100g;
+    public void setProteinsPer100g(int proteinPer100g) {
+        this.proteinsPer100g = proteinPer100g;
     }
 
     public int getCarbohydratesPer100g() {
@@ -40,20 +38,20 @@ public class Macronutrients {
         this.carbohydratesPer100g = carbohydratesPer100g;
     }
 
-    public int getFatPer100g() {
-        return fatPer100g;
+    public int getFatsPer100g() {
+        return fatsPer100g;
     }
 
-    public void setFatPer100g(int fatPer100g) {
-        this.fatPer100g = fatPer100g;
+    public void setFatsPer100g(int fatPer100g) {
+        this.fatsPer100g = fatPer100g;
     }
 
     @Override
     public String toString() {
         return "Macronutrients{" +
-                "proteinPer100g=" + proteinPer100g +
+                "proteinsPer100g=" + proteinsPer100g +
                 ", carbohydratesPer100g=" + carbohydratesPer100g +
-                ", fatPer100g=" + fatPer100g +
+                ", fatsPer100g=" + fatsPer100g +
                 '}';
     }
 
@@ -62,13 +60,13 @@ public class Macronutrients {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Macronutrients that = (Macronutrients) o;
-        return proteinPer100g == that.proteinPer100g &&
+        return proteinsPer100g == that.proteinsPer100g &&
                 carbohydratesPer100g == that.carbohydratesPer100g &&
-                fatPer100g == that.fatPer100g;
+                fatsPer100g == that.fatsPer100g;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(proteinPer100g, carbohydratesPer100g, fatPer100g);
+        return Objects.hash(proteinsPer100g, carbohydratesPer100g, proteinsPer100g);
     }
 }

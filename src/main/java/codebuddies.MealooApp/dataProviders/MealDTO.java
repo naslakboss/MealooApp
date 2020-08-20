@@ -9,9 +9,9 @@ public class MealDTO {
 
     String name;
 
-    List<ProductForMealDTO> products;
+    List<IngredientForMealDTO> ingredients;
 
-    int price;
+    double price;
 
     MealDifficulty mealDifficulty;
 
@@ -22,10 +22,10 @@ public class MealDTO {
     public MealDTO() {
     }
 
-    public MealDTO(String name, List<ProductForMealDTO> products, int price,
+    public MealDTO(String name, List<IngredientForMealDTO> ingredients, double price,
                    MealDifficulty mealDifficulty, Macronutrients macronutrients, int totalCalories) {
         this.name = name;
-        this.products = products;
+        this.ingredients = ingredients;
         this.price = price;
         this.mealDifficulty = mealDifficulty;
         this.macronutrients = macronutrients;
@@ -41,19 +41,19 @@ public class MealDTO {
         this.name = name;
     }
 
-    public List<ProductForMealDTO> getProducts() {
-        return products;
+    public List<IngredientForMealDTO> getIngredients() {
+        return ingredients;
     }
 
-    public void setProducts(List<ProductForMealDTO> products) {
-        this.products = products;
+    public void setIngredients(List<IngredientForMealDTO> ingredients) {
+        this.ingredients = ingredients;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
