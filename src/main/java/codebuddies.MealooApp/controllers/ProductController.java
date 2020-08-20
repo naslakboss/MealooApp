@@ -103,4 +103,3 @@ public class ProductController {
         return ResponseEntity.ok("codebuddies.MealooApp/entities/product " + name + " was successfully deleted from Repository");
     }
 }
-
