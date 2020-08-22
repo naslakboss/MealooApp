@@ -39,8 +39,8 @@ public class MealooUserController {
 //     }
 
     @GetMapping("")
-    public List<MealooUser> findAllUsers(){
-        return mealooUserService.findAll();
+    public ResponseEntity<List<MealooUser>> findAllUsers(){
+        return ResponseEntity.ok(mealooUserService.findAll());
     }
 
     @GetMapping("/{username}")

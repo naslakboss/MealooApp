@@ -21,12 +21,12 @@ public class MealFacade {
         this.mealService = mealService;
     }
 
-    public MealDTO getByName(String name){
+    public MealDTO findMealByName(String name){
         return  modelMapper.map(mealService.findByName(name), MealDTO.class);
         // todo add total macro and calories
     }
 
-    public List<MealDTO> getAll(){
+    public List<MealDTO> findAllMeals(){
         List<MealDTO> mealsList = mealService.findAll().stream()
                 .map(meal -> modelMapper.map(meal, MealDTO.class)).collect(Collectors.toList());
         return  mealsList;

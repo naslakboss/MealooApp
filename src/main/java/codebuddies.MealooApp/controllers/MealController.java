@@ -26,7 +26,6 @@ public class MealController {
 
     private MealService mealService;
 
-
     private MealFacade mealFacade;
 
     private ProductService productService;
@@ -93,25 +92,29 @@ public class MealController {
 
     @GetMapping("")
     public ResponseEntity<List<MealDTO>> findAllMeals(){
-        return ResponseEntity.ok(mealFacade.getAll());
+        return ResponseEntity.ok(mealFacade.findAllMeals());
     }
 
     @GetMapping("/{name}")
     public ResponseEntity<MealDTO> findMealByName(@PathVariable String name){
-        return ResponseEntity.ok(mealFacade.getByName(name));
+        MealDTO meal = mealFacade.findMealByName(name);
+        return meal != null ? ResponseEntity.ok(meal) : ResponseEntity.notFound().build();
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Meal> addMeal(@RequestBody @Valid Meal meal){
-        if(mealService.existsByName(meal.getName())) throw new EntityAlreadyFoundException("Meal");
+    public ResponseEntity<MealDTO> addMeal(@RequestBody @Valid Meal meal){
         mealService.save(meal);
-        return ResponseEntity.created(URI.create("/" + meal.getName())).body(meal);
+        return ResponseEntity.ok(mealFacade.findMealByName(meal.getName()));
     }
 
     @PatchMapping("/patch/{name}")
-    public ResponseEntity<Meal> patchMealByName(@PathVariable String name, @Valid @RequestBody Meal meal){
-        Meal patchedMeal = mealService.findByName(name);
-        return patchedMeal != null ? ResponseEntity.ok(mealService.updateByName(name, meal)) : ResponseEntity.notFound().build();
+    public ResponseEntity<MealDTO> patchMealByName(@PathVariable String name, @Valid @RequestBody Meal meal){
+        Meal oldMeal = mealService.findByName(name);
+        if(oldMeal != null){
+           return ResponseEntity.notFound().build();
+        }
+        Meal patchedMeal = mealService.updateByName(name, meal);
+        return ResponseEntity.ok(mealFacade.findMealByName(patchedMeal.getName()));
     }
     @Transactional
     @DeleteMapping("/delete/{name}")

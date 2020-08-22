@@ -6,6 +6,7 @@ import codebuddies.MealooApp.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.xml.bind.ValidationException;
 import java.util.List;
 
 @Service
@@ -52,8 +53,8 @@ public class ProductService {
         return foundedProduct;
     }
 
-    public Product save(Product product) {
-            return productRepository.save(product);
-        }
+    public Product save(Product product){
+        return productRepository.save(product);
+    }
 
 }

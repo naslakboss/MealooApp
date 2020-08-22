@@ -18,12 +18,17 @@ import java.util.stream.Collectors;
 @Service
 public class FoodDiaryService {
 
-    private FoodDiaryRepository foodDiaryRepository;
-
     @Autowired
-    public FoodDiaryService(FoodDiaryRepository foodDiaryRepository) {
-        this.foodDiaryRepository = foodDiaryRepository;
-    }
+    private FoodDiaryRepository foodDiaryRepository;
+    @Autowired
+    private MealService mealService;
+
+    //todo using only constuctor dependency injection caused cycle error
+//    @Autowired
+//    public FoodDiaryService(FoodDiaryRepository foodDiaryRepository, MealService mealService, MealooUserService mealooUserService) {
+//        this.foodDiaryRepository = foodDiaryRepository;
+//        this.mealService = mealService;
+//    }
 
     public FoodDiary save(FoodDiary diary) {
         return foodDiaryRepository.save(diary);
@@ -37,75 +42,74 @@ public class FoodDiaryService {
         return findByDate(date);
     }
 
-    public List<FoodDiary> findAllDiariesForUser(MealooUser user) {
+    public List<FoodDiary> findAllDiaries(MealooUser user) {
         return foodDiaryRepository.findAll().stream()
                 .filter(foodDiary -> foodDiary.getFakeUser()==user).collect(Collectors.toList());
     }
 
-    public FoodDiary createNewFoodDiary(MealooUser user){
+    public FoodDiary createNewDiary(MealooUser user){
         LocalDate date = LocalDate.now();
-        Optional<FoodDiary> checkIfExists = findAllDiariesForUser(user).stream()
-                .filter(foodDiary -> foodDiary.getDate().isEqual(date)).findFirst();
+        FoodDiary newFoodDiary = new FoodDiary(Collections.emptyList(), date, user);
+        Random random = new Random();
+        Long idBean = (long)random.nextInt(500);
 
-        if(checkIfExists.isPresent()){
-            throw new RuntimeException ("Food diary for this day is already exists!");
-        }
-        else {
-            FoodDiary newFoodDiary = new FoodDiary(Collections.emptyList(), date, user);
-            Random random = new Random();
-            Long idBean = (long)random.nextInt(500);
-            newFoodDiary.setId((idBean));
-            newFoodDiary.setTotalPrice(0);
-            newFoodDiary.setTotalCalories(0);
-            newFoodDiary.setMacronutrients(new Macronutrients(0,0,0));
-            foodDiaryRepository.save(newFoodDiary);
-            return newFoodDiary;
-        }
+        newFoodDiary.setId((idBean));
+        newFoodDiary.setTotalPrice(0);
+        newFoodDiary.setTotalCalories(0);
+        newFoodDiary.setMacronutrients(new Macronutrients(0,0,0));
 
+        foodDiaryRepository.save(newFoodDiary);
+        return newFoodDiary;
     }
 
-    public FoodDiary findTodayDiary(MealooUser user) {
+    public FoodDiary findTodaysDiary(MealooUser user) {
        LocalDate date = LocalDate.now();
-       Optional<FoodDiary> todayFoodDiary = findAllDiariesForUser(user).stream()
-               .filter(foodDiary -> foodDiary.getDate().isEqual(date)).findFirst();
-       if(todayFoodDiary.isPresent()){
+       Optional<FoodDiary> todayFoodDiary = findAllDiaries(user).stream()
+               .filter(foodDiary -> foodDiary.getDate().isEqual(date)).findAny();
+       if(!todayFoodDiary.isPresent()){
+           return createNewDiary(user);
+       }
+       else{
            return todayFoodDiary.get();
        }
-       else {
-           throw new RuntimeException("Diary for today is not exists yet");
-       }
     }
 
-    public FoodDiary addFoodToTodayDiary(MealooUser user, Meal meal) {
-        FoodDiary diary = findTodayDiary(user);
-        diary.getListOfMeals().add(meal);
+    public FoodDiary addMealToCurrentDiary(MealooUser user, String name) {
+        FoodDiary diary = findTodaysDiary(user);
+        Meal meal = mealService.findByName(name);
 
-        diary.setMacronutrients(diary.calculateMacronutrients());
-        diary.setTotalCalories(diary.calculateCalories());
-        diary.setTotalPrice(diary.calculatePrice());
-        foodDiaryRepository.save(diary);
-        return diary;
-    }
-
-    public FoodDiary deleteMealFromTodayDiary(MealooUser user, Meal mealToDelete) {
-        FoodDiary diary = findTodayDiary(user);
-        diary.getListOfMeals().remove(mealToDelete);
-
+        diary.addMeal(meal);
         diary.setMacronutrients(diary.calculateMacronutrients());
         diary.setTotalCalories(diary.calculateCalories());
         diary.setTotalPrice(diary.calculatePrice());
 
         foodDiaryRepository.save(diary);
         return diary;
+
+
     }
 
-    public FoodDiary findDiaryOfGivenDate(MealooUser user, String date) {
+    public FoodDiary findDiaryOfDay(MealooUser user, String date) {
         LocalDate parsedDate = LocalDate.parse(date);
-        Optional<FoodDiary> diary = findAllDiariesForUser(user).stream()
-                .filter(foodDiary -> foodDiary.getDate().isEqual(parsedDate)).findFirst();
+        Optional<FoodDiary> diary = findAllDiaries(user).stream()
+                .filter(foodDiary -> foodDiary.getDate().isEqual(parsedDate)).findAny();
         if(diary.isEmpty()){
-            throw new IllegalArgumentException("Dairy of given date is not exist");
+            createNewDiary(user);
         }
         return diary.get();
+    }
+
+
+    public FoodDiary deleteMealFromCurrentDiary(MealooUser user, String mealName) {
+        FoodDiary diary = findTodaysDiary(user);
+        Meal meal = mealService.findByName(mealName);
+        diary.deleteMeal(meal);
+
+        diary.setMacronutrients(diary.calculateMacronutrients());
+        diary.setTotalCalories(diary.calculateCalories());
+        diary.setTotalPrice(diary.calculatePrice());
+
+        foodDiaryRepository.save(diary);
+        return diary;
     }
 }

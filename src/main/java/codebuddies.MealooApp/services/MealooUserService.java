@@ -13,13 +13,11 @@ import java.util.*;
 public class MealooUserService {
 
     private MealooUserRepository mealooUserRepository;
-    private MealService mealService;
     private FoodDiaryService foodDiaryService;
 
     @Autowired
-    public MealooUserService(MealooUserRepository mealooUserRepository, MealService mealService, FoodDiaryService foodDiaryService) {
+    public MealooUserService(MealooUserRepository mealooUserRepository, FoodDiaryService foodDiaryService) {
         this.mealooUserRepository = mealooUserRepository;
-        this.mealService = mealService;
         this.foodDiaryService = foodDiaryService;
     }
 

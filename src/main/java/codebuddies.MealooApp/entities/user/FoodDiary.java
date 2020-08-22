@@ -48,6 +48,10 @@ public class FoodDiary {
         listOfMeals.add(meal);
     }
 
+    public void deleteMeal(Meal meal) {
+        listOfMeals.remove(meal);
+    }
+
     public Long getId() {
         return id;
     }

@@ -32,15 +32,22 @@ public class MealService {
 
     public Meal updateByName(String name, Meal meal) {
         Meal foundedMeal = findByName(name);
+        if(meal.getName() != null){
+            foundedMeal.setName(meal.getName());
+        }
+
         if(meal.getPrice() != 0){
             foundedMeal.setPrice(meal.getPrice());
         }
+
         if(meal.getIngredients() != null){
             foundedMeal.setIngredients(meal.getIngredients());
         }
+
         if(meal.getMealDifficulty()!=null){
             foundedMeal.setMealDifficulty(meal.getMealDifficulty());
         }
+
         save(foundedMeal);
         return foundedMeal;
     }
