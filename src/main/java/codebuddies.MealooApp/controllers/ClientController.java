@@ -2,16 +2,14 @@ package codebuddies.MealooApp.controllers;
 
 import codebuddies.MealooApp.dataProviders.FoodDiaryDTO;
 import codebuddies.MealooApp.dataProviders.FoodDiaryFacade;
-import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.user.MealooUser;
-import codebuddies.MealooApp.services.MealooUserService;
 import codebuddies.MealooApp.services.FoodDiaryService;
 import codebuddies.MealooApp.services.MealService;
-
+import codebuddies.MealooApp.services.MealooUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 import java.util.List;
 
 
@@ -19,60 +17,53 @@ import java.util.List;
 @RequestMapping("/client")
 public class ClientController {
 
-    private MealooUserService userService;
-
     private FoodDiaryService diaryService;
 
     private MealService mealService;
 
     private FoodDiaryFacade foodDiaryFacade;
 
+    private MealooUserService mealooUserService;
+
     @Autowired
-    public ClientController(MealooUserService userService, FoodDiaryService diaryService
-            ,MealService mealService, FoodDiaryFacade foodDiaryFacade) {
-        this.userService = userService;
+    public ClientController(FoodDiaryService diaryService, MealService mealService, FoodDiaryFacade foodDiaryFacade,@Lazy MealooUserService mealooUserService) {
         this.diaryService = diaryService;
         this.mealService = mealService;
         this.foodDiaryFacade = foodDiaryFacade;
+        this.mealooUserService = mealooUserService;
     }
 
-    @GetMapping("/getAllDiaries/{username}")
-    public List<FoodDiaryDTO> getAllDiariesForGivenUser(@PathVariable String username){
-        return foodDiaryFacade.getAllDiariesForGivenUser(username);
+    @GetMapping("/allDiaries/{username}")
+    public ResponseEntity<List<FoodDiaryDTO>> findAllDiaries(@PathVariable String username){
+        return ResponseEntity.ok(foodDiaryFacade.findAllDiaries(username));
     }
 
-    @GetMapping("/getTodayDiary/{username}")
-    public FoodDiaryDTO getTodayDiary(@PathVariable String username) {
-        return  foodDiaryFacade.findTodayDiary(username);
+    @GetMapping("/getTodaysDiary/{username}")
+    public ResponseEntity<FoodDiaryDTO> getTodayDiary(@PathVariable String username) {
+        return  ResponseEntity.ok(foodDiaryFacade.findTodaysDiary(username));
     }
 
-    @GetMapping("/getDiaryOfGivenDay/{username}/{date}")
-    public FoodDiaryDTO getDiaryOfGivenDay(@PathVariable String username, @PathVariable String date){
-        return foodDiaryFacade.findDiaryOfGivenDay(username, date);
+    @GetMapping("/getDiaryOfDay/{username}/{date}")
+    public ResponseEntity<FoodDiaryDTO> getDiaryOfGivenDay(@PathVariable String username, @PathVariable String date){
+        return ResponseEntity.ok(foodDiaryFacade.findDiaryOfDay(username, date));
     }
 
-    @PostMapping("/createNewFoodDiary/{username}")
-    public FoodDiaryDTO createNewDiary(@PathVariable String username){
-        return foodDiaryFacade.createNewFoodDiary(username);
+    @PostMapping("/createNewDiary/{username}")
+    public ResponseEntity<FoodDiaryDTO> createNewDiary(@PathVariable String username){
+        return ResponseEntity.ok(foodDiaryFacade.createNewDiary(username));
     }
 
     @PostMapping("/addMeal/{username}/{name}")
-    public FoodDiaryDTO addMealToDiary(@PathVariable String username, @PathVariable String name){
-        MealooUser user = userService.findByUsername(username);
-        Meal meal = mealService.findByName(name);
-        diaryService.addFoodToTodayDiary(user, meal);
-        String presentDate = LocalDate.now().toString();
-        return foodDiaryFacade.findDiaryOfGivenDay(username, presentDate);
+    public ResponseEntity<FoodDiaryDTO> addMealToDiary(@PathVariable String username, @PathVariable String mealName){
+        MealooUser user = mealooUserService.findByUsername(username);
+        diaryService.addMealToCurrentDiary(user, mealName);
+        return ResponseEntity.ok(foodDiaryFacade.findTodaysDiary(username));
     }
 
     @DeleteMapping("/deleteMeal/{username}/{name}")
-    public FoodDiaryDTO deleteMealFromDiary(@PathVariable String username, @PathVariable String name){
-        MealooUser user = userService.findByUsername(username);
-        Meal mealToDelete = mealService.findByName(name);
-        diaryService.deleteMealFromTodayDiary(user, mealToDelete);
-        String presentDate = LocalDate.now().toString();
-        return  foodDiaryFacade.findDiaryOfGivenDay(username, presentDate);
+    public ResponseEntity<FoodDiaryDTO> deleteMealFromDiary(@PathVariable String username, @PathVariable String mealName){
+        MealooUser user = mealooUserService.findByUsername(username);
+        diaryService.deleteMealFromCurrentDiary(user, mealName);
+        return  ResponseEntity.ok(foodDiaryFacade.findTodaysDiary(username));
     }
-
-
 }

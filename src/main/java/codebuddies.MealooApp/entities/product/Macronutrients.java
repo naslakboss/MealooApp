@@ -1,15 +1,19 @@
 package codebuddies.MealooApp.entities.product;
 
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Embeddable
 public class Macronutrients {
 
+    @NotNull
     private int proteinsPer100g;
 
+    @NotNull
     private int carbohydratesPer100g;
 
+    @NotNull
     private int fatsPer100g;
 
     public Macronutrients() {

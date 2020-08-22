@@ -1,7 +1,11 @@
 package codebuddies.MealooApp.entities.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.UniqueElements;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,16 +18,20 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank
     private String name;
 
+    @NotNull
     private double price;
     // todo add price in several currencies
 
+    @NotNull
     private int caloriesPer100g;
 
     @Embedded
     private Macronutrients macronutrients;
 
+    @NotNull
     private ProductType productType;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)

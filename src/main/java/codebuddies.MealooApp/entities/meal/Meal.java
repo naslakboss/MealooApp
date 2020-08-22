@@ -5,6 +5,7 @@ import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.user.FoodDiary;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 @Entity
@@ -21,6 +22,7 @@ public class Meal {
 
     private double price;
 
+    @NotNull
     private MealDifficulty mealDifficulty;
 
     private Macronutrients macronutrients;

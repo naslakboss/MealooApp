@@ -27,24 +27,24 @@ public class FoodDiaryFacade {
         this.modelMapper = modelMapper;
     }
 
-    public FoodDiaryDTO findTodayDiary(String name){
+    public FoodDiaryDTO findTodaysDiary(String name){
         MealooUser user = mealooUserService.findByUsername(name);
-        return modelMapper.map(foodDiaryService.findTodayDiary(user), FoodDiaryDTO.class);
+        return modelMapper.map(foodDiaryService.findTodaysDiary(user), FoodDiaryDTO.class);
     }
 
-    public FoodDiaryDTO findDiaryOfGivenDay(String name, String date){
+    public FoodDiaryDTO findDiaryOfDay(String name, String date){
         MealooUser user = mealooUserService.findByUsername(name);
-        return modelMapper.map(foodDiaryService.findDiaryOfGivenDate(user, date), FoodDiaryDTO.class);
+        return modelMapper.map(foodDiaryService.findDiaryOfDay(user, date), FoodDiaryDTO.class);
     }
 
-    public FoodDiaryDTO createNewFoodDiary(String username){
+    public FoodDiaryDTO createNewDiary(String username){
         MealooUser user = mealooUserService.findByUsername(username);
-        return modelMapper.map(foodDiaryService.createNewFoodDiary(user), FoodDiaryDTO.class);
+        return modelMapper.map(foodDiaryService.createNewDiary(user), FoodDiaryDTO.class);
     }
 
-    public List<FoodDiaryDTO> getAllDiariesForGivenUser(String username){
+    public List<FoodDiaryDTO> findAllDiaries(String username){
         MealooUser user = mealooUserService.findByUsername(username);
-        return foodDiaryService.findAllDiariesForUser(user).stream()
+        return foodDiaryService.findAllDiaries(user).stream()
                 .map(foodDiary -> modelMapper.map(foodDiary, FoodDiaryDTO.class))
                     .collect(Collectors.toList());
     }

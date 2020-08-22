@@ -3,6 +3,7 @@ package codebuddies.MealooApp.entities.product;
 import codebuddies.MealooApp.entities.meal.Meal;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Entity
@@ -11,6 +12,7 @@ public class Ingredient {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @NotBlank
     private int amount;
 
     @ManyToOne(fetch = FetchType.EAGER)

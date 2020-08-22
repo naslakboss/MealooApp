@@ -2,21 +2,17 @@ package codebuddies.MealooApp.controllers;
 
 import codebuddies.MealooApp.dataProviders.ProductDTO;
 import codebuddies.MealooApp.dataProviders.ProductFacade;
-import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.product.Product;
-import codebuddies.MealooApp.entities.product.ProductType;
-import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 import codebuddies.MealooApp.services.ProductService;
 //import mealoapp.MealooAppp.services.ProductTypeService;
 //import codebuddies.MealooApp.services.ProductTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URI;
+import javax.xml.bind.ValidationException;
 import java.util.List;
 
 @RestController
@@ -72,16 +68,20 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Product> addProduct(@RequestBody @Valid Product product) {
-        if(productService.existsByName(product.getName())) throw new EntityAlreadyFoundException("codebuddies.MealooApp/entities/product");
+    public ResponseEntity<ProductDTO> addProduct(@RequestBody @Valid Product product)  {
         productService.save(product);
-        return ResponseEntity.created(URI.create("/" + product.getName())).body(product);
+        return ResponseEntity.ok(productFacade.getProductByName(product.getName()));
     }
 
     @PatchMapping("/patch/{name}")
-    public ResponseEntity<Product> patchProductByName(@PathVariable String name, @Valid Product product) {
-        Product patchedProduct = productService.findByName(name);
-        return patchedProduct != null ? ResponseEntity.ok(productService.updateByName(name, product)) : ResponseEntity.notFound().build();
+    public ResponseEntity<ProductDTO> patchProductByName(@PathVariable String name, @Valid Product product) {
+        Product oldProduct = productService.findByName(name);
+        if(oldProduct == null){
+            return ResponseEntity.notFound().build();
+        }
+        productService.updateByName(name, oldProduct);
+        return ResponseEntity.ok(productFacade.getProductByName(name));
+
 
     }
 
@@ -90,7 +90,7 @@ public class ProductController {
         if (!productService.existsByName(name)) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok("codebuddies.MealooApp/entities/product " + name + " was successfully deleted from Repository");
+        return ResponseEntity.ok("Product " + name + " was successfully deleted from Repository");
     }
 }
 
