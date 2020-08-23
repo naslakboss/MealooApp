@@ -2,6 +2,8 @@ package codebuddies.MealooApp.entities.product;
 
 import codebuddies.MealooApp.entities.meal.Meal;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Range;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
@@ -13,6 +15,7 @@ public class Ingredient {
     private long id;
 
     @NotBlank
+    @Range(min = 1)
     private int amount;
 
     @ManyToOne(fetch = FetchType.EAGER)

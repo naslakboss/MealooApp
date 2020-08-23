@@ -7,13 +7,19 @@ import codebuddies.MealooApp.services.ProductService;
 //import mealoapp.MealooAppp.services.ProductTypeService;
 //import codebuddies.MealooApp.services.ProductTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.Valid;
+import javax.validation.executable.ValidateOnExecution;
 import javax.xml.bind.ValidationException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/product")
@@ -78,9 +84,14 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ProductDTO> addProduct(@RequestBody @Valid Product product)  {
+    public ResponseEntity<ProductDTO> addProduct(@Valid @RequestBody Product product)  {
         productService.save(product);
         return ResponseEntity.ok(productFacade.getProductByName(product.getName()));
+    }
+
+    @PostMapping("/testadd")
+    public ResponseEntity<String> testthisshit(@Valid @RequestBody Product product){
+        return ResponseEntity.ok("Product is valid");
     }
 
     @PatchMapping("/patch/{name}")
@@ -101,5 +112,16 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok("Product " + name + " was successfully deleted from Repository");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage()));
+
+        return errors;
     }
 }

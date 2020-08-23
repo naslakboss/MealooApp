@@ -116,6 +116,7 @@ public class MealController {
         Meal patchedMeal = mealService.updateByName(name, meal);
         return ResponseEntity.ok(mealFacade.findMealByName(patchedMeal.getName()));
     }
+
     @Transactional
     @DeleteMapping("/delete/{name}")
     public ResponseEntity deleteByName(@PathVariable String name){
