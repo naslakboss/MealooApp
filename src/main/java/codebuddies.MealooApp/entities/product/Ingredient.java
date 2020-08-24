@@ -14,7 +14,6 @@ public class Ingredient {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @NotBlank
     @Range(min = 1)
     private int amount;
 

@@ -60,14 +60,14 @@ public class MealController {
 //
 //        Ingredient breadI = new Ingredient(300, bread);
 //        Ingredient milkI = new Ingredient(500, milk);
-//        Ingredient beefI = new Ingredient(400, beef);
+//        Ingredient beef1 = new Ingredient(200, beef);
 //        Ingredient chickenI = new Ingredient(600, chicken);
 //        Ingredient pastaI = new Ingredient(200, pasta);
 //        Ingredient strawberryI = new Ingredient(1000, strawberry);
 //
 //        ingredientRepository.save(breadI);
 //        ingredientRepository.save(milkI);
-//        ingredientRepository.save(beefI);
+//        ingredientRepository.save(beef1);
 //        ingredientRepository.save(chickenI);
 //        ingredientRepository.save(pastaI);
 //        ingredientRepository.save(strawberryI);
@@ -102,7 +102,7 @@ public class MealController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<MealDTO> addMeal(@RequestBody @Valid Meal meal){
+    public ResponseEntity<MealDTO> createMeal(@RequestBody @Valid Meal meal){
         mealService.save(meal);
         return ResponseEntity.ok(mealFacade.findMealByName(meal.getName()));
     }
@@ -110,7 +110,7 @@ public class MealController {
     @PatchMapping("/patch/{name}")
     public ResponseEntity<MealDTO> patchMealByName(@PathVariable String name, @Valid @RequestBody Meal meal){
         Meal oldMeal = mealService.findByName(name);
-        if(oldMeal != null){
+        if(oldMeal == null){
            return ResponseEntity.notFound().build();
         }
         Meal patchedMeal = mealService.updateByName(name, meal);

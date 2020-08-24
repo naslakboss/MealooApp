@@ -36,6 +36,15 @@ public class Meal {
     public Meal() {
     }
 
+    public Meal(String name, List<Ingredient> ingredients, MealDifficulty mealDifficulty) {
+        this.name = name;
+        this.ingredients = ingredients;
+        this.price = calculatePrice();
+        this.mealDifficulty = mealDifficulty;
+        macronutrients = calculateMacronutrients();
+        totalCalories = calculateCalories();
+    }
+
     public Meal(long id, String name, List<Ingredient> ingredients, MealDifficulty mealDifficulty) {
         this.id = id;
         this.name = name;
@@ -110,7 +119,7 @@ public class Meal {
         this.foodDiaries = foodDiaries;
     }
 
-    private double calculatePrice(){
+    public double calculatePrice(){
         double totalPrice = 0;
         for(int i = 0; i < ingredients.size(); i++){
             totalPrice  += (ingredients.get(i).getProduct().getPrice() * ingredients.get(i).getAmount()/1000);
@@ -147,9 +156,15 @@ public class Meal {
         return new Macronutrients(calculareProteins(), calculateCarbohydrates(), calculateFats());
     }
 
-    private int calculateCalories() {
+    public int calculateCalories() {
         return (calculateCarbohydrates() * 4) + (calculareProteins() * 4) + (calculateFats() * 9);
 
+    }
+
+    public void recalulateData(){
+        calculatePrice();
+        calculateMacronutrients();
+        calculateCalories();
     }
 
     @Override
