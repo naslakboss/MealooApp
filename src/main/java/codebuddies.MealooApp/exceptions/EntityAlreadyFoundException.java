@@ -14,6 +14,4 @@ public class EntityAlreadyFoundException extends RuntimeException {
     public EntityAlreadyFoundException(String entityName) {
         super(entityName + " with given parameters are already exist in database");
     }
-
-
 }

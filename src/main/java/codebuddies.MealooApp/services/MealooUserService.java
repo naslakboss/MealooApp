@@ -3,6 +3,7 @@ package codebuddies.MealooApp.services;
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.user.MealooUser;
 import codebuddies.MealooApp.entities.user.FoodDiary;
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.MealooUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,8 +47,12 @@ public class MealooUserService {
     }
 
 
-    public MealooUser findByUsername(String username) {
-        return mealooUserRepository.findByUsername(username);
+    public MealooUser findByUsername(String username) throws ResourceNotFoundException {
+        MealooUser user = mealooUserRepository.findByUsername(username);
+        if(user == null){
+            throw new ResourceNotFoundException("This user does not exist in database");
+        }
+        return user;
     }
 
     public MealooUser patchByUsername(String username, MealooUser mealooUser) {

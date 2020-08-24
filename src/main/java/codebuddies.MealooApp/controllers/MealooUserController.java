@@ -1,6 +1,7 @@
 package codebuddies.MealooApp.controllers;
 
 import codebuddies.MealooApp.entities.user.*;
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.services.MealooUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -9,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 
@@ -44,30 +44,21 @@ public class MealooUserController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<MealooUser> findUserByUsername(@PathVariable String username){
+    public ResponseEntity<MealooUser> findUserByUsername(@PathVariable String username) throws ResourceNotFoundException {
         MealooUser user = mealooUserService.findByUsername(username);
-        return  user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok().body(user);
     }
 
     @PatchMapping("/{username}")
     public ResponseEntity<MealooUser> patchUserByUsername(@PathVariable String username
             , @RequestBody MealooUser mealooUser){
-        MealooUser user = mealooUserService.findByUsername(username);
-        if(user == null){
-            ResponseEntity.notFound().build();
-        }
-
         MealooUser patchedUser = mealooUserService.patchByUsername(username, mealooUser);
         return ResponseEntity.ok(patchedUser);
 
     }
     @GetMapping("/calculateBMIandCaloricDemand/{username}")
-    public ResponseEntity<Map> calculateBMI(@PathVariable String username){
-        MealooUser user = mealooUserService.findByUsername(username);
-        if(user == null){
-            ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(mealooUserService.calculateBMIandCaloricDemand(user));
+    public ResponseEntity<Map> calculateBMI(@PathVariable String username) throws ResourceNotFoundException {
+        return ResponseEntity.ok(mealooUserService.calculateBMIandCaloricDemand(mealooUserService.findByUsername(username)));
     }
 }
 

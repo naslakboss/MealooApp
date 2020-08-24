@@ -3,6 +3,7 @@ package codebuddies.MealooApp.controllers;
 import codebuddies.MealooApp.dataProviders.ProductDTO;
 import codebuddies.MealooApp.dataProviders.ProductFacade;
 import codebuddies.MealooApp.entities.product.Product;
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.services.ProductService;
 //import mealoapp.MealooAppp.services.ProductTypeService;
 //import codebuddies.MealooApp.services.ProductTypeService;
@@ -68,51 +69,27 @@ public class ProductController {
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<ProductDTO> findProductByName(@PathVariable String name) {
+    public ResponseEntity<ProductDTO> findProductByName(@PathVariable String name) throws ResourceNotFoundException {
         ProductDTO searchedProduct = productFacade.getProductByName(name);
-        return searchedProduct != null ? ResponseEntity.ok(searchedProduct) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok().body(searchedProduct);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ProductDTO> addProduct(@Valid @RequestBody Product product)  {
+    public ResponseEntity<ProductDTO> addProduct(@Valid @RequestBody Product product) throws ResourceNotFoundException {
         productService.save(product);
         return ResponseEntity.ok(productFacade.getProductByName(product.getName()));
     }
 
-    @PostMapping("/testadd")
-    public ResponseEntity<String> testthisshit(@Valid @RequestBody Product product){
-        return ResponseEntity.ok("Product is valid");
-    }
-
     @PatchMapping("/patch/{name}")
-    public ResponseEntity<ProductDTO> patchProductByName(@PathVariable String name, @Valid Product product) {
-        Product oldProduct = productService.findByName(name);
-        if(oldProduct == null){
-            return ResponseEntity.notFound().build();
-        }
-        productService.updateByName(name, oldProduct);
+    public ResponseEntity<ProductDTO> patchProductByName(@PathVariable String name, @Valid Product product) throws ResourceNotFoundException {
+        productService.updateByName(name, product);
         return ResponseEntity.ok(productFacade.getProductByName(name));
-
-
     }
 
     @DeleteMapping("/delete/{name}")
-    public ResponseEntity deleteByName(@PathVariable String name) {
-        if (!productService.existsByName(name)) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity deleteByName(@PathVariable String name) throws ResourceNotFoundException {
+        productService.deleteByName(name);
         return ResponseEntity.ok("Product " + name + " was successfully deleted from Repository");
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-
-        ex.getBindingResult().getFieldErrors().forEach(error ->
-                errors.put(error.getField(), error.getDefaultMessage()));
-
-        return errors;
     }
 }
 

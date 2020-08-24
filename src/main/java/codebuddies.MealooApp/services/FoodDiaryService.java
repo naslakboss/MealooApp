@@ -5,6 +5,7 @@ import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.user.MealooUser;
 import codebuddies.MealooApp.entities.user.FoodDiary;
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.FoodDiaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,10 +51,6 @@ public class FoodDiaryService {
     public FoodDiary createNewDiary(MealooUser user){
         LocalDate date = LocalDate.now();
         FoodDiary newFoodDiary = new FoodDiary(Collections.emptyList(), date, user);
-        Random random = new Random();
-        Long idBean = (long)random.nextInt(500);
-
-        newFoodDiary.setId((idBean));
         newFoodDiary.setTotalPrice(0);
         newFoodDiary.setTotalCalories(0);
         newFoodDiary.setMacronutrients(new Macronutrients(0,0,0));
@@ -74,7 +71,7 @@ public class FoodDiaryService {
        }
     }
 
-    public FoodDiary addMealToCurrentDiary(MealooUser user, String name) {
+    public FoodDiary addMealToCurrentDiary(MealooUser user, String name) throws ResourceNotFoundException {
         FoodDiary diary = findTodaysDiary(user);
         Meal meal = mealService.findByName(name);
 
@@ -100,7 +97,7 @@ public class FoodDiaryService {
     }
 
 
-    public FoodDiary deleteMealFromCurrentDiary(MealooUser user, String mealName) {
+    public FoodDiary deleteMealFromCurrentDiary(MealooUser user, String mealName) throws ResourceNotFoundException {
         FoodDiary diary = findTodaysDiary(user);
         Meal meal = mealService.findByName(mealName);
         diary.deleteMeal(meal);
