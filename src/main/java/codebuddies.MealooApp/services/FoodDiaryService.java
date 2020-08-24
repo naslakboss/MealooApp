@@ -112,4 +112,5 @@ public class FoodDiaryService {
         foodDiaryRepository.save(diary);
         return diary;
     }
+
 }
