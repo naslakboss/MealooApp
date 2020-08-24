@@ -14,7 +14,7 @@ public class FoodDiary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
 
     @ManyToMany
     @JsonIgnoreProperties("foodDiaries")
@@ -52,11 +52,11 @@ public class FoodDiary {
         listOfMeals.remove(meal);
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

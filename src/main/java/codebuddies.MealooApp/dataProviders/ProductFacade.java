@@ -1,6 +1,7 @@
 package codebuddies.MealooApp.dataProviders;
 
 import codebuddies.MealooApp.entities.product.Product;
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.services.ProductService;
 
 import org.modelmapper.ModelMapper;
@@ -21,7 +22,10 @@ public class ProductFacade {
         this.modelMapper = modelMapper;
     }
 
-    public ProductDTO getProductByName(String name){
+    public ProductDTO getProductByName(String name) throws ResourceNotFoundException {
+        if(!productService.existsByName(name)){
+            throw new ResourceNotFoundException("Product of given name does not exist in database");
+        }
         return modelMapper.map(productService.findByName(name), ProductDTO.class);
     }
     

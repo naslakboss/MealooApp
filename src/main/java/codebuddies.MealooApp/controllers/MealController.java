@@ -7,7 +7,9 @@ import codebuddies.MealooApp.entities.meal.MealDifficulty;
 import codebuddies.MealooApp.entities.product.Ingredient;
 import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.IngredientRepository;
+import codebuddies.MealooApp.repositories.MealRepository;
 import codebuddies.MealooApp.services.MealService;
 import codebuddies.MealooApp.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ public class MealController {
     private ProductService productService;
 
     private IngredientRepository ingredientRepository;
+
+    @Autowired
+    MealRepository mealRepository;
 
     @Autowired
     public MealController(MealService mealService, MealFacade mealFacade,
@@ -96,33 +101,27 @@ public class MealController {
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<MealDTO> findMealByName(@PathVariable String name){
+    public ResponseEntity<MealDTO> findMealByName(@PathVariable(value = "name") String name) throws ResourceNotFoundException {
         MealDTO meal = mealFacade.findMealByName(name);
-        return meal != null ? ResponseEntity.ok(meal) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok().body(meal);
     }
 
+
     @PostMapping("/add")
-    public ResponseEntity<MealDTO> createMeal(@RequestBody @Valid Meal meal){
+    public ResponseEntity<MealDTO> createMeal(@RequestBody @Valid Meal meal) throws ResourceNotFoundException {
         mealService.save(meal);
         return ResponseEntity.ok(mealFacade.findMealByName(meal.getName()));
     }
 
     @PatchMapping("/patch/{name}")
-    public ResponseEntity<MealDTO> patchMealByName(@PathVariable String name, @Valid @RequestBody Meal meal){
-        Meal oldMeal = mealService.findByName(name);
-        if(oldMeal == null){
-           return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<MealDTO> patchMealByName(@PathVariable String name, @Valid @RequestBody Meal meal) throws ResourceNotFoundException {
         Meal patchedMeal = mealService.updateByName(name, meal);
         return ResponseEntity.ok(mealFacade.findMealByName(patchedMeal.getName()));
     }
 
     @Transactional
     @DeleteMapping("/delete/{name}")
-    public ResponseEntity deleteByName(@PathVariable String name){
-        if(!mealService.existsByName(name)){
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity deleteByName(@PathVariable String name) throws ResourceNotFoundException {
         mealService.deleteByName(name);
         return ResponseEntity.ok("Meal " + name + " was successfully deleted from Repository");
     }

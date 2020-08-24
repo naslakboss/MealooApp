@@ -1,5 +1,6 @@
 package codebuddies.MealooApp.dataProviders;
 
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.services.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class ProductForIngredientFacade {
         this.modelMapper = modelMapper;
     }
 
-    public ProductForIngredientDTO getProductByName(String name){
+    public ProductForIngredientDTO getProductByName(String name) throws ResourceNotFoundException {
         return modelMapper.map(productService.findByName(name), ProductForIngredientDTO.class);
     }
     public List<ProductForIngredientDTO> getAllProducts(){

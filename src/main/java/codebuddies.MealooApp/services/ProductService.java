@@ -2,11 +2,10 @@ package codebuddies.MealooApp.services;
 
 import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.product.Product;
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.xml.bind.ValidationException;
 import java.util.List;
 
 @Service
@@ -19,15 +18,23 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    public Product save(Product product){
+        return productRepository.save(product);
+    }
+
     public boolean existsByName(String name) {
         return productRepository.existsByName(name);
     }
 
-    public  Product findByName(String name) {
-        return productRepository.findByName(name);
+    public  Product findByName(String name) throws ResourceNotFoundException {
+        Product product = productRepository.findByName(name);
+        if(product == null){
+            throw new ResourceNotFoundException("Product of given name does not exist in database");
+        }
+        return product;
     }
 
-    public  Product updateByName(String name, Product product) {
+    public  Product updateByName(String name, Product product) throws ResourceNotFoundException {
         Product foundedProduct = findByName(name);
         Macronutrients macro = new Macronutrients();
         Macronutrients newMacro = product.getMacronutrients();
@@ -53,8 +60,11 @@ public class ProductService {
         return foundedProduct;
     }
 
-    public Product save(Product product){
-        return productRepository.save(product);
-    }
 
+    public void deleteByName(String name) throws ResourceNotFoundException {
+        if(!existsByName(name)){
+            throw new ResourceNotFoundException("This product cannot be deleted because it does not exist");
+        }
+        productRepository.deleteByName(name);
+    }
 }
