@@ -20,17 +20,17 @@ import java.util.stream.Collectors;
 @Service
 public class MealService {
 
-    private ProductRepository productRepository;
+    private ProductService productService;
 
     private MealRepository mealRepository;
 
     private IngredientRepository ingredientRepository;
 
     @Autowired
-    public MealService(ProductRepository productRepository, MealRepository mealRepository
+    public MealService(ProductService productService, MealRepository mealRepository
             , IngredientRepository ingredientRepository) {
 
-        this.productRepository = productRepository;
+        this.productService = productService;
         this.mealRepository = mealRepository;
         this.ingredientRepository = ingredientRepository;
     }
@@ -46,7 +46,7 @@ public class MealService {
     public Meal findByName(String name) throws ResourceNotFoundException {
         Meal meal = mealRepository.findByName(name);
         if(meal == null){
-            throw new ResourceNotFoundException("Meal of given name does not exist in database");
+            throw new ResourceNotFoundException(name);
         }
         return meal;
     }
@@ -62,10 +62,7 @@ public class MealService {
             if (amounts.get(i) <= 0) {
                 throw new IllegalDataException("Product amount must be more than 0");
             }
-            Product temporaryProduct = productRepository.findByName(productsNames.get(i));
-            if(temporaryProduct == null){
-                throw new ResourceNotFoundException(productsNames.get(i) + " does not exist in database");
-            }
+            Product temporaryProduct = productService.findByName(productsNames.get(i));
             Ingredient temporary = new Ingredient(amounts.get(i)
                     , temporaryProduct);
             ingredientList.add(temporary);
@@ -84,8 +81,7 @@ public class MealService {
     public Meal updateByName(String name, Meal meal) throws ResourceNotFoundException {
         Meal foundedMeal = findByName(name);
         if(!foundedMeal.getFoodDiaries().isEmpty()){
-            throw new MealIsNeededException("This meal is used in the making of diaries." +
-                    " You cannot delete or change it");
+            throw new MealIsNeededException();
         }
         deleteByName(name);
 
@@ -107,8 +103,7 @@ public class MealService {
     @Transactional
     public void deleteByName(String name) throws ResourceNotFoundException {
         if(!findByName(name).getFoodDiaries().isEmpty()){
-            throw new MealIsNeededException("This meal is used in the making of diaries." +
-                    " You cannot delete or change it");
+            throw new MealIsNeededException();
         }
         mealRepository.deleteByName(name);
     }

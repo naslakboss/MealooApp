@@ -29,7 +29,7 @@ public class ProductService {
     public  Product findByName(String name) throws ResourceNotFoundException {
         Product product = productRepository.findByName(name);
         if(product == null){
-            throw new ResourceNotFoundException("Product of given name does not exist in database");
+            throw new ResourceNotFoundException(name);
         }
         return product;
     }
