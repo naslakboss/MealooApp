@@ -50,7 +50,7 @@ public class MealooUserService {
     public MealooUser findByUsername(String username) throws ResourceNotFoundException {
         MealooUser user = mealooUserRepository.findByUsername(username);
         if(user == null){
-            throw new ResourceNotFoundException("This user does not exist in database");
+            throw new ResourceNotFoundException(username);
         }
         return user;
     }

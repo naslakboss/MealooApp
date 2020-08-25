@@ -54,14 +54,14 @@ public class ClientController {
         return ResponseEntity.ok(foodDiaryFacade.createNewDiary(username));
     }
 
-    @PostMapping("/addMeal/{username}/{name}")
+    @PostMapping("/addMeal/{username}/{mealName}")
     public ResponseEntity<FoodDiaryDTO> addMealToDiary(@PathVariable String username, @PathVariable String mealName) throws ResourceNotFoundException {
         MealooUser user = mealooUserService.findByUsername(username);
         diaryService.addMealToCurrentDiary(user, mealName);
         return ResponseEntity.ok(foodDiaryFacade.findTodaysDiary(username));
     }
 
-    @DeleteMapping("/deleteMeal/{username}/{name}")
+    @DeleteMapping("/deleteMeal/{username}/{mealName}")
     public ResponseEntity<FoodDiaryDTO> deleteMealFromDiary(@PathVariable String username, @PathVariable String mealName) throws ResourceNotFoundException {
         MealooUser user = mealooUserService.findByUsername(username);
         diaryService.deleteMealFromCurrentDiary(user, mealName);

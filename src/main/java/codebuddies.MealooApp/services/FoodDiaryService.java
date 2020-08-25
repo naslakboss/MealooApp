@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +23,7 @@ public class FoodDiaryService {
     @Autowired
     private MealService mealService;
 
-    //todo using only constuctor dependency injection caused cycle error
+    //todo using only constructor dependency injection caused cycle error
 //    @Autowired
 //    public FoodDiaryService(FoodDiaryRepository foodDiaryRepository, MealService mealService, MealooUserService mealooUserService) {
 //        this.foodDiaryRepository = foodDiaryRepository;
@@ -63,12 +62,7 @@ public class FoodDiaryService {
        LocalDate date = LocalDate.now();
        Optional<FoodDiary> todayFoodDiary = findAllDiaries(user).stream()
                .filter(foodDiary -> foodDiary.getDate().isEqual(date)).findAny();
-       if(!todayFoodDiary.isPresent()){
-           return createNewDiary(user);
-       }
-       else{
-           return todayFoodDiary.get();
-       }
+        return todayFoodDiary.orElseGet(() -> createNewDiary(user));
     }
 
     public FoodDiary addMealToCurrentDiary(MealooUser user, String name) throws ResourceNotFoundException {
@@ -90,7 +84,7 @@ public class FoodDiaryService {
         LocalDate parsedDate = LocalDate.parse(date);
         Optional<FoodDiary> diary = findAllDiaries(user).stream()
                 .filter(foodDiary -> foodDiary.getDate().isEqual(parsedDate)).findAny();
-        if(diary.isEmpty()){
+        if(diary.isPresent()){
             createNewDiary(user);
         }
         return diary.get();
