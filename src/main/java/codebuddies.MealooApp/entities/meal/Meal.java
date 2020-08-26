@@ -1,7 +1,6 @@
 package codebuddies.MealooApp.entities.meal;
 
 import codebuddies.MealooApp.entities.product.Ingredient;
-import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.user.FoodDiary;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
@@ -25,7 +24,9 @@ public class Meal {
     @NotNull
     private MealDifficulty mealDifficulty;
 
-    private Macronutrients macronutrients;
+
+    @Embedded
+    private MealMacronutrients mealMacronutrients;
 
     private int totalCalories;
 
@@ -41,17 +42,7 @@ public class Meal {
         this.ingredients = ingredients;
         this.price = calculatePrice();
         this.mealDifficulty = mealDifficulty;
-        macronutrients = calculateMacronutrients();
-        totalCalories = calculateCalories();
-    }
-
-    public Meal(long id, String name, List<Ingredient> ingredients, MealDifficulty mealDifficulty) {
-        this.id = id;
-        this.name = name;
-        this.ingredients = ingredients;
-        this.price = calculatePrice();
-        this.mealDifficulty = mealDifficulty;
-        macronutrients = calculateMacronutrients();
+        mealMacronutrients = calculateMealMacronutrients();
         totalCalories = calculateCalories();
     }
 
@@ -95,12 +86,12 @@ public class Meal {
         this.mealDifficulty = mealDifficulty;
     }
 
-    public Macronutrients getMacronutrients() {
-        return macronutrients;
+    public MealMacronutrients getMealMacronutrients() {
+        return mealMacronutrients;
     }
 
-    public void setMacronutrients(Macronutrients macronutrients) {
-        this.macronutrients = macronutrients;
+    public void setMealMacronutrients(MealMacronutrients mealMacronutrients) {
+        this.mealMacronutrients = mealMacronutrients;
     }
 
     public int getTotalCalories() {
@@ -152,8 +143,8 @@ public class Meal {
         return totalFats;
     }
 
-    private Macronutrients calculateMacronutrients(){
-        return new Macronutrients(calculareProteins(), calculateCarbohydrates(), calculateFats());
+    private MealMacronutrients calculateMealMacronutrients(){
+        return new MealMacronutrients(calculareProteins(), calculateCarbohydrates(), calculateFats());
     }
 
     public int calculateCalories() {
@@ -163,7 +154,7 @@ public class Meal {
 
     public void recalulateData(){
         calculatePrice();
-        calculateMacronutrients();
+        calculateMealMacronutrients();
         calculateCalories();
     }
 
@@ -172,19 +163,19 @@ public class Meal {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Meal meal = (Meal) o;
-        return price == meal.price &&
+        return Double.compare(meal.price, price) == 0 &&
                 totalCalories == meal.totalCalories &&
                 Objects.equals(id, meal.id) &&
                 Objects.equals(name, meal.name) &&
                 Objects.equals(ingredients, meal.ingredients) &&
                 mealDifficulty == meal.mealDifficulty &&
-                Objects.equals(macronutrients, meal.macronutrients) &&
+                Objects.equals(mealMacronutrients, meal.mealMacronutrients) &&
                 Objects.equals(foodDiaries, meal.foodDiaries);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, ingredients, price, mealDifficulty, macronutrients, totalCalories, foodDiaries);
+        return Objects.hash(id, name, ingredients, price, mealDifficulty, mealMacronutrients, totalCalories, foodDiaries);
     }
 
     @Override
@@ -195,7 +186,7 @@ public class Meal {
                 ", ingredients=" + ingredients +
                 ", price=" + price +
                 ", mealDifficulty=" + mealDifficulty +
-                ", macronutrients=" + macronutrients +
+                ", mealMacronutrients=" + mealMacronutrients +
                 ", totalCalories=" + totalCalories +
                 ", foodDiaries=" + foodDiaries +
                 '}';

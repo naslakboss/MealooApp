@@ -22,6 +22,7 @@ public class ProductService {
 
     public Product save(Product product) throws ValidationException {
         checkTheCorrectnessOfQuantity(product);
+        product.setCaloriesPer100g(product.calculateCaloriesPer100g());
         return productRepository.save(product);
     }
 

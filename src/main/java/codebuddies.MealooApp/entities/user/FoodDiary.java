@@ -1,6 +1,7 @@
 package codebuddies.MealooApp.entities.user;
 
 import codebuddies.MealooApp.entities.meal.Meal;
+import codebuddies.MealooApp.entities.meal.MealMacronutrients;
 import codebuddies.MealooApp.entities.product.Macronutrients;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -119,12 +120,12 @@ public class FoodDiary {
 
     public Macronutrients calculateMacronutrients(){
         Macronutrients macronutrients = new Macronutrients();
-        int totalCarbohydrates = listOfMeals.stream().map(Meal::getMacronutrients)
-                .mapToInt(Macronutrients::getCarbohydratesPer100g).sum();
-        int totalProteins = listOfMeals.stream().map(Meal::getMacronutrients)
-                .mapToInt(Macronutrients::getProteinsPer100g).sum();
-        int totalFats = listOfMeals.stream().map(Meal::getMacronutrients)
-                .mapToInt(Macronutrients::getFatsPer100g).sum();
+        int totalCarbohydrates = listOfMeals.stream().map(Meal::getMealMacronutrients)
+                .mapToInt(MealMacronutrients::getTotalCarbohydrates).sum();
+        int totalProteins = listOfMeals.stream().map(Meal::getMealMacronutrients)
+                .mapToInt(MealMacronutrients::getTotalProteins).sum();
+        int totalFats = listOfMeals.stream().map(Meal::getMealMacronutrients)
+                .mapToInt(MealMacronutrients::getTotalFats).sum();
         macronutrients.setCarbohydratesPer100g(totalCarbohydrates);
         macronutrients.setProteinsPer100g(totalProteins);
         macronutrients.setFatsPer100g(totalFats);

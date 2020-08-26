@@ -1,10 +1,9 @@
 package codebuddies.MealooApp.entities.product;
 
 import javax.persistence.Embeddable;
-import javax.validation.ValidationException;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 

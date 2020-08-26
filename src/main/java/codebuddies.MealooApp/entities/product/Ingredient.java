@@ -2,10 +2,8 @@ package codebuddies.MealooApp.entities.product;
 
 import codebuddies.MealooApp.entities.meal.Meal;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.validator.constraints.Range;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @Entity
@@ -14,10 +12,10 @@ public class Ingredient {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Range(min = 1)
+    @Min(value = 1, message = "Amount of product in meal cannot be less than 1g")
     private int amount;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Product product;
 
     @ManyToMany(mappedBy = "ingredients")

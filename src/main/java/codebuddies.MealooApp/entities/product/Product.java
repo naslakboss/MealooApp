@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -21,6 +20,7 @@ public class Product {
     private Long id;
 
     @NotBlank(message = "Product name is mandatory")
+//    @UniqueProduct
     private String name;
 
     @NotNull(message = "Price of product is mandatory")
@@ -47,14 +47,14 @@ public class Product {
         this.name = name;
         this.price = price;
         this.macronutrients = macronutrients;
-        this.caloriesPer100g = calculateCaloriesPer100g();
+        caloriesPer100g = calculateCaloriesPer100g();
         this.productType = productType;
     }
 
 
     public int calculateCaloriesPer100g(){
-        return (macronutrients.getCarbohydratesPer100g() * 4) +
-                    (macronutrients.getFatsPer100g() * 9) + (macronutrients.getProteinsPer100g() * 4);
+        return (this.macronutrients.getCarbohydratesPer100g() * 4) +
+                    (this.macronutrients.getFatsPer100g() * 9) + (this.macronutrients.getProteinsPer100g() * 4);
     }
 
 
