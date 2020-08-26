@@ -119,7 +119,7 @@ public class Meal {
         return totalPrice;
     }
 
-    private int calculateCarbohydrates(){
+    protected int calculateCarbohydrates(){
         int totalCarbohydrates = 0;
         for(int i = 0; i < ingredients.size() ; i++){
             totalCarbohydrates += ingredients.get(i).getProduct().getMacronutrients().getCarbohydratesPer100g()
@@ -127,7 +127,7 @@ public class Meal {
         }
         return totalCarbohydrates;
     }
-    private int calculareProteins(){
+    protected int calculareProteins(){
         int totalProteins = 0;
         for(int i = 0; i < ingredients.size(); i++){
             totalProteins += ingredients.get(i).getProduct().getMacronutrients().getProteinsPer100g()
@@ -135,7 +135,7 @@ public class Meal {
         }
         return totalProteins;
     }
-    private int calculateFats(){
+    protected int calculateFats(){
         int totalFats = 0;
         for(int i = 0; i < ingredients.size() ; i++){
             totalFats += ingredients.get(i).getProduct().getMacronutrients().getFatsPer100g()
@@ -144,7 +144,7 @@ public class Meal {
         return totalFats;
     }
 
-    private MealMacronutrients calculateMealMacronutrients(){
+    protected MealMacronutrients calculateMealMacronutrients(){
         return new MealMacronutrients(calculareProteins(), calculateCarbohydrates(), calculateFats());
     }
 
@@ -154,9 +154,9 @@ public class Meal {
     }
 
     public void recalulateData(){
-        calculatePrice();
-        calculateMealMacronutrients();
-        calculateCalories();
+        setPrice(calculatePrice());
+        setMealMacronutrients(calculateMealMacronutrients());
+        setTotalCalories(calculateCalories());
     }
 
     @Override

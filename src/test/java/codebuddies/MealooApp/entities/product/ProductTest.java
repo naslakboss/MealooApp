@@ -1,26 +1,25 @@
 package codebuddies.MealooApp.entities.product;
 
-import org.hamcrest.MatcherAssert;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
 
+@MockitoSettings(strictness = Strictness.STRICT_STUBS)
 @ExtendWith(MockitoExtension.class)
-@WebMvcTest(Product.class)
 class ProductTest {
 
+    Product product;
+    Macronutrients macronutrients;
     @Test
     void shouldReturnProperValueIfMacronutrientsHaveGoodFormat() {
         //given
-        Macronutrients macro = new Macronutrients(2, 17,0);
-        Product product = new Product("Potato", 3, macro, ProductType.GRAINS);
+         macronutrients = new Macronutrients(2, 17,0);
+         product = new Product("Potato", 3, macronutrients, ProductType.GRAINS);
         //when
         //then
         assertThat(product.getCaloriesPer100g(), equalTo(76));
