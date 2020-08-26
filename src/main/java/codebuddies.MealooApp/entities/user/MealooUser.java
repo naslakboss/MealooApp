@@ -31,7 +31,8 @@ public class MealooUser {
     public MealooUser() {
     }
 
-    // There sould be builder pattern but we switch to oauth2 later
+    //todo There should be builder pattern but we switch to oauth2 later
+    //todo set some params protected or private
 
 
     public MealooUser(String username, String password, String email, NutritionSettings nutritionSettings) {

@@ -57,6 +57,7 @@ public class Product {
                     (this.macronutrients.getFatsPer100g() * 9) + (this.macronutrients.getProteinsPer100g() * 4);
     }
 
+    //todo set some params protected or private
 
     public Long getId() {
         return id;

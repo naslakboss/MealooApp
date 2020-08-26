@@ -45,6 +45,7 @@ public class Meal {
         mealMacronutrients = calculateMealMacronutrients();
         totalCalories = calculateCalories();
     }
+    //todo set some params protected or private
 
     public Long getId() {
         return id;

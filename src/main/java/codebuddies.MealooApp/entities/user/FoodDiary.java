@@ -44,6 +44,7 @@ public class FoodDiary {
         totalCalories = calculateCalories();
         totalPrice = calculatePrice();
     }
+    //todo set some params protected or private
 
     public void addMeal(Meal meal){
         listOfMeals.add(meal);
