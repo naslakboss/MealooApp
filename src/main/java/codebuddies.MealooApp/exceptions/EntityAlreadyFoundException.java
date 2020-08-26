@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.HashMap;
 import java.util.Map;
 
-@ResponseStatus(HttpStatus.BAD_REQUEST)
+@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 public class EntityAlreadyFoundException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
     public EntityAlreadyFoundException(String entityName) {
         super(entityName + " with given parameters are already exist in database");
     }

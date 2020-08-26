@@ -4,6 +4,7 @@ import codebuddies.MealooApp.dataProviders.ProductDTO;
 import codebuddies.MealooApp.dataProviders.ProductFacade;
 import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
+import codebuddies.MealooApp.exceptions.ValidationException;
 import codebuddies.MealooApp.services.ProductService;
 //import mealoapp.MealooAppp.services.ProductTypeService;
 //import codebuddies.MealooApp.services.ProductTypeService;
@@ -17,7 +18,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.validation.Valid;
 import javax.validation.executable.ValidateOnExecution;
-import javax.xml.bind.ValidationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +85,7 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ProductDTO> addProduct(@Valid @RequestBody Product product) throws ResourceNotFoundException {
+    public ResponseEntity<ProductDTO> addProduct(@Valid @RequestBody Product product) throws ResourceNotFoundException, ValidationException {
         productService.save(product);
         return ResponseEntity.ok(productFacade.getProductByName(product.getName()));
     }

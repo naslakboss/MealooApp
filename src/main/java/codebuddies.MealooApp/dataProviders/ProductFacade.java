@@ -31,12 +31,15 @@ public class ProductFacade {
     
 
     public List<ProductDTO> getAllProducts(){
-       
 
-        List<ProductDTO> listOfProducts = productService.findAll()
+
+        return productService.findAll()
                 .stream().map(product -> modelMapper.map(product, ProductDTO.class))
                 .collect(Collectors.toList());
-        return listOfProducts;
 
+    }
+
+    public boolean existsByName(String name) {
+        return productService.existsByName(name);
     }
 }

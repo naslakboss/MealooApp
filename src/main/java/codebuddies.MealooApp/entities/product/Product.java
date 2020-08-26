@@ -4,6 +4,8 @@ import codebuddies.MealooApp.validators.UniqueProduct;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.ValidationException;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -19,7 +21,6 @@ public class Product {
     private Long id;
 
     @NotBlank(message = "Product name is mandatory")
-    @UniqueProduct
     private String name;
 
     @NotNull(message = "Price of product is mandatory")
@@ -29,6 +30,7 @@ public class Product {
     private int caloriesPer100g;
 
     @Embedded
+    @Valid
     private Macronutrients macronutrients;
 
     @NotNull(message = "Product Type is mandatory")
@@ -41,21 +43,20 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, double price, int caloriesPer100g, Macronutrients macronutrients, ProductType productType) {
+    public Product(String name, double price, Macronutrients macronutrients, ProductType productType) {
         this.name = name;
         this.price = price;
         this.macronutrients = macronutrients;
-        this.caloriesPer100g = calculateCaloriesPer100g(this.caloriesPer100g);
+        this.caloriesPer100g = calculateCaloriesPer100g();
         this.productType = productType;
     }
 
-    public int calculateCaloriesPer100g(int caloriesPer100g){
-        if(caloriesPer100g == 0) {
-            return (macronutrients.getCarbohydratesPer100g() * 4) +
+
+    public int calculateCaloriesPer100g(){
+        return (macronutrients.getCarbohydratesPer100g() * 4) +
                     (macronutrients.getFatsPer100g() * 9) + (macronutrients.getProteinsPer100g() * 4);
-        }
-        return caloriesPer100g;
     }
+
 
     public Long getId() {
         return id;
@@ -132,4 +133,16 @@ public class Product {
         return Objects.hash(id, name, price, caloriesPer100g, macronutrients, productType, ingredients);
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", caloriesPer100g=" + caloriesPer100g +
+                ", macronutrients=" + macronutrients +
+                ", productType=" + productType +
+                ", ingredients=" + ingredients +
+                '}';
+    }
 }

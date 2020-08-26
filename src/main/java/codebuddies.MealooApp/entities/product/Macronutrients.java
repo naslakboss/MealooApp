@@ -1,16 +1,29 @@
 package codebuddies.MealooApp.entities.product;
 
 import javax.persistence.Embeddable;
+import javax.validation.ValidationException;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Embeddable
 public class Macronutrients {
 
+    @NotNull
+    @Min(value = 0, message = "Amount of Proteins could not be less than 0")
+    @Max(value = 100, message = "Amount of Proteins in 100g of product could not be higher that 100g!")
     private int proteinsPer100g;
 
+    @NotNull
+    @Min(value = 0, message = "Amount of Carbohydrates could not be less than 0")
+    @Max(value = 100, message = "Amount of Carbohydrates in 100g of product could not be higher that 100g!")
     private int carbohydratesPer100g;
 
+    @NotNull
+    @Min(value = 0, message = "Amount of Fats could not be less than 0")
+    @Max(value = 100, message = "Amount of Fats in 100g of product could not be higher that 100g!")
     private int fatsPer100g;
 
     public Macronutrients() {
@@ -21,7 +34,6 @@ public class Macronutrients {
         this.carbohydratesPer100g = carbohydratesPer100g;
         this.fatsPer100g = fatPer100g;
     }
-
 
     public int getProteinsPer100g() {
         return proteinsPer100g;
