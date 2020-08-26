@@ -31,7 +31,7 @@ public class MealooUser {
     public MealooUser() {
     }
 
-    //todo There should be builder pattern but we switch to oauth2 later
+    //todo There should be builder pattern but we will switch to oauth2 later
     //todo set some params protected or private
 
 
