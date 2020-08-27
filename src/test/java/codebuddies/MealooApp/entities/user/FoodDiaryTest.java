@@ -76,7 +76,7 @@ class FoodDiaryTest {
     }
 
     @Test
-    void addMeal() {
+    void addMealToListShouldIncrementSizeOfList() {
         //given
         //when
         listOfMeals.add(meal3);
@@ -88,7 +88,7 @@ class FoodDiaryTest {
     }
 
     @Test
-    void deleteMeal() {
+    void deleteMealFromListShouldDecrementSizeOfList() {
         //given
         //when
         listOfMeals.remove(meal1);
@@ -100,7 +100,7 @@ class FoodDiaryTest {
     }
 
     @Test
-    void calculatePrice() {
+    void shouldCalculatePriceCorrectlyFromAllMealInDiary() {
         //given
         float mealPrice1 = (float) meal1.getPrice();
         float mealPrice2 = (float) meal2.getPrice();
@@ -116,10 +116,33 @@ class FoodDiaryTest {
     }
 
     @Test
-    void calculateCalories() {
+    void shouldCalculateCaloriesCorrectlyFromAllMealsInDiary() {
+        //given
+        int caloriesFromMeal1 = meal1.getTotalCalories();
+        int caloriesFromMeal2 = meal1.getTotalCalories();
+        int totalCalories = caloriesFromMeal1 + caloriesFromMeal2;
+        //when
+        foodDiary.calculateCalories();
+        //then
+        assertThat(foodDiary.getTotalCalories(), equalTo(totalCalories));
     }
 
     @Test
-    void calculateMacronutrients() {
+    void shouldCalculateMacronutrientsFromAllMealsInDiary() {
+        //given
+        int proteinsFromMeal1 = meal1.getMealMacronutrients().getTotalProteins();
+        int carbohydratesFromMeal1 = meal1.getMealMacronutrients().getTotalCarbohydrates();
+        int fatsFromMeal1 = meal1.getMealMacronutrients().getTotalFats();
+
+        int proteinsFromMeal2 = meal2.getMealMacronutrients().getTotalProteins();
+        int carbohydratesFromMeal2 = meal2.getMealMacronutrients().getTotalCarbohydrates();
+        int fatsFromMeal2 = meal2.getMealMacronutrients().getTotalFats();
+
+        int totalProteins =proteinsFromMeal1 + proteinsFromMeal2;
+        int totalCarbohydrates =carbohydratesFromMeal1 + carbohydratesFromMeal2;
+        int totalFats =fatsFromMeal1 + fatsFromMeal2;
+        //when
+        foodDiary.calculateMacronutrients();
+        //then
     }
 }
