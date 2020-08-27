@@ -142,7 +142,7 @@ class FoodDiaryTest {
         int totalCarbohydrates =carbohydratesFromMeal1 + carbohydratesFromMeal2;
         int totalFats =fatsFromMeal1 + fatsFromMeal2;
         //when
-        foodDiary.calculateMacronutrients();
+        foodDiary.calculateMealMacronutrients();
         //then
     }
 }

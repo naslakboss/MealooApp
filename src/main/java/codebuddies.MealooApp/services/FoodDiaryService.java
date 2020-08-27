@@ -2,6 +2,7 @@ package codebuddies.MealooApp.services;
 
 
 import codebuddies.MealooApp.entities.meal.Meal;
+import codebuddies.MealooApp.entities.meal.MealMacronutrients;
 import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.user.MealooUser;
 import codebuddies.MealooApp.entities.user.FoodDiary;
@@ -52,7 +53,7 @@ public class FoodDiaryService {
         FoodDiary newFoodDiary = new FoodDiary(Collections.emptyList(), date, user);
         newFoodDiary.setTotalPrice(0);
         newFoodDiary.setTotalCalories(0);
-        newFoodDiary.setMacronutrients(new Macronutrients(0,0,0));
+        newFoodDiary.setMealMacronutrients(new MealMacronutrients(0,0,0));
 
         foodDiaryRepository.save(newFoodDiary);
         return newFoodDiary;
@@ -70,7 +71,7 @@ public class FoodDiaryService {
         Meal meal = mealService.findByName(name);
 
         diary.addMeal(meal);
-        diary.setMacronutrients(diary.calculateMacronutrients());
+        diary.setMealMacronutrients(diary.calculateMealMacronutrients());
         diary.setTotalCalories(diary.calculateCalories());
         diary.setTotalPrice(diary.calculatePrice());
 
@@ -96,7 +97,7 @@ public class FoodDiaryService {
         Meal meal = mealService.findByName(mealName);
         diary.deleteMeal(meal);
 
-        diary.setMacronutrients(diary.calculateMacronutrients());
+        diary.setMealMacronutrients(diary.calculateMealMacronutrients());
         diary.setTotalCalories(diary.calculateCalories());
         diary.setTotalPrice(diary.calculatePrice());
 

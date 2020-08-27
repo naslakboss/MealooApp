@@ -27,7 +27,7 @@ public class FoodDiary {
     @JsonIgnore
     private MealooUser mealooUser;
 
-    private Macronutrients macronutrients;
+    private MealMacronutrients mealMacronutrients;
 
     private int totalCalories;
 
@@ -40,7 +40,7 @@ public class FoodDiary {
         this.listOfMeals = listOfMeals;
         this.date = date;
         this.mealooUser = mealooUser;
-        macronutrients = calculateMacronutrients();
+        mealMacronutrients = calculateMealMacronutrients();
         totalCalories = calculateCalories();
         totalPrice = calculatePrice();
     }
@@ -86,12 +86,12 @@ public class FoodDiary {
         this.mealooUser = mealooUser;
     }
 
-    public Macronutrients getMacronutrients() {
-        return macronutrients;
+    public MealMacronutrients getMealMacronutrients() {
+        return mealMacronutrients;
     }
 
-    public void setMacronutrients(Macronutrients macronutrients) {
-        this.macronutrients = macronutrients;
+    public void setMealMacronutrients(MealMacronutrients mealMacronutrients) {
+        this.mealMacronutrients = mealMacronutrients;
     }
 
     public int getTotalCalories() {
@@ -115,22 +115,21 @@ public class FoodDiary {
     }
 
     public int calculateCalories(){
-        int totalCalories = listOfMeals.stream().mapToInt(Meal::getTotalCalories).sum();
-        return totalCalories;
+        return listOfMeals.stream().mapToInt(Meal::getTotalCalories).sum();
      }
 
-    public Macronutrients calculateMacronutrients(){
-        Macronutrients macronutrients = new Macronutrients();
+    public MealMacronutrients calculateMealMacronutrients(){
+        MealMacronutrients mealMacronutrients = new MealMacronutrients();
         int totalCarbohydrates = listOfMeals.stream().map(Meal::getMealMacronutrients)
                 .mapToInt(MealMacronutrients::getTotalCarbohydrates).sum();
         int totalProteins = listOfMeals.stream().map(Meal::getMealMacronutrients)
                 .mapToInt(MealMacronutrients::getTotalProteins).sum();
         int totalFats = listOfMeals.stream().map(Meal::getMealMacronutrients)
                 .mapToInt(MealMacronutrients::getTotalFats).sum();
-        macronutrients.setCarbohydratesPer100g(totalCarbohydrates);
-        macronutrients.setProteinsPer100g(totalProteins);
-        macronutrients.setFatsPer100g(totalFats);
-        return macronutrients;
+        mealMacronutrients.setTotalCarbohydrates(totalCarbohydrates);
+        mealMacronutrients.setTotalProteins(totalProteins);
+        mealMacronutrients.setTotalFats(totalFats);
+        return mealMacronutrients;
     }
 
 }

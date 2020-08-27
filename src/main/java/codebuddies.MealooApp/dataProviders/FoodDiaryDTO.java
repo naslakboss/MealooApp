@@ -1,6 +1,7 @@
 package codebuddies.MealooApp.dataProviders;
 
 import codebuddies.MealooApp.entities.meal.Meal;
+import codebuddies.MealooApp.entities.meal.MealMacronutrients;
 import codebuddies.MealooApp.entities.product.Macronutrients;
 
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ public class FoodDiaryDTO {
 
     List<MealDTO> listOfMeals;
 
-    Macronutrients macronutrients;
+    MealMacronutrients mealMacronutrients;
 
     int totalCalories;
 
@@ -22,10 +23,10 @@ public class FoodDiaryDTO {
     }
 
     public FoodDiaryDTO(LocalDate date, List<MealDTO> listOfMeals
-            , Macronutrients macronutrients, int totalCalories, double totalPrice) {
+            , MealMacronutrients mealMacronutrients, int totalCalories, double totalPrice) {
         this.date = date;
         this.listOfMeals = listOfMeals;
-        this.macronutrients = macronutrients;
+        this.mealMacronutrients = mealMacronutrients;
         this.totalCalories = totalCalories;
         this.totalPrice = totalPrice;
     }
@@ -46,12 +47,12 @@ public class FoodDiaryDTO {
         this.listOfMeals = listOfMeals;
     }
 
-    public Macronutrients getMacronutrients() {
-        return macronutrients;
+    public MealMacronutrients getMealMacronutrients() {
+        return mealMacronutrients;
     }
 
-    public void setMacronutrients(Macronutrients macronutrients) {
-        this.macronutrients = macronutrients;
+    public void setMealMacronutrients(MealMacronutrients mealMacronutrients) {
+        this.mealMacronutrients = mealMacronutrients;
     }
 
     public int getTotalCalories() {
