@@ -14,12 +14,10 @@ import java.util.*;
 public class MealooUserService {
 
     private MealooUserRepository mealooUserRepository;
-    private FoodDiaryService foodDiaryService;
 
     @Autowired
-    public MealooUserService(MealooUserRepository mealooUserRepository, FoodDiaryService foodDiaryService) {
+    public MealooUserService(MealooUserRepository mealooUserRepository) {
         this.mealooUserRepository = mealooUserRepository;
-        this.foodDiaryService = foodDiaryService;
     }
 
     public List<MealooUser> findAll() {
@@ -30,23 +28,6 @@ public class MealooUserService {
         return mealooUserRepository.save(user1);
     }
 
-    public MealooUser addMealToDiary(String username, Meal meal, LocalDate date) {
-        MealooUser user = mealooUserRepository.findByUsername(username);
-
-        FoodDiary foodDiary = foodDiaryService.findByDate(date);
-
-        user.addDiary(foodDiary);
-
-        foodDiary.setListOfMeals(Collections.singletonList(meal));
-
-        mealooUserRepository.save(user);
-
-        foodDiaryService.save(foodDiary);
-
-        return user;
-    }
-
-
     public MealooUser findByUsername(String username) throws ResourceNotFoundException {
         MealooUser user = mealooUserRepository.findByUsername(username);
         if(user == null){
@@ -55,7 +36,7 @@ public class MealooUserService {
         return user;
     }
 
-    public MealooUser patchByUsername(String username, MealooUser mealooUser) {
+    public MealooUser updateByUsername(String username, MealooUser mealooUser) {
         MealooUser patchedUser = mealooUserRepository.findByUsername(username);
         if(mealooUser.getPassword()!= null) {
             patchedUser.setPassword(mealooUser.getPassword());
@@ -75,11 +56,12 @@ public class MealooUserService {
         if(mealooUser.getMealooUserDetails().getSex() != null){
             patchedUser.getMealooUserDetails().setSex(mealooUser.getMealooUserDetails().getSex());
         }
+        save(patchedUser);
         return patchedUser;
     }
 
 
-    public Map calculateBMIandCaloricDemand(MealooUser user) {
+    public Map calculateBMIAndCaloricDemand(MealooUser user) {
         Map<String, Double> result = new LinkedHashMap<>();
         double userBMI = user.getMealooUserDetails()
                 .calculateBMI();

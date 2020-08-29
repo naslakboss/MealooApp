@@ -52,13 +52,13 @@ public class MealooUserController {
     @PatchMapping("/{username}")
     public ResponseEntity<MealooUser> patchUserByUsername(@PathVariable String username
             , @RequestBody MealooUser mealooUser){
-        MealooUser patchedUser = mealooUserService.patchByUsername(username, mealooUser);
+        MealooUser patchedUser = mealooUserService.updateByUsername(username, mealooUser);
         return ResponseEntity.ok(patchedUser);
 
     }
     @GetMapping("/calculateBMIandCaloricDemand/{username}")
     public ResponseEntity<Map> calculateBMI(@PathVariable String username) throws ResourceNotFoundException {
-        return ResponseEntity.ok(mealooUserService.calculateBMIandCaloricDemand(mealooUserService.findByUsername(username)));
+        return ResponseEntity.ok(mealooUserService.calculateBMIAndCaloricDemand(mealooUserService.findByUsername(username)));
     }
 
 }
