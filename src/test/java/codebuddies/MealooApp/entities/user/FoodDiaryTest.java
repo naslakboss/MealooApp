@@ -119,7 +119,7 @@ class FoodDiaryTest {
     void shouldCalculateCaloriesCorrectlyFromAllMealsInDiary() {
         //given
         int caloriesFromMeal1 = meal1.getTotalCalories();
-        int caloriesFromMeal2 = meal1.getTotalCalories();
+        int caloriesFromMeal2 = meal2.getTotalCalories();
         int totalCalories = caloriesFromMeal1 + caloriesFromMeal2;
         //when
         foodDiary.calculateCalories();
@@ -144,5 +144,10 @@ class FoodDiaryTest {
         //when
         foodDiary.calculateMealMacronutrients();
         //then
+        assertAll(
+                () -> assertThat(foodDiary.getMealMacronutrients().getTotalProteins(), equalTo(totalProteins)),
+                () -> assertThat(foodDiary.getMealMacronutrients().getTotalCarbohydrates(), equalTo(totalCarbohydrates)),
+                () -> assertThat(foodDiary.getMealMacronutrients().getTotalFats(), equalTo(totalFats))
+        );
     }
 }

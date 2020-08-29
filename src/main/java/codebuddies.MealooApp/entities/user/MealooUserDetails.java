@@ -24,13 +24,14 @@ public class MealooUserDetails {
 
     public int calculateCaloricDemand(){
         if(sex == Sex.MALE){
-           int maleDemand = (66 + (18 * weight) + (9 * height) - (8 * age)) * (physicalActivity.getMultiplier()/10);
+           int maleDemand = (66 + (14 * weight) + (5 * height) - (6 * age)) * (physicalActivity.getMultiplier()/10);
            return maleDemand;
         }
         int femaleDemand  = (655 + (10 * weight) + (2 * height) - (5 * age)) * (physicalActivity.getMultiplier()/10);
         return femaleDemand;
 
     }
+
 
     public MealooUserDetails() {
     }

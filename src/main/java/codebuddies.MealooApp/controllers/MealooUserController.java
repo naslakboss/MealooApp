@@ -60,5 +60,6 @@ public class MealooUserController {
     public ResponseEntity<Map> calculateBMI(@PathVariable String username) throws ResourceNotFoundException {
         return ResponseEntity.ok(mealooUserService.calculateBMIandCaloricDemand(mealooUserService.findByUsername(username)));
     }
+
 }
 

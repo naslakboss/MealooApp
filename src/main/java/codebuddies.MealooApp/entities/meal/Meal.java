@@ -153,7 +153,7 @@ public class Meal {
 
     }
 
-    public void recalulateData(){
+    public void recalculateData(){
         setPrice(calculatePrice());
         setMealMacronutrients(calculateMealMacronutrients());
         setTotalCalories(calculateCalories());

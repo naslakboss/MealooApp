@@ -122,7 +122,7 @@ class MealTest {
         int oldFats = meal.getMealMacronutrients().getTotalFats(); // Because product doesn't contain fats
         meal.getIngredients().get(0).setAmount(700);
         //when
-        meal.recalulateData();
+        meal.recalculateData();
         //then
         assertAll(
                 () -> assertThat(meal.getTotalCalories(), not(lessThan(oldCalories))),

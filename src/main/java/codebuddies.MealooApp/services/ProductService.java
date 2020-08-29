@@ -8,13 +8,18 @@ import codebuddies.MealooApp.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
 public class ProductService {
 
-    @Autowired
+
     ProductRepository productRepository;
+
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     public List<Product> findAll() {
         return productRepository.findAll();
@@ -38,21 +43,17 @@ public class ProductService {
         return product;
     }
 
-    public  Product updateByName(String name, Product product) throws ResourceNotFoundException {
+    @Transactional
+    public  Product updateByName(String name, Product product) throws ResourceNotFoundException, ValidationException {
         Product foundedProduct = findByName(name);
         Macronutrients macro = new Macronutrients();
         Macronutrients newMacro = product.getMacronutrients();
+
+        if(product.getName() != null){
+            foundedProduct.setName(product.getName());
+        }
         if(product.getPrice() != 0){
             foundedProduct.setPrice(product.getPrice());
-        }
-        if(product.getCaloriesPer100g() != 0){
-            foundedProduct.setCaloriesPer100g(product.getCaloriesPer100g());
-        }
-        if(product.getProductType()!=null){
-            foundedProduct.setProductType(product.getProductType());
-        }
-        if(newMacro.getCarbohydratesPer100g()!= 0){
-            macro.setCarbohydratesPer100g(newMacro.getCarbohydratesPer100g());
         }
         if(newMacro.getProteinsPer100g()!= 0){
             macro.setCarbohydratesPer100g(newMacro.getProteinsPer100g());
@@ -60,7 +61,15 @@ public class ProductService {
         if(newMacro.getFatsPer100g()!= 0){
             macro.setFatsPer100g(newMacro.getCarbohydratesPer100g());
         }
+        if(product.getCaloriesPer100g() != 0){
+            foundedProduct.setCaloriesPer100g(product.getCaloriesPer100g());
+        }
+        if(product.getProductType()!=null){
+            foundedProduct.setProductType(product.getProductType());
+        }
         foundedProduct.setMacronutrients(newMacro);
+        foundedProduct.calculateCaloriesPer100g();
+        save(foundedProduct);
         return foundedProduct;
     }
 
@@ -72,7 +81,7 @@ public class ProductService {
         productRepository.deleteByName(name);
     }
 
-    private void checkTheCorrectnessOfQuantity(Product product) throws ValidationException {
+    public boolean checkTheCorrectnessOfQuantity(Product product) throws ValidationException {
         if(product.getMacronutrients().getProteinsPer100g() + product.getMacronutrients().getCarbohydratesPer100g() > 100
                 || product.getMacronutrients().getProteinsPer100g() + product.getMacronutrients().getFatsPer100g() > 100
                     || product.getMacronutrients().getCarbohydratesPer100g() + product.getMacronutrients().getFatsPer100g() > 100
@@ -81,5 +90,6 @@ public class ProductService {
             throw new ValidationException("Total sum of Macronutrients in 100g of product" +
                     " cannot exceed 100g");
         }
+        return true;
     }
 }

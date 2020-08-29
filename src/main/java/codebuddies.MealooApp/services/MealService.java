@@ -8,7 +8,6 @@ import codebuddies.MealooApp.exceptions.MealIsNeededException;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.IngredientRepository;
 import codebuddies.MealooApp.repositories.MealRepository;
-import codebuddies.MealooApp.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +50,7 @@ public class MealService {
         return meal;
     }
 
-    public List<Ingredient> changeIngredients(Meal meal) throws ResourceNotFoundException {
+    public List<Ingredient> createListOfIngredients(Meal meal) throws ResourceNotFoundException {
         List<String> productsNames = meal.getIngredients().stream()
                 .map(Ingredient::getProduct).map(Product::getName).collect(Collectors.toList());
         List<Integer> amounts = meal.getIngredients().stream()
@@ -72,7 +71,7 @@ public class MealService {
     }
 
     public Meal save(Meal meal) throws ResourceNotFoundException {
-        List<Ingredient> ingredientList = changeIngredients(meal);
+        List<Ingredient> ingredientList = createListOfIngredients(meal);
         Meal newMeal = new Meal(meal.getName(), ingredientList, meal.getMealDifficulty());
         return mealRepository.save(newMeal);
     }
@@ -80,23 +79,22 @@ public class MealService {
     @Transactional
     public Meal updateByName(String name, Meal meal) throws ResourceNotFoundException {
         Meal foundedMeal = findByName(name);
+
         if(!foundedMeal.getFoodDiaries().isEmpty()){
             throw new MealIsNeededException();
         }
-        deleteByName(name);
-
         if(meal.getName() != null){
             foundedMeal.setName(meal.getName());
         }
 
         if(meal.getIngredients() != null){
-            foundedMeal.setIngredients(changeIngredients(meal));
+            foundedMeal.setIngredients(createListOfIngredients(meal));
         }
 
         if(meal.getMealDifficulty()!=null){
             foundedMeal.setMealDifficulty(meal.getMealDifficulty());
         }
-        foundedMeal.recalulateData();
+        foundedMeal.recalculateData();
         save(foundedMeal);
         return foundedMeal;
     }
@@ -104,6 +102,9 @@ public class MealService {
     public void deleteByName(String name) throws ResourceNotFoundException {
         if(!findByName(name).getFoodDiaries().isEmpty()){
             throw new MealIsNeededException();
+        }
+        if(mealRepository.findByName(name) == null){
+            throw new ResourceNotFoundException("This meal does not exist in repository");
         }
         mealRepository.deleteByName(name);
     }

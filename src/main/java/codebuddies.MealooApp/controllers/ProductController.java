@@ -8,6 +8,7 @@ import codebuddies.MealooApp.exceptions.ValidationException;
 import codebuddies.MealooApp.services.ProductService;
 //import mealoapp.MealooAppp.services.ProductTypeService;
 //import codebuddies.MealooApp.services.ProductTypeService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.validation.Valid;
 import javax.validation.executable.ValidateOnExecution;
+import java.io.DataInput;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,9 +94,9 @@ public class ProductController {
     }
 
     @PatchMapping("/patch/{name}")
-    public ResponseEntity<ProductDTO> patchProductByName(@PathVariable String name, @Valid Product product) throws ResourceNotFoundException {
-        productService.updateByName(name, product);
-        return ResponseEntity.ok(productFacade.getProductByName(name));
+    public ResponseEntity<ProductDTO> patchProductByName(@PathVariable String name, @Valid @RequestBody Product product) throws ResourceNotFoundException, ValidationException {
+        Product patchedProduct = productService.updateByName(name, product);
+        return ResponseEntity.ok(productFacade.getProductByName(patchedProduct.getName()));
     }
 
     @DeleteMapping("/delete/{name}")
