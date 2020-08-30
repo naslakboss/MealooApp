@@ -3,12 +3,14 @@ package codebuddies.MealooApp.entities.user;
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
 import codebuddies.MealooApp.entities.product.Macronutrients;
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 public class FoodDiary {
@@ -51,7 +53,12 @@ public class FoodDiary {
     }
 
     public void deleteMeal(Meal meal) {
-        listOfMeals.remove(meal);
+        Optional<Meal> mealToDelete = listOfMeals.stream()
+                    .filter(diaryMeals -> diaryMeals.getName().equals(meal.getName())).findAny();
+        if(mealToDelete.isEmpty()){
+            throw new ResourceNotFoundException("This diary does not contain " + meal.getName());
+        }
+        listOfMeals.remove(mealToDelete.get());
     }
 
     public long getId() {
@@ -78,11 +85,11 @@ public class FoodDiary {
         this.date = date;
     }
 
-    public MealooUser getFakeUser() {
+    public MealooUser getMealooUser() {
         return mealooUser;
     }
 
-    public void setFakeUser(MealooUser mealooUsers) {
+    public void setMealooUser(MealooUser mealooUsers) {
         this.mealooUser = mealooUser;
     }
 

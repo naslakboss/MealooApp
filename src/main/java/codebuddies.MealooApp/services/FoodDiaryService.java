@@ -3,7 +3,6 @@ package codebuddies.MealooApp.services;
 
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
-import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.user.MealooUser;
 import codebuddies.MealooApp.entities.user.FoodDiary;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
@@ -19,17 +18,17 @@ import java.util.stream.Collectors;
 @Service
 public class FoodDiaryService {
 
-    @Autowired
-    private FoodDiaryRepository foodDiaryRepository;
-    @Autowired
-    private MealService mealService;
 
-    //todo using only constructor dependency injection caused cycle error
-//    @Autowired
-//    public FoodDiaryService(FoodDiaryRepository foodDiaryRepository, MealService mealService, MealooUserService mealooUserService) {
-//        this.foodDiaryRepository = foodDiaryRepository;
-//        this.mealService = mealService;
-//    }
+
+    FoodDiaryRepository foodDiaryRepository;
+
+    MealService mealService;
+
+    @Autowired
+    public FoodDiaryService(FoodDiaryRepository foodDiaryRepository, MealService mealService) {
+        this.foodDiaryRepository = foodDiaryRepository;
+        this.mealService = mealService;
+    }
 
     public FoodDiary save(FoodDiary diary) {
         return foodDiaryRepository.save(diary);
@@ -39,13 +38,16 @@ public class FoodDiaryService {
         return foodDiaryRepository.findAll();
     }
 
-    public FoodDiary findByDate(LocalDate date) {
-        return findByDate(date);
+    public List<FoodDiary> findByDate(LocalDate date) {
+        if(foodDiaryRepository.findByDate(date).isEmpty()){
+            throw new ResourceNotFoundException("Diary of Given date does not exist in database");
+        }
+        return foodDiaryRepository.findByDate(date).get();
     }
 
     public List<FoodDiary> findAllDiaries(MealooUser user) {
         return foodDiaryRepository.findAll().stream()
-                .filter(foodDiary -> foodDiary.getFakeUser()==user).collect(Collectors.toList());
+                .filter(foodDiary -> foodDiary.getMealooUser()==user).collect(Collectors.toList());
     }
 
     public FoodDiary createNewDiary(MealooUser user){
@@ -66,6 +68,16 @@ public class FoodDiaryService {
         return todayFoodDiary.orElseGet(() -> createNewDiary(user));
     }
 
+    public FoodDiary findDiaryOfDay(MealooUser user, String date) {
+        LocalDate parsedDate = LocalDate.parse(date);
+        Optional<FoodDiary> diary = findAllDiaries(user).stream()
+                .filter(foodDiary -> foodDiary.getDate().isEqual(parsedDate)).findAny();
+        if(diary.isEmpty()){
+            return createNewDiary(user);
+        }
+        return diary.get();
+    }
+
     public FoodDiary addMealToCurrentDiary(MealooUser user, String name) throws ResourceNotFoundException {
         FoodDiary diary = findTodaysDiary(user);
         Meal meal = mealService.findByName(name);
@@ -77,20 +89,7 @@ public class FoodDiaryService {
 
         foodDiaryRepository.save(diary);
         return diary;
-
-
     }
-
-    public FoodDiary findDiaryOfDay(MealooUser user, String date) {
-        LocalDate parsedDate = LocalDate.parse(date);
-        Optional<FoodDiary> diary = findAllDiaries(user).stream()
-                .filter(foodDiary -> foodDiary.getDate().isEqual(parsedDate)).findAny();
-        if(diary.isPresent()){
-            createNewDiary(user);
-        }
-        return diary.get();
-    }
-
 
     public FoodDiary deleteMealFromCurrentDiary(MealooUser user, String mealName) throws ResourceNotFoundException {
         FoodDiary diary = findTodaysDiary(user);
