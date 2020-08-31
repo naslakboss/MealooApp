@@ -66,4 +66,5 @@ public class ClientController {
         diaryService.deleteMealFromCurrentDiary(user, mealName);
         return  ResponseEntity.ok(foodDiaryFacade.findTodaysDiary(username));
     }
+    // todo add algorithm
 }
