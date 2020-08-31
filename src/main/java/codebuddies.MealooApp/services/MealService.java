@@ -94,6 +94,9 @@ public class MealService {
         if(meal.getMealDifficulty()!=null){
             foundedMeal.setMealDifficulty(meal.getMealDifficulty());
         }
+        if(meal.getRecipe()!=null){
+            foundedMeal.setRecipe(meal.getRecipe());
+        }
         foundedMeal.recalculateData();
         save(foundedMeal);
         return foundedMeal;

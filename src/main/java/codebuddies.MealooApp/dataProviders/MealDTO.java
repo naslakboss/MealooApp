@@ -20,17 +20,20 @@ public class MealDTO {
 
     int totalCalories;
 
+    String recipe;
+
     public MealDTO() {
     }
 
     public MealDTO(String name, List<IngredientForMealDTO> ingredients, double price,
-                   MealDifficulty mealDifficulty, MealMacronutrients mealMacronutrients, int totalCalories) {
+                   MealDifficulty mealDifficulty, MealMacronutrients mealMacronutrients, int totalCalories, String recipe) {
         this.name = name;
         this.ingredients = ingredients;
         this.price = price;
         this.mealDifficulty = mealDifficulty;
         this.mealMacronutrients = mealMacronutrients;
         this.totalCalories = totalCalories;
+        this.recipe = recipe;
 
     }
 
@@ -80,5 +83,13 @@ public class MealDTO {
 
     public void setTotalCalories(int totalCalories) {
         this.totalCalories = totalCalories;
+    }
+
+    public String getRecipe() {
+        return recipe;
+    }
+
+    public void setRecipe(String recipe) {
+        this.recipe = recipe;
     }
 }

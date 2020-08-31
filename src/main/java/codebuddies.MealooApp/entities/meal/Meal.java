@@ -24,6 +24,7 @@ public class Meal {
     @NotNull
     private MealDifficulty mealDifficulty;
 
+    private String recipe;
 
     @Embedded
     private MealMacronutrients mealMacronutrients;
@@ -45,6 +46,17 @@ public class Meal {
         mealMacronutrients = calculateMealMacronutrients();
         totalCalories = calculateCalories();
     }
+
+    public Meal(String name, List<Ingredient> ingredients, MealDifficulty mealDifficulty, String recipe) {
+        this.name = name;
+        this.ingredients = ingredients;
+        this.price = calculatePrice();
+        this.mealDifficulty = mealDifficulty;
+        this.recipe = recipe;
+        mealMacronutrients = calculateMealMacronutrients();
+        totalCalories = calculateCalories();
+    }
+
     //todo set some params protected or private
 
     public Long getId() {
@@ -109,6 +121,14 @@ public class Meal {
 
     public void setFoodDiaries(List<FoodDiary> foodDiaries) {
         this.foodDiaries = foodDiaries;
+    }
+
+    public String getRecipe() {
+        return recipe;
+    }
+
+    public void setRecipe(String recipe) {
+        this.recipe = recipe;
     }
 
     public double calculatePrice(){
@@ -176,7 +196,7 @@ public class Meal {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, ingredients, price, mealDifficulty, mealMacronutrients, totalCalories, foodDiaries);
+        return Objects.hash(id, name, ingredients, price, mealDifficulty, recipe, mealMacronutrients, totalCalories, foodDiaries);
     }
 
     @Override
@@ -187,6 +207,7 @@ public class Meal {
                 ", ingredients=" + ingredients +
                 ", price=" + price +
                 ", mealDifficulty=" + mealDifficulty +
+                ", recipe='" + recipe + '\'' +
                 ", mealMacronutrients=" + mealMacronutrients +
                 ", totalCalories=" + totalCalories +
                 ", foodDiaries=" + foodDiaries +
