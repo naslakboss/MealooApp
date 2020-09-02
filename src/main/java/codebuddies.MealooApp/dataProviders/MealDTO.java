@@ -2,7 +2,6 @@ package codebuddies.MealooApp.dataProviders;
 
 import codebuddies.MealooApp.entities.meal.MealDifficulty;
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
-import codebuddies.MealooApp.entities.product.Macronutrients;
 
 import java.util.List;
 
@@ -22,11 +21,14 @@ public class MealDTO {
 
     String recipe;
 
+    List<ImageDTO> images;
+
     public MealDTO() {
     }
 
     public MealDTO(String name, List<IngredientForMealDTO> ingredients, double price,
-                   MealDifficulty mealDifficulty, MealMacronutrients mealMacronutrients, int totalCalories, String recipe) {
+                   MealDifficulty mealDifficulty, MealMacronutrients mealMacronutrients, int totalCalories, String recipe
+                    ,List<ImageDTO> images) {
         this.name = name;
         this.ingredients = ingredients;
         this.price = price;
@@ -34,6 +36,7 @@ public class MealDTO {
         this.mealMacronutrients = mealMacronutrients;
         this.totalCalories = totalCalories;
         this.recipe = recipe;
+        this.images = images;
 
     }
 
@@ -91,5 +94,13 @@ public class MealDTO {
 
     public void setRecipe(String recipe) {
         this.recipe = recipe;
+    }
+
+    public List<ImageDTO> getImages() {
+        return images;
+    }
+
+    public void setImages(List<ImageDTO> images) {
+        this.images = images;
     }
 }

@@ -45,6 +45,8 @@ class MealServiceTest {
     MealRepository mealRepository;
     @Mock
     IngredientRepository ingredientRepository;
+    @Mock
+    ImageService imageService;
 
     Product product1;
     Product product2;
@@ -84,7 +86,7 @@ class MealServiceTest {
         meal2 = new Meal("RiceAndStrawberry", listOfIngredients2, MealDifficulty.EASY);
         meal3 = new Meal("ChickenAndStrawberry", listOfIngredients3, MealDifficulty.INSANE);
 
-        mealService = new MealService(productService, mealRepository, ingredientRepository);
+        mealService = new MealService(productService, mealRepository, ingredientRepository, imageService);
 
     }
 

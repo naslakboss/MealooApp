@@ -1,5 +1,6 @@
 package codebuddies.MealooApp.services;
 
+import codebuddies.MealooApp.entities.image.Image;
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.product.Ingredient;
 import codebuddies.MealooApp.entities.product.Product;
@@ -12,8 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,13 +29,16 @@ public class MealService {
 
     private IngredientRepository ingredientRepository;
 
+    private ImageService imageService;
+
     @Autowired
     public MealService(ProductService productService, MealRepository mealRepository
-            , IngredientRepository ingredientRepository) {
+            , IngredientRepository ingredientRepository, ImageService imageService) {
 
         this.productService = productService;
         this.mealRepository = mealRepository;
         this.ingredientRepository = ingredientRepository;
+        this.imageService = imageService;
     }
 
     public List<Meal> findAll() {
@@ -111,4 +118,12 @@ public class MealService {
         }
         mealRepository.deleteByName(name);
     }
+
+    public void addImageToMeal(String name, String filePath) throws IOException {
+        Meal meal = findByName(name);
+        String imageUrl  =  imageService.addNewImage(filePath);
+        Image newImg = new Image(filePath, imageUrl, meal);
+        imageService.save(newImg);
+    }
 }
+

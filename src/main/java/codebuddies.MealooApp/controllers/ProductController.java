@@ -2,7 +2,9 @@ package codebuddies.MealooApp.controllers;
 
 import codebuddies.MealooApp.dataProviders.ProductDTO;
 import codebuddies.MealooApp.dataProviders.ProductFacade;
+import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.product.Product;
+import codebuddies.MealooApp.entities.product.ProductType;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.exceptions.ValidationException;
 import codebuddies.MealooApp.services.ProductService;
@@ -10,6 +12,8 @@ import codebuddies.MealooApp.services.ProductService;
 //import codebuddies.MealooApp.services.ProductTypeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -40,22 +44,28 @@ public class ProductController {
     }
 
 //    @EventListener(ApplicationReadyEvent.class)
-//    public void fillDB() {
+//    public void fillDB() throws ValidationException {
 //
-//        Product egg = new Product("Eggs", 10, 155,
+//        Product egg = new Product("Eggs", 10,
 //                new Macronutrients(13, 1, 10), ProductType.DAIRY);
-//        Product bread = new Product("Bread", 3, 264,
+//        Product bread = new Product("Bread", 3,
 //                new Macronutrients(9, 50, 3), ProductType.GRAINS);
-//        Product milk = new Product("Milk", 4, 100,
+//        Product milk = new Product("Milk", 4,
 //                new Macronutrients(3, 4, 4), ProductType.DAIRY);
-//        Product beef = new Product("Beef", 30, 300,
+//        Product beef = new Product("Beef", 30,
 //                new Macronutrients(30, 5, 30), ProductType.MEAT);
-//        Product chicken = new Product("Chicken", 15, 100,
+//        Product chicken = new Product("Chicken", 15,
 //                new Macronutrients(22, 0, 1), ProductType.MEAT);
-//        Product pasta = new Product("Pasta", 8, 343,
+//        Product pasta = new Product("Pasta", 8,
 //                new Macronutrients(12, 65, 2), ProductType.MEAT);
-//        Product strawberry = new Product("Strawberry", 5, 33,
+//        Product strawberry = new Product("Strawberry", 5,
 //                new Macronutrients(2, 12, 2), ProductType.DAIRY);
+//        Product piers = new Product("ChickenBreast", 2,
+//                new Macronutrients(31, 0, 4), ProductType.MEAT);
+//        Product rice = new Product("WhiteRice", 1,
+//                new Macronutrients(7, 80, 1), ProductType.GRAINS);
+//        Product paprika = new Product("Paprika", 3,
+//                new Macronutrients(1, 7, 1), ProductType.VEGETABLES);
 //        productService.save(egg);
 //        productService.save(bread);
 //        productService.save(milk);
@@ -63,13 +73,6 @@ public class ProductController {
 //        productService.save(chicken);
 //        productService.save(pasta);
 //        productService.save(strawberry);
-//
-//        Product piers = new Product("ChickenBreast", 2, 170,
-//                new Macronutrients(31, 0, 4), ProductType.MEAT);
-//        Product rice = new Product("WhiteRice", 1, 360,
-//                new Macronutrients(7, 80, 1), ProductType.GRAINS);
-//        Product paprika = new Product("Paprika", 3, 28,
-//                new Macronutrients(1, 7, 1), ProductType.VEGETABLES);
 //        productService.save(piers);
 //        productService.save(rice);
 //        productService.save(paprika);

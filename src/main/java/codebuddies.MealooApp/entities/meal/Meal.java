@@ -1,5 +1,6 @@
 package codebuddies.MealooApp.entities.meal;
 
+import codebuddies.MealooApp.entities.image.Image;
 import codebuddies.MealooApp.entities.product.Ingredient;
 import codebuddies.MealooApp.entities.user.FoodDiary;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -34,6 +35,9 @@ public class Meal {
     @ManyToMany(mappedBy = "listOfMeals")
     @JsonIgnore
     private List<FoodDiary> foodDiaries;
+
+    @OneToMany(mappedBy = "meal")
+    private List<Image> images;
 
     public Meal() {
     }
@@ -131,6 +135,14 @@ public class Meal {
         this.recipe = recipe;
     }
 
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
+
     public double calculatePrice(){
         double totalPrice = 0;
         for(int i = 0; i < ingredients.size(); i++){
@@ -190,13 +202,15 @@ public class Meal {
                 Objects.equals(name, meal.name) &&
                 Objects.equals(ingredients, meal.ingredients) &&
                 mealDifficulty == meal.mealDifficulty &&
+                Objects.equals(recipe, meal.recipe) &&
                 Objects.equals(mealMacronutrients, meal.mealMacronutrients) &&
-                Objects.equals(foodDiaries, meal.foodDiaries);
+                Objects.equals(foodDiaries, meal.foodDiaries) &&
+                Objects.equals(images, meal.images);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, ingredients, price, mealDifficulty, recipe, mealMacronutrients, totalCalories, foodDiaries);
+        return Objects.hash(id, name, ingredients, price, mealDifficulty, recipe, mealMacronutrients, totalCalories, foodDiaries, images);
     }
 
     @Override
@@ -211,6 +225,7 @@ public class Meal {
                 ", mealMacronutrients=" + mealMacronutrients +
                 ", totalCalories=" + totalCalories +
                 ", foodDiaries=" + foodDiaries +
+                ", images=" + images +
                 '}';
     }
 }
