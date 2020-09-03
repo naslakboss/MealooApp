@@ -99,33 +99,32 @@ public class MealController {
         return ResponseEntity.ok().body(meal);
     }
 
-    @GetMapping("/raw/{name}")
-    public Meal findRawMeal(@PathVariable(value = "name") String name){
-        return mealService.findByName(name);
-    }
-
-
     @PostMapping("/add")
     public ResponseEntity<MealDTO> createMeal(@RequestBody @Valid Meal meal) throws ResourceNotFoundException {
         mealService.save(meal);
         return ResponseEntity.ok(mealFacade.findMealByName(meal.getName()));
     }
-    @Autowired
-    ImageService imageService;
 
-    @PostMapping("addImage/{name}")
-    public ResponseEntity<MealDTO> addImageToMeal(@RequestParam("filePath") String filePath, @PathVariable String name) throws IOException {
+    @PostMapping("image/{name}")
+    public ResponseEntity<MealDTO> addImageToMeal(@PathVariable String name, @RequestParam("filePath") String filePath) throws IOException {
         mealService.addImageToMeal(name, filePath);
         return ResponseEntity.ok(mealFacade.findMealByName(name));
     }
 
-    @PatchMapping("/patch/{name}")
+    @Transactional
+    @DeleteMapping("image/{name}")
+    public ResponseEntity deleteImageFromMeal(@PathVariable String name, @RequestParam("fileUrl") String fileUrl) throws IOException {
+        mealService.deleteImageFromMeal(name, fileUrl);
+        return ResponseEntity.ok("Image from meal " + name + " was successfully removed");
+    }
+
+    @PatchMapping("/{name}")
     public ResponseEntity<MealDTO> patchMealByName(@PathVariable String name, @Valid @RequestBody Meal meal) throws ResourceNotFoundException {
         Meal patchedMeal = mealService.updateByName(name, meal);
         return ResponseEntity.ok(mealFacade.findMealByName(patchedMeal.getName()));
     }
     @Transactional
-    @DeleteMapping("/delete/{name}")
+    @DeleteMapping("/{name}")
     public ResponseEntity deleteByName(@PathVariable String name) throws ResourceNotFoundException {
         mealService.deleteByName(name);
         return ResponseEntity.ok("Meal " + name + " was successfully deleted from Repository");

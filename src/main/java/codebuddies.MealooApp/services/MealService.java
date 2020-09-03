@@ -14,10 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -121,9 +118,20 @@ public class MealService {
 
     public void addImageToMeal(String name, String filePath) throws IOException {
         Meal meal = findByName(name);
-        String imageUrl  =  imageService.addNewImage(filePath);
+        Map result  =  imageService.addNewImage(filePath);
+        String imageUrl = result.get("url").toString();
+        String publicId = result.get("public_id").toString();
         Image newImg = new Image(filePath, imageUrl, meal);
         imageService.save(newImg);
+    }
+
+    public void deleteImageFromMeal(String name, String fileUrl) throws IOException {
+        Meal meal = findByName(name);
+        Optional<String> imageUrl = meal.getImages().stream().map(Image::getFileUrl).findAny();
+        if(imageUrl.isEmpty()){
+            throw new ResourceNotFoundException("Image with given publicID is not attached to this meal");
+        }
+        imageService.deleteByFileUrl(imageUrl.get());
     }
 }
 

@@ -18,16 +18,17 @@ public class ImageService {
 
     //todo Add improvement here
     private Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-    ));
+            "cloud_name", "codebuddies",
+            "api_key", "568422233866872",
+            "api_secret", "Ux0UcCPbF-yjojxpiaH5dEpFXUQ"));
 
     public ImageService(ImageRepository imageRepository){
         this.imageRepository = imageRepository;
     }
 
-    public String addNewImage(String filePath) throws IOException {
+    public Map addNewImage(String filePath) throws IOException {
         File file = new File(filePath);
-        Map result = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
-        return result.get("url").toString();
+        return cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
     }
 
     public Image save(Image image) {
@@ -37,4 +38,9 @@ public class ImageService {
     public void delete(Image image){
         imageRepository.delete(image);
     }
+
+    public void deleteByFileUrl(String fileUrl) throws IOException {
+        imageRepository.deleteByFileUrl(fileUrl);
+    }
+
 }

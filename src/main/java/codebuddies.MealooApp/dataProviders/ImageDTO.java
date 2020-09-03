@@ -2,12 +2,13 @@ package codebuddies.MealooApp.dataProviders;
 
 public class ImageDTO {
 
+
     String fileUrl;
 
     public ImageDTO() {
     }
 
-    public ImageDTO(String fileUrl) {
+    public ImageDTO( String fileUrl) {
         this.fileUrl = fileUrl;
     }
 
