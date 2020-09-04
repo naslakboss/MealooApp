@@ -1,7 +1,5 @@
 package codebuddies.MealooApp.services;
 
-
-import codebuddies.MealooApp.dataProviders.FoodDiaryDTO;
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
 import codebuddies.MealooApp.entities.user.MealooUser;
@@ -9,11 +7,8 @@ import codebuddies.MealooApp.entities.user.FoodDiary;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.FoodDiaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,14 +19,18 @@ public class FoodDiaryService {
 
 
 
-    FoodDiaryRepository foodDiaryRepository;
+    private FoodDiaryRepository foodDiaryRepository;
 
-    MealService mealService;
+    private MealService mealService;
+
+    private MealooUserService mealooUserService;
+
 
     @Autowired
-    public FoodDiaryService(FoodDiaryRepository foodDiaryRepository, MealService mealService) {
+    public FoodDiaryService(FoodDiaryRepository foodDiaryRepository, MealService mealService, MealooUserService mealooUserService) {
         this.foodDiaryRepository = foodDiaryRepository;
         this.mealService = mealService;
+        this.mealooUserService = mealooUserService;
     }
 
     public FoodDiary save(FoodDiary diary) {
@@ -83,33 +82,39 @@ public class FoodDiaryService {
         return diary.get();
     }
 
-    public FoodDiary addMealToCurrentDiary(MealooUser user, String name) throws ResourceNotFoundException {
+    public void recalculateData(FoodDiary diary){
+        diary.setMealMacronutrients(diary.calculateMealMacronutrients());
+        diary.setTotalCalories(diary.calculateCalories());
+        diary.setTotalPrice(diary.calculatePrice());
+    }
+
+    public FoodDiary addMealToCurrentDiary(String username, String name) throws ResourceNotFoundException {
+        MealooUser user = mealooUserService.findByUsername(username);
         FoodDiary diary = findTodaysDiary(user);
         Meal meal = mealService.findByName(name);
 
         diary.addMeal(meal);
-        diary.setMealMacronutrients(diary.calculateMealMacronutrients());
-        diary.setTotalCalories(diary.calculateCalories());
-        diary.setTotalPrice(diary.calculatePrice());
+        recalculateData(diary);
 
         foodDiaryRepository.save(diary);
         return diary;
     }
 
-    public FoodDiary deleteMealFromCurrentDiary(MealooUser user, String mealName) throws ResourceNotFoundException {
+    public FoodDiary deleteMealFromCurrentDiary(String username, String mealName) throws ResourceNotFoundException {
+        MealooUser user = mealooUserService.findByUsername(username);
         FoodDiary diary = findTodaysDiary(user);
         Meal meal = mealService.findByName(mealName);
-        diary.deleteMeal(meal);
 
-        diary.setMealMacronutrients(diary.calculateMealMacronutrients());
-        diary.setTotalCalories(diary.calculateCalories());
-        diary.setTotalPrice(diary.calculatePrice());
+        diary.deleteMeal(meal);
+        recalculateData(diary);
 
         foodDiaryRepository.save(diary);
         return diary;
     }
 
-    public FoodDiary generateDiet(int totalCalories, int numbersOfMeals, MealooUser user) {
+    public FoodDiary generateDiet(int totalCalories, int numbersOfMeals, String username) {
+        MealooUser user = mealooUserService.findByUsername(username);
+
         if(totalCalories < 0 || totalCalories > 10000){
             throw new RuntimeException("Total calories should be higher than 0 and less than 10000," +
                     " This app is not created for hulks");
@@ -139,7 +144,7 @@ public class FoodDiaryService {
 
         for(int i = 0; i < numbersOfMeals - 1; i++){
             int randomIndex = random.nextInt(namesOfMatchingMeals.size());
-            addMealToCurrentDiary(user, namesOfMatchingMeals.get(randomIndex));
+            addMealToCurrentDiary(username, namesOfMatchingMeals.get(randomIndex));
             namesOfMatchingMeals.remove(randomIndex);
         }
 
@@ -152,19 +157,18 @@ public class FoodDiaryService {
                     " Try to add new meals or create your own diary manually");
         }
 
-        addMealToCurrentDiary(user, fixDeficit.get(random.nextInt(fixDeficit.size())));
+        addMealToCurrentDiary(username, fixDeficit.get(random.nextInt(fixDeficit.size())));
 
         return findTodaysDiary(user);
     }
 
     public List<String> rejectMealsFromThreeDaysBack(MealooUser user){
 
-        List<String> result = user.getFoodDiaries().stream()
+            return user.getFoodDiaries().stream()
                 .filter(time -> DAYS.between(time.getDate(), LocalDate.now()) <= 3)
-                .map(FoodDiary::getListOfMeals)
-                .flatMap(Collection::stream)
-                .map(Meal::getName)
-                .collect(Collectors.toList());
-        return result;
+                    .map(FoodDiary::getListOfMeals)
+                        .flatMap(Collection::stream)
+                            .map(Meal::getName)
+                                .collect(Collectors.toList());
     }
 }

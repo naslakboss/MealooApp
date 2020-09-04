@@ -87,8 +87,7 @@ public class ProductController {
 
     @GetMapping("/{name}")
     public ResponseEntity<ProductDTO> findProductByName(@PathVariable String name) throws ResourceNotFoundException {
-        ProductDTO searchedProduct = productFacade.getProductByName(name);
-        return ResponseEntity.ok().body(searchedProduct);
+        return ResponseEntity.ok(productFacade.getProductByName(name));
     }
 
     @PostMapping("/add")

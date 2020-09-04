@@ -12,14 +12,11 @@ import codebuddies.MealooApp.entities.user.MealooUser;
 import codebuddies.MealooApp.entities.user.NutritionSettings;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.FoodDiaryRepository;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -44,6 +41,9 @@ class FoodDiaryServiceTest {
 
     @Mock
     MealService mealService;
+
+    @Mock
+    MealooUserService mealooUserService;
 
     Product product1;
     Product product2;
@@ -109,7 +109,7 @@ class FoodDiaryServiceTest {
         foodDiary3 = new FoodDiary(listOfMeals3, LocalDate.now(), mealooUser2);
         listOfDiaries = new ArrayList<>(List.of(foodDiary1, foodDiary2, foodDiary3));
 
-        foodDiaryService = new FoodDiaryService(foodDiaryRepository, mealService);
+        foodDiaryService = new FoodDiaryService(foodDiaryRepository, mealService, mealooUserService);
     }
 
     @Test
@@ -215,7 +215,7 @@ class FoodDiaryServiceTest {
     @Test
     void shouldCreateNewDiaryForCurrentDiaryIfNotExistForGivenUser(){
         //given
-        LocalDate date = LocalDate.of(2020, 8, 25);;
+        LocalDate date = LocalDate.of(2020, 8, 25);
         List<FoodDiary> diaries = new ArrayList<>();
         diaries.add(foodDiary1);
         diaries.add(foodDiary2);
@@ -246,7 +246,7 @@ class FoodDiaryServiceTest {
         given(foodDiaryRepository.findAll()).willReturn(listOfDiaries);
         mealooUser2.setFoodDiaries(List.of(foodDiary3));
         //when
-        FoodDiary result = foodDiaryService.addMealToCurrentDiary(mealooUser2, "RiceAndStrawberry");
+        FoodDiary result = foodDiaryService.addMealToCurrentDiary(mealooUser2.getUsername(), "RiceAndStrawberry");
         //then
         assertAll(
                 () -> assertThat(result.getListOfMeals().size(), equalTo(3)),
@@ -265,7 +265,7 @@ class FoodDiaryServiceTest {
         given(foodDiaryRepository.findAll()).willReturn(listOfDiaries);
         mealooUser2.setFoodDiaries(List.of(foodDiary3));
         //when
-        FoodDiary result = foodDiaryService.deleteMealFromCurrentDiary(mealooUser2, "RiceAndChicken");
+        FoodDiary result = foodDiaryService.deleteMealFromCurrentDiary(mealooUser2.getUsername(), "RiceAndChicken");
         //then
         assertAll(
                 () -> assertThat(result.getListOfMeals().size(), equalTo(1)),
@@ -280,7 +280,7 @@ class FoodDiaryServiceTest {
         //given + when
         given(mealService.findByName("WillowPears")).willThrow(ResourceNotFoundException.class);
         //then
-        assertThrows(ResourceNotFoundException.class, () -> foodDiaryService.addMealToCurrentDiary(mealooUser2, "WillowPears"));
+        assertThrows(ResourceNotFoundException.class, () -> foodDiaryService.addMealToCurrentDiary(mealooUser2.getUsername(), "WillowPears"));
     }
 
 
@@ -289,14 +289,14 @@ class FoodDiaryServiceTest {
         //given + when
         given(mealService.findByName("WillowPears")).willThrow(ResourceNotFoundException.class);
         //then
-        assertThrows(ResourceNotFoundException.class, () -> foodDiaryService.deleteMealFromCurrentDiary(mealooUser2, "WillowPears"));
+        assertThrows(ResourceNotFoundException.class, () -> foodDiaryService.deleteMealFromCurrentDiary(mealooUser2.getUsername(), "WillowPears"));
     }
 
     @Test
-    void shouldThrownAResourceNotFoundExceptionWhenDeletingMealFrocCurrentDiaryIfFoodDiaryDoesNotContainGivenMeal(){
+    void shouldThrownAResourceNotFoundExceptionWhenDeletingMealFromCurrentDiaryIfFoodDiaryDoesNotContainGivenMeal(){
         //given + when
         given(mealService.findByName("RiceAndStrawberry")).willReturn(meal2);
         //then
-        assertThrows(ResourceNotFoundException.class, () -> foodDiaryService.deleteMealFromCurrentDiary(mealooUser2, "RiceAndStrawberry"));
+        assertThrows(ResourceNotFoundException.class, () -> foodDiaryService.deleteMealFromCurrentDiary(mealooUser2.getUsername(), "RiceAndStrawberry"));
     }
 }
