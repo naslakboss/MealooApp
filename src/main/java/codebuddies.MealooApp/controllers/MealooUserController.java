@@ -33,10 +33,10 @@ public class MealooUserController {
 //                    ,new NutritionSettings(4000)
 //                        , new MealooUserDetails(100, 50, 30, Sex.MALE, PhysicalActivity.HIGH));
 //        mealooUserService.save(fakeUser);
-//        MealooUser naslakboss = new MealooUser(3L, "naslakboss", "pass", "damian@gmail.com"
-//                ,new NutritionSettings(3700)
-//                , new MealooUserDetails(183, 93, 21, Sex.MALE, PhysicalActivity.MEDIUM));
-//        mealooUserService.save(naslakboss);
+//        MealooUser client = new MealooUser(3L, "client", "pass", "client@gmail.com"
+//                ,new NutritionSettings(2000)
+//                , new MealooUserDetails(170, 65, 28, Sex.MALE, PhysicalActivity.MEDIUM));
+//        mealooUserService.save(client);
 //     }
 
     @GetMapping("")
@@ -57,7 +57,7 @@ public class MealooUserController {
         return ResponseEntity.ok(patchedUser);
 
     }
-    @GetMapping("/calculateBMIandCaloricDemand/{username}")
+    @GetMapping("/calculations/{username}")
     public ResponseEntity<Map> calculateBMI(@PathVariable String username) throws ResourceNotFoundException {
         return ResponseEntity.ok(mealooUserService.calculateBMIAndCaloricDemand(mealooUserService.findByUsername(username)));
     }

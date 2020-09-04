@@ -1,6 +1,7 @@
 package codebuddies.MealooApp.services;
 
 
+import codebuddies.MealooApp.dataProviders.FoodDiaryDTO;
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
 import codebuddies.MealooApp.entities.user.MealooUser;
@@ -8,12 +9,15 @@ import codebuddies.MealooApp.entities.user.FoodDiary;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.FoodDiaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 public class FoodDiaryService {
@@ -52,7 +56,8 @@ public class FoodDiaryService {
 
     public FoodDiary createNewDiary(MealooUser user){
         LocalDate date = LocalDate.now();
-        FoodDiary newFoodDiary = new FoodDiary(Collections.emptyList(), date, user);
+        List<Meal> emptyList = new ArrayList<>();
+        FoodDiary newFoodDiary = new FoodDiary(emptyList, date, user);
         newFoodDiary.setTotalPrice(0);
         newFoodDiary.setTotalCalories(0);
         newFoodDiary.setMealMacronutrients(new MealMacronutrients(0,0,0));
@@ -104,4 +109,62 @@ public class FoodDiaryService {
         return diary;
     }
 
+    public FoodDiary generateDiet(int totalCalories, int numbersOfMeals, MealooUser user) {
+        if(totalCalories < 0 || totalCalories > 10000){
+            throw new RuntimeException("Total calories should be higher than 0 and less than 10000," +
+                    " This app is not created for hulks");
+        }
+        if(numbersOfMeals < 3 || numbersOfMeals > 7){
+            throw new RuntimeException("Numbers of meals should vary from 3 to 7");
+        }
+        if(findTodaysDiary(user).getListOfMeals().size() != 0){
+            throw new RuntimeException("Meals for present day was already created");
+        }
+        int perfectCaloricValue = totalCalories/numbersOfMeals;
+
+        List<String> namesOfMatchingMeals = mealService.findAllNamesOfMatchingMeals(perfectCaloricValue);
+
+        List<String> removedMeals = rejectMealsFromThreeDaysBack(user);
+
+        for(String meal : removedMeals){
+            namesOfMatchingMeals.remove(meal);
+        }
+
+        if(namesOfMatchingMeals.size() < numbersOfMeals){
+            throw new ResourceNotFoundException("Sorry, database does not contain required meals." +
+                    " Try to add new meals or create your own diary manually");
+        }
+
+        Random random = new Random();
+
+        for(int i = 0; i < numbersOfMeals - 1; i++){
+            int randomIndex = random.nextInt(namesOfMatchingMeals.size());
+            addMealToCurrentDiary(user, namesOfMatchingMeals.get(randomIndex));
+            namesOfMatchingMeals.remove(randomIndex);
+        }
+
+        int deficit = totalCalories - findTodaysDiary(user).getTotalCalories();
+
+        List<String> fixDeficit = mealService.findAllNamesOfMealsForCorrectDeficit(deficit);
+
+        if(fixDeficit.isEmpty()){
+            throw new ResourceNotFoundException("Sorry, database does not contain required meals." +
+                    " Try to add new meals or create your own diary manually");
+        }
+
+        addMealToCurrentDiary(user, fixDeficit.get(random.nextInt(fixDeficit.size())));
+
+        return findTodaysDiary(user);
+    }
+
+    public List<String> rejectMealsFromThreeDaysBack(MealooUser user){
+
+        List<String> result = user.getFoodDiaries().stream()
+                .filter(time -> DAYS.between(time.getDate(), LocalDate.now()) <= 3)
+                .map(FoodDiary::getListOfMeals)
+                .flatMap(Collection::stream)
+                .map(Meal::getName)
+                .collect(Collectors.toList());
+        return result;
+    }
 }

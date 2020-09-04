@@ -87,7 +87,7 @@ public class MealController {
 //        Meal newMeal4 = new Meal("OnlyBeef", Collections.singletonList(beefIn), MealDifficulty.INSANE);
 //        mealService.save(newMeal4);
 //    }
-
+// todo add pageable
     @GetMapping("")
     public ResponseEntity<List<MealDTO>> findAllMeals(){
         return ResponseEntity.ok(mealFacade.findAllMeals());

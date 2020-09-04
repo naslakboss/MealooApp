@@ -2,6 +2,7 @@ package codebuddies.MealooApp.controllers;
 
 import codebuddies.MealooApp.dataProviders.FoodDiaryDTO;
 import codebuddies.MealooApp.dataProviders.FoodDiaryFacade;
+import codebuddies.MealooApp.entities.user.FoodDiary;
 import codebuddies.MealooApp.entities.user.MealooUser;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.services.FoodDiaryService;
@@ -33,38 +34,46 @@ public class ClientController {
         this.mealooUserService = mealooUserService;
     }
 
-    @GetMapping("/allDiaries/{username}")
+    @GetMapping("/diaries/{username}")
     public ResponseEntity<List<FoodDiaryDTO>> findAllDiaries(@PathVariable String username) throws ResourceNotFoundException {
         return ResponseEntity.ok(foodDiaryFacade.findAllDiaries(username));
     }
 
-    @GetMapping("/getTodaysDiary/{username}")
+    @GetMapping("/todayDiary/{username}")
     public ResponseEntity<FoodDiaryDTO> getTodayDiary(@PathVariable String username) throws ResourceNotFoundException {
         return  ResponseEntity.ok(foodDiaryFacade.findTodaysDiary(username));
     }
 
-    @GetMapping("/getDiaryOfDay/{username}/{date}")
-    public ResponseEntity<FoodDiaryDTO> getDiaryOfGivenDay(@PathVariable String username, @PathVariable String date) throws ResourceNotFoundException {
+    @GetMapping("/diary/{username}")
+    public ResponseEntity<FoodDiaryDTO> getDiaryOfGivenDay(@PathVariable String username, @RequestParam("date") String date) throws ResourceNotFoundException {
         return ResponseEntity.ok(foodDiaryFacade.findDiaryOfDay(username, date));
     }
 
-    @PostMapping("/createNewDiary/{username}")
+    @PostMapping("/diary/{username}")
     public ResponseEntity<FoodDiaryDTO> createNewDiary(@PathVariable String username) throws ResourceNotFoundException {
         return ResponseEntity.ok(foodDiaryFacade.createNewDiary(username));
     }
 
-    @PostMapping("/addMeal/{username}/{mealName}")
-    public ResponseEntity<FoodDiaryDTO> addMealToDiary(@PathVariable String username, @PathVariable String mealName) throws ResourceNotFoundException {
+    @PostMapping("/addMeal/{username}")
+    public ResponseEntity<FoodDiaryDTO> addMealToDiary(@PathVariable String username, @RequestParam("mealName") String mealName) throws ResourceNotFoundException {
         MealooUser user = mealooUserService.findByUsername(username);
         diaryService.addMealToCurrentDiary(user, mealName);
         return ResponseEntity.ok(foodDiaryFacade.findTodaysDiary(username));
     }
 
-    @DeleteMapping("/deleteMeal/{username}/{mealName}")
-    public ResponseEntity<FoodDiaryDTO> deleteMealFromDiary(@PathVariable String username, @PathVariable String mealName) throws ResourceNotFoundException {
+    @DeleteMapping("/deleteMeal/{username}")
+    public ResponseEntity<FoodDiaryDTO> deleteMealFromDiary(@PathVariable String username, @RequestParam("mealName") String mealName) throws ResourceNotFoundException {
         MealooUser user = mealooUserService.findByUsername(username);
         diaryService.deleteMealFromCurrentDiary(user, mealName);
         return  ResponseEntity.ok(foodDiaryFacade.findTodaysDiary(username));
     }
     // todo add algorithm
+
+    @GetMapping("/generate/{name}")
+    public ResponseEntity<FoodDiaryDTO> generateListOfMealsAutomatically(@PathVariable String name
+                    , @RequestParam("totalCalories") int totalCalories, @RequestParam("numberOfMeals") int numbersOfMeals){
+        MealooUser user = mealooUserService.findByUsername(name);
+        diaryService.generateDiet(totalCalories, numbersOfMeals, user);
+        return  ResponseEntity.ok(foodDiaryFacade.findTodaysDiary(name));
+    }
 }

@@ -133,5 +133,19 @@ public class MealService {
         }
         imageService.deleteByFileUrl(imageUrl.get());
     }
+
+    public List<String> findAllNamesOfMatchingMeals(int perfectCaloricValue){
+        return   findAll().stream()
+                .filter(meal -> meal.getTotalCalories() > perfectCaloricValue - 100 &&
+                    meal.getTotalCalories() < perfectCaloricValue + 100)
+                        .map(Meal::getName).collect(Collectors.toList());
+    }
+
+    public List<String> findAllNamesOfMealsForCorrectDeficit(int deficit){
+        return   findAll().stream()
+                .filter(meal -> meal.getTotalCalories() > deficit - 100 &&
+                    meal.getTotalCalories() < deficit + 100)
+                        .map(Meal::getName).collect(Collectors.toList());
+    }
 }
 

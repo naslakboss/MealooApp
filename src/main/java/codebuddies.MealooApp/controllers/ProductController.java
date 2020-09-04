@@ -79,6 +79,7 @@ public class ProductController {
 //    }
 
 
+    // todo add pageable
     @GetMapping("")
     public ResponseEntity<List<ProductDTO>> findAllProducts() {
         return ResponseEntity.ok(productFacade.getAllProducts());
@@ -96,13 +97,13 @@ public class ProductController {
         return ResponseEntity.ok(productFacade.getProductByName(product.getName()));
     }
 
-    @PatchMapping("/patch/{name}")
+    @PatchMapping("/{name}")
     public ResponseEntity<ProductDTO> patchProductByName(@PathVariable String name, @Valid @RequestBody Product product) throws ResourceNotFoundException, ValidationException {
         Product patchedProduct = productService.updateByName(name, product);
         return ResponseEntity.ok(productFacade.getProductByName(patchedProduct.getName()));
     }
 
-    @DeleteMapping("/delete/{name}")
+    @DeleteMapping("/{name}")
     public ResponseEntity deleteByName(@PathVariable String name) throws ResourceNotFoundException {
         productService.deleteByName(name);
         return ResponseEntity.ok("Product " + name + " was successfully deleted from Repository");
