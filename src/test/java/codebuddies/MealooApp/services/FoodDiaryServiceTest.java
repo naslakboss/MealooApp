@@ -22,6 +22,7 @@ import org.mockito.quality.Strictness;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -31,6 +32,7 @@ import static org.hamcrest.Matchers.lessThan;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
+import static org.springframework.util.Assert.doesNotContain;
 
 @MockitoSettings(strictness = Strictness.STRICT_STUBS)
 @ExtendWith(SpringExtension.class)
@@ -64,11 +66,14 @@ class FoodDiaryServiceTest {
     List<Meal> listOfMeals1;
     List<Meal> listOfMeals2;
     List<Meal> listOfMeals3;
+
     MealooUser mealooUser1;
     MealooUser mealooUser2;
+
     FoodDiary foodDiary1;
     FoodDiary foodDiary2;
     FoodDiary foodDiary3;
+
     List<FoodDiary> listOfDiaries;
 
     FoodDiaryService foodDiaryService;
@@ -96,6 +101,7 @@ class FoodDiaryServiceTest {
         listOfMeals1.add(meal2);
 
         listOfMeals2 = new ArrayList<>(List.of(meal2, meal3));
+
         listOfMeals3 = new ArrayList<>();
         listOfMeals3.add(meal1);
         listOfMeals3.add(meal3);
@@ -107,7 +113,10 @@ class FoodDiaryServiceTest {
         foodDiary1 = new FoodDiary(listOfMeals1, LocalDate.now(), mealooUser1);
         foodDiary2 = new FoodDiary(listOfMeals2, LocalDate.now(), mealooUser1);
         foodDiary3 = new FoodDiary(listOfMeals3, LocalDate.now(), mealooUser2);
-        listOfDiaries = new ArrayList<>(List.of(foodDiary1, foodDiary2, foodDiary3));
+        listOfDiaries = new ArrayList<>();
+        listOfDiaries.add(foodDiary1);
+        listOfDiaries.add(foodDiary2);
+        listOfDiaries.add(foodDiary3);
 
         foodDiaryService = new FoodDiaryService(foodDiaryRepository, mealService, mealooUserService);
     }
@@ -233,33 +242,140 @@ class FoodDiaryServiceTest {
         );
     }
 
+
     @Test
     void shouldAddMealToCurrentDiaryIfMealExist() {
         //given
         given(mealService.findByName("RiceAndStrawberry")).willReturn(meal2);
+        given(mealooUserService.findByUsername("Admin")).willReturn(mealooUser2);
         List<FoodDiary> listOfDiaries = new ArrayList<>();
-        listOfDiaries.add(foodDiary1);
-        listOfDiaries.add(foodDiary2);
         listOfDiaries.add(foodDiary3);
         int totalCaloriesBefore = foodDiary3.getTotalCalories();
         float totalPriceBefore = foodDiary3.getTotalPrice();
         given(foodDiaryRepository.findAll()).willReturn(listOfDiaries);
         mealooUser2.setFoodDiaries(List.of(foodDiary3));
         //when
-        FoodDiary result = foodDiaryService.addMealToCurrentDiary(mealooUser2.getUsername(), "RiceAndStrawberry");
+        foodDiaryService.addMealToCurrentDiary("Admin", "RiceAndStrawberry");
         //then
         assertAll(
-                () -> assertThat(result.getListOfMeals().size(), equalTo(3)),
-                () -> assertThat(result.getListOfMeals().get(2).getName(), equalTo("RiceAndStrawberry")),
-                () -> assertThat(result.getTotalCalories(), greaterThan(totalCaloriesBefore)),
-                () -> assertThat(result.getTotalPrice(), greaterThan(totalPriceBefore))
+                () -> assertThat(mealooUser2.getFoodDiaries().get(0).getListOfMeals().size(), equalTo(3)),
+                () -> assertThat(mealooUser2.getFoodDiaries().get(0).getListOfMeals().get(2).getName(), equalTo("RiceAndStrawberry")),
+                () -> assertThat(mealooUser2.getFoodDiaries().get(0).getTotalCalories(), greaterThan(totalCaloriesBefore)),
+                () -> assertThat(mealooUser2.getFoodDiaries().get(0).getTotalPrice(), greaterThan(totalPriceBefore))
         );
     }
+    @Test
+    void shouldRejectMealsIfDateBetweenCurrentIsLessThanThree(){
+        //given
+        LocalDate currentDate = LocalDate.now();
+        LocalDate fourDaysBefore = currentDate.minusDays(4);
+        LocalDate fiveDaysBefore = currentDate.minusDays(5);
+        foodDiary2.setDate(fourDaysBefore);
+        foodDiary3.setDate(fiveDaysBefore);
+        mealooUser1.setFoodDiaries(listOfDiaries);
+        given(foodDiaryRepository.findAll()).willReturn(listOfDiaries);
+        //when
+        List<String> rejectedMealNames = foodDiaryService.rejectMealsFromThreeDaysBack(mealooUser1);
+        //then
+        assertAll(
+                () -> assertThat(rejectedMealNames.size(), equalTo(2)),
+                () -> assertThat(rejectedMealNames.get(0),equalTo(listOfMeals1.get(0).getName())),
+                () -> assertThat(rejectedMealNames.get(1), equalTo(listOfMeals1.get(1).getName()))
+        );
+    }
+
+    @Test
+    void shouldThrowRuntimeExceptionWhenTotalCaloriesIsLessThanZero(){
+        //given + when
+        int totalCalories = - 20;
+        int numberOfMeals = 5;
+        //then
+        Exception exception = assertThrows(RuntimeException.class, () ->
+                foodDiaryService.generateDiet(totalCalories, numberOfMeals, mealooUser1.getUsername()));
+
+        String expectedMessage = "Total calories should be higher than 0 and less than 10000," +
+                " This app is not created for hulks";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void shouldThrowExceptionRuntimeExceptionWhenTotalCaloriesIsMoreThan10000(){
+        //given + when
+        int totalCalories = 11000;
+        int numberOfMeals = 5;
+        //then
+            Exception exception = assertThrows(RuntimeException.class, () ->
+                foodDiaryService.generateDiet(totalCalories, numberOfMeals, mealooUser1.getUsername()));
+
+        String expectedMessage = "Total calories should be higher than 0 and less than 10000," +
+                " This app is not created for hulks";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void shouldThrowERuntimeExceptionWhenNumberOfMealsIsLessThan3(){
+        //given + when
+        int totalCalories = 2500;
+        int numberOfMeals = 1;
+        //then
+        Exception exception = assertThrows(RuntimeException.class, () ->
+                foodDiaryService.generateDiet(totalCalories, numberOfMeals, mealooUser1.getUsername()));
+
+        String expectedMessage = "Numbers of meals should vary from 3 to 7";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void shouldThrowRuntimeExceptionWhenNumberOfMealsIsMoreThan7(){
+        //given + when
+        int totalCalories = 2500;
+        int numberOfMeals = 10;
+        //then
+        Exception exception = assertThrows(RuntimeException.class, () ->
+                foodDiaryService.generateDiet(totalCalories, numberOfMeals, mealooUser1.getUsername()));
+
+        String expectedMessage = "Numbers of meals should vary from 3 to 7";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void shouldThrowRuntimeExceptionIfDiaryWasAlreadyCreated(){
+        //given + when
+        int totalCalories = 2500;
+        int numberOfMeals = 5;
+        List<FoodDiary> emptyDiary = new ArrayList<>();
+        given(foodDiaryRepository.findAll()).willReturn(emptyDiary);
+        //then
+        assertThrows(RuntimeException.class, () ->
+                foodDiaryService.generateDiet(totalCalories, numberOfMeals, mealooUser1.getUsername()));
+    }
+
+    @Test
+    void shouldThrowResourceFoundExceptionIfListOfNamesIsLessThanNumberOfMealsRequired(){
+        //given + when
+        int totalCalories = 2500;
+        int numberOfMeals = 4;
+        List<String> smallList = new ArrayList<>(List.of("Potato", "Cucubmer"));
+        given(mealService.findAllNamesOfMatchingMeals(anyInt())).willReturn(smallList);
+        //then
+        Exception exception = assertThrows(ResourceNotFoundException.class, () ->
+                foodDiaryService.generateDiet(totalCalories, numberOfMeals, mealooUser1.getUsername()));
+        String expectedMessage = "Sorry, database does not contain required meals." +
+                " Try to add new meals or create your own diary manually";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
 
     @Test
     void shouldDeleteMealFromCurrentDiaryIfMealExist() {
         //given
         given(mealService.findByName("RiceAndChicken")).willReturn(meal1);
+        given(mealooUserService.findByUsername("Admin")).willReturn(mealooUser2);
         int totalCaloriesBefore = foodDiary3.getTotalCalories();
         float totalPriceBefore = foodDiary3.getTotalPrice();
         given(foodDiaryRepository.findAll()).willReturn(listOfDiaries);

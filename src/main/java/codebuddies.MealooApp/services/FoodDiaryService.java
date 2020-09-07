@@ -150,7 +150,7 @@ public class FoodDiaryService {
 
         int deficit = totalCalories - findTodaysDiary(user).getTotalCalories();
 
-        List<String> fixDeficit = mealService.findAllNamesOfMealsForCorrectDeficit(deficit);
+        List<String> fixDeficit = mealService.findAllNamesOfMatchingMeals(deficit);
 
         if(fixDeficit.isEmpty()){
             throw new ResourceNotFoundException("Sorry, database does not contain required meals." +
@@ -164,7 +164,7 @@ public class FoodDiaryService {
 
     public List<String> rejectMealsFromThreeDaysBack(MealooUser user){
 
-            return user.getFoodDiaries().stream()
+            return findAllDiaries(user).stream()
                 .filter(time -> DAYS.between(time.getDate(), LocalDate.now()) <= 3)
                     .map(FoodDiary::getListOfMeals)
                         .flatMap(Collection::stream)

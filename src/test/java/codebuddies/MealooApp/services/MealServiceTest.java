@@ -1,5 +1,6 @@
 package codebuddies.MealooApp.services;
 
+import codebuddies.MealooApp.entities.image.Image;
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.meal.MealDifficulty;
 import codebuddies.MealooApp.entities.product.Ingredient;
@@ -22,10 +23,10 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -231,4 +232,65 @@ class MealServiceTest {
         //then
         verify(mealRepository, times(1)).deleteByName(anyString());
     }
+
+    @Test
+    void shouldReturnMealNamesIfTheDifferenceInCaloriesIsBetween100lessOrMoreThanTheIdeaValue(){
+        //given
+        given(mealRepository.findAll()).willReturn(Arrays.asList(meal1, meal2, meal3));
+        meal1.setTotalCalories(300);
+        meal2.setTotalCalories(550);
+        meal3.setTotalCalories(602);
+        int perfectCaloricValue = 500;
+        //when
+        List<String> matchingMeals = mealService.findAllNamesOfMatchingMeals(perfectCaloricValue);
+        //then
+        assertAll(
+                () -> assertThat(matchingMeals.size(), equalTo(1)),
+                () -> assertThat(matchingMeals.get(0), equalTo( meal2.getName()))
+        );
+    }
+
+    @Test
+    public void shouldAddImageToMeal() throws IOException {
+        //given
+        given(mealRepository.findByName("RiceAndChicken")).willReturn(meal1);
+
+        Map result = new HashMap();
+        result.put("filePath", "example//path//1");
+        result.put("url", "example//url.com");
+
+        given(imageService.addNewImage(anyString())).willReturn(result);
+        Image image = new Image(result.get("filePath").toString(), result.get("url").toString(), meal1);
+
+        //when
+        mealService.addImageToMeal("RiceAndChicken", "filePath");
+        //then
+        assertAll(
+                () -> assertThat(image.getMeal(), equalTo(meal1)),
+                () -> assertThat(image.getFilePath(), equalTo("example//path//1")),
+                () -> verify(imageService, times(1)).addNewImage("filePath"),
+                () -> verify(imageService, times(1)).save(any())
+        );
+    }
+        @Test
+        public void shouldDeleteImageFromMealIfUrlIsCorrect() throws IOException {
+            //given
+            given(mealRepository.findByName("RiceAndChicken")).willReturn(meal1);
+            Image image = new Image("path", "url", meal1);
+            //when
+            mealService.deleteImageFromMeal(meal1.getName(), "url");
+            //then
+            verify(imageService, times(1)).deleteByFileUrl("url");
+        }
+
+        @Test
+        public void shouldThrowResourceNotFoundExceptionWhenMealDoesNotHaveAnImage() {
+        //given + when
+        given(mealRepository.findByName("RiceAndChicken")).willReturn(meal1);
+        meal1.setImages(Collections.emptyList());
+        //then
+        assertThrows(ResourceNotFoundException.class, () ->
+                mealService.deleteImageFromMeal(meal1.getName(), anyString()));
+        }
+
 }

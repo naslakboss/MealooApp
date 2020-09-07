@@ -120,7 +120,6 @@ public class MealService {
         Meal meal = findByName(name);
         Map result  =  imageService.addNewImage(filePath);
         String imageUrl = result.get("url").toString();
-        String publicId = result.get("public_id").toString();
         Image newImg = new Image(filePath, imageUrl, meal);
         imageService.save(newImg);
     }
@@ -129,7 +128,7 @@ public class MealService {
         Meal meal = findByName(name);
         Optional<String> imageUrl = meal.getImages().stream().map(Image::getFileUrl).findAny();
         if(imageUrl.isEmpty()){
-            throw new ResourceNotFoundException("Image with given publicID is not attached to this meal");
+            throw new ResourceNotFoundException("Image with given URL is not attached to this meal");
         }
         imageService.deleteByFileUrl(imageUrl.get());
     }
@@ -141,11 +140,5 @@ public class MealService {
                         .map(Meal::getName).collect(Collectors.toList());
     }
 
-    public List<String> findAllNamesOfMealsForCorrectDeficit(int deficit){
-        return   findAll().stream()
-                .filter(meal -> meal.getTotalCalories() > deficit - 100 &&
-                    meal.getTotalCalories() < deficit + 100)
-                        .map(Meal::getName).collect(Collectors.toList());
-    }
 }
 
