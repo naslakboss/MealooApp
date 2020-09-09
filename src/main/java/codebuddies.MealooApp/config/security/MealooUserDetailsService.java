@@ -1,4 +1,4 @@
-package codebuddies.MealooApp.services;
+package codebuddies.MealooApp.config.security;
 
 import codebuddies.MealooApp.entities.user.MealooUser;
 import codebuddies.MealooApp.repositories.MealooUserRepository;
@@ -20,6 +20,7 @@ public class MealooUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         MealooUser mealooUser = mealooUserRepository.findByUsername(username);
         UserBuilder builder = null;
+
         if(mealooUser != null){
             builder = org.springframework.security.core.userdetails.User.withUsername(username);
             builder.password(new BCryptPasswordEncoder().encode(mealooUser.getPassword()));

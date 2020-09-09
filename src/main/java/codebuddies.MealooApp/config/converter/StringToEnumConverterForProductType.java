@@ -1,4 +1,4 @@
-package codebuddies.MealooApp.config;
+package codebuddies.MealooApp.config.converter;
 
 import codebuddies.MealooApp.entities.product.ProductType;
 import org.springframework.core.convert.converter.Converter;

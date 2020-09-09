@@ -1,5 +1,7 @@
-package codebuddies.MealooApp.config;
+package codebuddies.MealooApp.config.converter;
 
+import codebuddies.MealooApp.config.converter.StringToEnumConverterForMealDifficulty;
+import codebuddies.MealooApp.config.converter.StringToEnumConverterForProductType;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
