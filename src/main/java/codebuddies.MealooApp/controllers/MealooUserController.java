@@ -4,22 +4,22 @@ import codebuddies.MealooApp.entities.user.*;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.services.MealooUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
+@PreAuthorize("#username == authentication.principal.username or hasRole('ROLE_ADMIN')")
 public class MealooUserController {
 
 
     private MealooUserService mealooUserService;
+
 
     @Autowired
     public MealooUserController(MealooUserService mealooUserService) {
@@ -38,7 +38,6 @@ public class MealooUserController {
 //                , new MealooUserDetails(170, 65, 28, Sex.MALE, PhysicalActivity.MEDIUM));
 //        mealooUserService.save(client);
 //     }
-
     @GetMapping("")
     public ResponseEntity<List<MealooUser>> findAllUsers(){
         return ResponseEntity.ok(mealooUserService.findAll());
@@ -57,7 +56,7 @@ public class MealooUserController {
         return ResponseEntity.ok(patchedUser);
 
     }
-    @GetMapping("/calculations/{username}")
+    @GetMapping("/{username}/calculate")
     public ResponseEntity<Map> calculateBMI(@PathVariable String username) throws ResourceNotFoundException {
         return ResponseEntity.ok(mealooUserService.calculateBMIAndCaloricDemand(mealooUserService.findByUsername(username)));
     }

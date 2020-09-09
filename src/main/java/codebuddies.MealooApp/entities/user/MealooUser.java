@@ -3,6 +3,7 @@ package codebuddies.MealooApp.entities.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.List;
 
 @Entity
@@ -16,6 +17,10 @@ public class MealooUser {
 
     private String password;
 
+    private MealooUserRole mealooUserRole;
+
+    @Email
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Embedded
@@ -31,15 +36,11 @@ public class MealooUser {
     public MealooUser() {
     }
 
-    //todo There should be builder pattern but we will switch to oauth2 later
-    //todo set some params protected or private
-
-
     public MealooUser(String username, String password, String email, NutritionSettings nutritionSettings) {
-        this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.mealooUserRole = MealooUserRole.USER;
         this.nutritionSettings = nutritionSettings;
     }
 
@@ -50,6 +51,7 @@ public class MealooUser {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.mealooUserRole = MealooUserRole.USER;
         this.nutritionSettings = nutritionSettings;
         this.mealooUserDetails = mealooUserDetails;
     }
@@ -116,4 +118,13 @@ public class MealooUser {
     public void setMealooUserDetails(MealooUserDetails mealooUserDetails) {
         this.mealooUserDetails = mealooUserDetails;
     }
+
+    public MealooUserRole getMealooUserRole() {
+        return mealooUserRole;
+    }
+
+    public void setMealooUserRole(MealooUserRole mealooUserRole) {
+        this.mealooUserRole = mealooUserRole;
+    }
+
 }

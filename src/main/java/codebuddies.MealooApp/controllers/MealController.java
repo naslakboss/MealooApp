@@ -11,6 +11,7 @@ import codebuddies.MealooApp.services.MealService;
 import codebuddies.MealooApp.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -19,7 +20,7 @@ import java.io.IOException;
 import java.util.*;
 
 @RestController
-@RequestMapping("/meal")
+@RequestMapping("/meals")
 public class MealController {
 
     private MealService mealService;
@@ -105,14 +106,15 @@ public class MealController {
         return ResponseEntity.ok(mealFacade.findMealByName(meal.getName()));
     }
 
-    @PostMapping("image/{name}")
+    @PostMapping("{name}/add-image")
     public ResponseEntity<MealDTO> addImageToMeal(@PathVariable String name, @RequestParam("filePath") String filePath) throws IOException {
         mealService.addImageToMeal(name, filePath);
         return ResponseEntity.ok(mealFacade.findMealByName(name));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
     @Transactional
-    @DeleteMapping("image/{name}")
+    @DeleteMapping("/{name}/delete-image")
     public ResponseEntity deleteImageFromMeal(@PathVariable String name, @RequestParam("fileUrl") String fileUrl) throws IOException {
         mealService.deleteImageFromMeal(name, fileUrl);
         return ResponseEntity.ok("Image from meal " + name + " was successfully removed");
@@ -123,6 +125,7 @@ public class MealController {
         Meal patchedMeal = mealService.updateByName(name, meal);
         return ResponseEntity.ok(mealFacade.findMealByName(patchedMeal.getName()));
     }
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
     @Transactional
     @DeleteMapping("/{name}")
     public ResponseEntity deleteByName(@PathVariable String name) throws ResourceNotFoundException {
