@@ -17,7 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
-//@PreAuthorize("#username == authentication.principal.username or hasRole('ROLE_ADMIN')")
+@PreAuthorize("#username == authentication.principal.username or hasRole('ROLE_ADMIN')")
 public class MealooUserController {
 
 
@@ -40,14 +40,6 @@ public class MealooUserController {
 //                ,new NutritionSettings(2000)
 //                , new MealooUserDetails(170, 65, 28, Sex.MALE, PhysicalActivity.MEDIUM));
 //        mealooUserService.save(client);
-//        MealooUser admin = mealooUserService.findByUsername("naslakboss");
-//        admin.setMealooUserRole(MealooUserRole.ADMIN);
-
-//        MealooUser client = mealooUserService.findByUsername("client");
-//        client.setMealooUserRole(MealooUserRole.MODERATOR);
-
-//        MealooUser test = mealooUserService.findByUsername("test");
-//        test.setMealooUserRole(MealooUserRole.USER);
 //     }
     @GetMapping("")
     public ResponseEntity<List<MealooUser>> findAllUsers(){
