@@ -28,10 +28,10 @@ public class MealooUserController {
     public MealooUserController(MealooUserService mealooUserService) {
         this.mealooUserService = mealooUserService;
     }
-
-    @Transactional
-    @EventListener(ApplicationReadyEvent.class)
-    public void fillDB(){
+//
+//    @Transactional
+//    @EventListener(ApplicationReadyEvent.class)
+//    public void fillDB(){
 //        MealooUser fakeUser = new MealooUser(2L, "test", "pass", "test@gmail.com"
 //                    ,new NutritionSettings(4000)
 //                        , new MealooUserDetails(100, 50, 30, Sex.MALE, PhysicalActivity.HIGH));
@@ -40,15 +40,15 @@ public class MealooUserController {
 //                ,new NutritionSettings(2000)
 //                , new MealooUserDetails(170, 65, 28, Sex.MALE, PhysicalActivity.MEDIUM));
 //        mealooUserService.save(client);
-        MealooUser admin = mealooUserService.findByUsername("naslakboss");
-        admin.setMealooUserRole(MealooUserRole.ADMIN);
+//        MealooUser admin = mealooUserService.findByUsername("naslakboss");
+//        admin.setMealooUserRole(MealooUserRole.ADMIN);
 
-        MealooUser client = mealooUserService.findByUsername("client");
-        client.setMealooUserRole(MealooUserRole.MODERATOR);
+//        MealooUser client = mealooUserService.findByUsername("client");
+//        client.setMealooUserRole(MealooUserRole.MODERATOR);
 
-        MealooUser test = mealooUserService.findByUsername("test");
-        test.setMealooUserRole(MealooUserRole.USER);
-     }
+//        MealooUser test = mealooUserService.findByUsername("test");
+//        test.setMealooUserRole(MealooUserRole.USER);
+//     }
     @GetMapping("")
     public ResponseEntity<List<MealooUser>> findAllUsers(){
         return ResponseEntity.ok(mealooUserService.findAll());
