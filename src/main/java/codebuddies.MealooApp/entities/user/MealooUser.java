@@ -2,8 +2,13 @@ package codebuddies.MealooApp.entities.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -13,9 +18,14 @@ public class MealooUser {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank
+    @Length(min = 5, max = 30)
     private String username;
 
+    @NotBlank
+    @Length(min = 6, max = 30)
     private String password;
+
 
     private MealooUserRole mealooUserRole;
 
@@ -26,7 +36,7 @@ public class MealooUser {
     @Embedded
     private NutritionSettings nutritionSettings;
 
-    @OneToMany(mappedBy = "mealooUser")
+    @OneToMany(mappedBy = "mealooUser", orphanRemoval = true)
     @JsonIgnore
     private List<FoodDiary> foodDiaries;
 
@@ -36,12 +46,13 @@ public class MealooUser {
     public MealooUser() {
     }
 
-    public MealooUser(String username, String password, String email, NutritionSettings nutritionSettings) {
+    public MealooUser(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.mealooUserRole = MealooUserRole.USER;
-        this.nutritionSettings = nutritionSettings;
+        this.nutritionSettings = new NutritionSettings(0);
+        this.mealooUserDetails = new MealooUserDetails(0,0,0, Sex.MALE, PhysicalActivity.LITTLE);
     }
 
     public MealooUser(Long id, String username, String password, String email,

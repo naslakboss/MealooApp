@@ -25,7 +25,7 @@ public class FoodDiary {
 
     public LocalDate date;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnore
     private MealooUser mealooUser;
 

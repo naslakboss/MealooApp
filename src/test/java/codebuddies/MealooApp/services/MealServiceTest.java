@@ -178,7 +178,7 @@ class MealServiceTest {
         given(mealRepository.findByName("RiceAndChicken")).willReturn(meal1);
         meal1.setFoodDiaries(Collections.singletonList(
                 new FoodDiary(Arrays.asList(meal2,meal3), LocalDate.now()
-                        ,new MealooUser("Tester", "assertAll", "24/7@gmail.com", new NutritionSettings(4000)))));
+                        ,new MealooUser("Tester", "assertAll", "24/7@gmail.com"))));
         //then
         assertThrows(MealIsNeededException.class, () -> mealService.updateByName("RiceAndChicken", meal2));
     }
@@ -209,7 +209,7 @@ class MealServiceTest {
         given(mealRepository.findByName("RiceAndChicken")).willReturn(meal1);
         meal1.setFoodDiaries(Collections.singletonList(
                 new FoodDiary(Arrays.asList(meal2,meal3), LocalDate.now()
-                        ,new MealooUser("Tester", "assertAll", "24/7@gmail.com", new NutritionSettings(4000)))));
+                        ,new MealooUser("Tester", "assertAll", "24/7@gmail.com"))));
         //then
         assertThrows(MealIsNeededException.class, () -> mealService.deleteByName("RiceAndChicken"));
     }

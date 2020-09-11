@@ -70,8 +70,8 @@ class FoodDiaryTest {
         listOfMeals.add(meal1);
         listOfMeals.add(meal2);
 
-        mealooUser = new MealooUser("User", "secretPassword", "johnsmith@gmail.com"
-                , new NutritionSettings(3000));
+        mealooUser =
+                new MealooUser("User", "secretPassword", "johnsmith@gmail.com");
         foodDiary = new FoodDiary(listOfMeals, LocalDate.now(), mealooUser);
     }
 

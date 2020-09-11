@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface MealooUserRepository extends JpaRepository<MealooUser, Long> {
 
     MealooUser findByUsername(String username);
+
+    void deleteByUsername(String username);
 }

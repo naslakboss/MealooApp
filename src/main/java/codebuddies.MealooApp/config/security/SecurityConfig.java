@@ -12,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -40,6 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .and().formLogin().defaultSuccessUrl("/meals", true)
 //                .permitAll()
 //                .and().logout().logoutSuccessUrl("/login");
-        http.authorizeRequests().anyRequest().permitAll();
+        http.csrf().disable()
+                .authorizeRequests().anyRequest().permitAll();
     }
 }

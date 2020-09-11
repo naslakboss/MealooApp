@@ -66,10 +66,20 @@ public class MealooUserController {
         return ResponseEntity.ok(patchedUser);
 
     }
+
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/{username}")
+    @Transactional
+    public ResponseEntity deleteUserByUsername(@PathVariable String username){
+        mealooUserService.deleteByUsername(username);
+        return ResponseEntity.ok("User " + username + " was successfully deleted from database");
+    }
+
     @GetMapping("/{username}/calculate")
     public ResponseEntity<Map> calculateBMI(@PathVariable String username) throws ResourceNotFoundException {
         return ResponseEntity.ok(mealooUserService.calculateBMIAndCaloricDemand(mealooUserService.findByUsername(username)));
     }
+
 
 }
 

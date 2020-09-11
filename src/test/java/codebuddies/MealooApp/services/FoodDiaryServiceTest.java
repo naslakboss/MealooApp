@@ -106,10 +106,10 @@ class FoodDiaryServiceTest {
         listOfMeals3.add(meal1);
         listOfMeals3.add(meal3);
 
-        mealooUser1 = new MealooUser("User", "secretPassword", "johnsmith@gmail.com"
-                , new NutritionSettings(3000));
-        mealooUser2 = new MealooUser("Admin", "secretHardPassword", "andrewsmith@gmail.com"
-                , new NutritionSettings(3200));
+        mealooUser1
+                = new MealooUser("User", "secretPassword", "johnsmith@gmail.com");
+        mealooUser2
+                = new MealooUser("Admin", "secretHardPassword", "andrewsmith@gmail.com");
         foodDiary1 = new FoodDiary(listOfMeals1, LocalDate.now(), mealooUser1);
         foodDiary2 = new FoodDiary(listOfMeals2, LocalDate.now(), mealooUser1);
         foodDiary3 = new FoodDiary(listOfMeals3, LocalDate.now(), mealooUser2);

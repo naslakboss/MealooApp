@@ -1,13 +1,11 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.entities.meal.Meal;
-import codebuddies.MealooApp.entities.user.MealooUser;
-import codebuddies.MealooApp.entities.user.FoodDiary;
+import codebuddies.MealooApp.entities.user.*;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.MealooUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.time.LocalDate;
+
 import java.util.*;
 
 @Service
@@ -23,9 +21,13 @@ public class MealooUserService {
     public List<MealooUser> findAll() {
         return mealooUserRepository.findAll();
     }
-
+    //todo bcrypt
     public MealooUser save(MealooUser user) {
-        return mealooUserRepository.save(user);
+        MealooUser newUser = new MealooUser(user.getUsername(), user.getPassword(), user.getEmail());
+        newUser.setMealooUserRole(MealooUserRole.USER);
+        newUser.setNutritionSettings(new NutritionSettings(0));
+        newUser.setMealooUserDetails(new MealooUserDetails(0,0,0, Sex.MALE, PhysicalActivity.LITTLE));
+        return mealooUserRepository.save(newUser);
     }
 
     public MealooUser findByUsername(String username) throws ResourceNotFoundException {
@@ -40,6 +42,9 @@ public class MealooUserService {
         MealooUser patchedUser = mealooUserRepository.findByUsername(username);
         if(mealooUser.getPassword()!= null) {
             patchedUser.setPassword(mealooUser.getPassword());
+        }
+        if(mealooUser.getNutritionSettings().getDailyCaloricGoal() != 0){
+            patchedUser.getNutritionSettings().setDailyCaloricGoal(mealooUser.getNutritionSettings().getDailyCaloricGoal());
         }
         if(mealooUser.getMealooUserDetails().getAge() != 0){
             patchedUser.getMealooUserDetails().setAge(mealooUser.getMealooUserDetails().getAge());
@@ -56,9 +61,19 @@ public class MealooUserService {
         if(mealooUser.getMealooUserDetails().getSex() != null){
             patchedUser.getMealooUserDetails().setSex(mealooUser.getMealooUserDetails().getSex());
         }
-        save(patchedUser);
+        mealooUserRepository.save(patchedUser);
         return patchedUser;
     }
+
+    public void deleteByUsername(String username) {
+        MealooUser user = mealooUserRepository.findByUsername(username);
+        if(user == null){
+            throw new ResourceNotFoundException(username);
+        } else {
+            mealooUserRepository.deleteByUsername(username);
+        }
+    }
+
 
 
     public Map calculateBMIAndCaloricDemand(MealooUser user) {
@@ -74,4 +89,5 @@ public class MealooUserService {
         result.put("If you want to lose about 0.5kg per week, you should eat about", caloricDemand - 500);
         return result;
     }
+
 }

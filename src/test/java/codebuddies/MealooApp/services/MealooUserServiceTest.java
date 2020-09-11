@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -19,6 +20,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @MockitoSettings(strictness = Strictness.STRICT_STUBS)
 @ExtendWith(SpringExtension.class)
@@ -35,9 +37,9 @@ class MealooUserServiceTest {
 
     @BeforeEach
     void setUp(){
-        user1 = new MealooUser("Tester", "TopSecret", "imtester@gmail.com", new NutritionSettings(3500));
+        user1 = new MealooUser("Tester", "TopSecret", "imtester@gmail.com");
         user1.setMealooUserDetails(new MealooUserDetails(177, 83, 25, Sex.MALE, PhysicalActivity.MEDIUM));
-        user2 = new MealooUser("Client", "pass", "cleint@gmail.com", new NutritionSettings(4000));
+        user2 = new MealooUser("Client", "pass", "cleint@gmail.com");
         diary = new FoodDiary(Collections.emptyList(), LocalDate.now(), user1);
         userService = new MealooUserService(userRepository);
     }
@@ -88,11 +90,11 @@ class MealooUserServiceTest {
     @Test
     void shouldUpdateUserDataIfExist() {
         //given
-        given(userRepository.findByUsername("tester")).willReturn(user1);
-        MealooUser user3 = new MealooUser("Manager", "bCryptEncoded", "managermail@gmail.com", new NutritionSettings(3500));
+        given(userRepository.findByUsername("Tester")).willReturn(user1);
+        MealooUser user3 = new MealooUser("Manager", "bCryptEncoded", "managermail@gmail.com");
         user3.setMealooUserDetails(new MealooUserDetails(175, 80, 32, Sex.MALE, PhysicalActivity.LITTLE));
         //when
-        MealooUser result = userService.updateByUsername("tester", user3);
+        MealooUser result = userService.updateByUsername("Tester", user3);
         //then
         assertAll(
                 () -> assertThat(result.getMealooUserDetails().getAge(), equalTo(32)),
@@ -102,7 +104,25 @@ class MealooUserServiceTest {
     }
 
     @Test
-    void shouldThrowaResourceNotFoundExceptionWhenUpdateNotExistedUser(){
+    void shouldDeleteUserIfExists(){
+        //given
+        given(userRepository.findByUsername("Tester")).willReturn(user1);
+        //when
+        userService.deleteByUsername("Tester");
+        //then
+        verify(userRepository, times(1)).deleteByUsername("Tester");
+    }
+    @Test
+    void shouldThrowaResourceNotFoundExceptionWhenUserDoesNotExist(){
+        //given + when
+        given(userRepository.findByUsername("Yeti")).willReturn(null);
+        //then
+        assertThrows(ResourceNotFoundException.class, () ->
+                userService.deleteByUsername("Yeti"));
+    }
+
+    @Test
+    void shouldThrowAResourceNotFoundExceptionWhenUpdateNotExistedUser(){
         //given + when
         given(userRepository.findByUsername("Clerk")).willThrow(ResourceNotFoundException.class);
         //then
