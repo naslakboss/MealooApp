@@ -24,8 +24,8 @@ public class MealooUserService {
         return mealooUserRepository.findAll();
     }
 
-    public MealooUser save(MealooUser user1) {
-        return mealooUserRepository.save(user1);
+    public MealooUser save(MealooUser user) {
+        return mealooUserRepository.save(user);
     }
 
     public MealooUser findByUsername(String username) throws ResourceNotFoundException {

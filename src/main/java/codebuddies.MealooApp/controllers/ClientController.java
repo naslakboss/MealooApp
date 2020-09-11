@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/client")
-@PreAuthorize("#username == authentication.principal.username or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
+//@PreAuthorize("#username == authentication.principal.username or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
 public class ClientController {
 
     private FoodDiaryService diaryService;

@@ -33,7 +33,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/product")
-@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
+//@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
 public class ProductController {
 
     ProductService productService;

@@ -12,12 +12,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
-@PreAuthorize("#username == authentication.principal.username or hasRole('ROLE_ADMIN')")
+//@PreAuthorize("#username == authentication.principal.username or hasRole('ROLE_ADMIN')")
 public class MealooUserController {
 
 
@@ -50,6 +51,12 @@ public class MealooUserController {
     public ResponseEntity<MealooUser> findUserByUsername(@PathVariable String username) throws ResourceNotFoundException {
         MealooUser user = mealooUserService.findByUsername(username);
         return ResponseEntity.ok().body(user);
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<MealooUser> addNewUser(@RequestBody @Valid MealooUser mealooUser){
+        MealooUser newUser = mealooUserService.save(mealooUser);
+        return ResponseEntity.ok().body(newUser);
     }
 
     @PatchMapping("/{username}")

@@ -112,7 +112,7 @@ public class MealController {
         return ResponseEntity.ok(mealFacade.findMealByName(name));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
     @Transactional
     @DeleteMapping("/{name}/delete-image")
     public ResponseEntity deleteImageFromMeal(@PathVariable String name, @RequestParam("fileUrl") String fileUrl) throws IOException {
@@ -125,7 +125,7 @@ public class MealController {
         Meal patchedMeal = mealService.updateByName(name, meal);
         return ResponseEntity.ok(mealFacade.findMealByName(patchedMeal.getName()));
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
     @Transactional
     @DeleteMapping("/{name}")
     public ResponseEntity deleteByName(@PathVariable String name) throws ResourceNotFoundException {
