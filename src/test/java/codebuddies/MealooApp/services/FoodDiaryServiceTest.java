@@ -114,9 +114,11 @@ class FoodDiaryServiceTest {
                 = new MealooUser("User", "secretPassword", "johnsmith@gmail.com");
         mealooUser2
                 = new MealooUser("Admin", "secretHardPassword", "andrewsmith@gmail.com");
+
         foodDiary1 = new FoodDiary(listOfMeals1, LocalDate.now(), mealooUser1);
         foodDiary2 = new FoodDiary(listOfMeals2, LocalDate.now(), mealooUser1);
         foodDiary3 = new FoodDiary(listOfMeals3, LocalDate.now(), mealooUser2);
+
         listOfDiaries = new ArrayList<>();
         listOfDiaries.add(foodDiary1);
         listOfDiaries.add(foodDiary2);
@@ -142,9 +144,6 @@ class FoodDiaryServiceTest {
     @Test
     void shouldFindAllDiariesForOneUser() {
         //given
-        List<FoodDiary> listOfDiaries = new ArrayList<>();
-        listOfDiaries.add(foodDiary1);
-        listOfDiaries.add(foodDiary2);
         given(foodDiaryRepository.findAll()).willReturn(listOfDiaries);
         //when
         List<FoodDiary> diaries = foodDiaryService.findAll();
@@ -152,18 +151,13 @@ class FoodDiaryServiceTest {
         assertAll(
                 () -> assertThat(diaries.get(0), sameInstance(foodDiary1)),
                 () -> assertThat(diaries.get(1), sameInstance(foodDiary2)),
-                () -> assertThat(diaries.size(), sameInstance(2))
+                () -> assertThat(diaries.size(), sameInstance(3))
         );
     }
 
     @Test
     void shouldFindAllDiariesIfFoodDiariesWithGivenDataExist() {
         //given
-        List<FoodDiary> listOfDiaries = new ArrayList<>();
-        listOfDiaries.add(foodDiary1);
-        listOfDiaries.add(foodDiary2);
-        listOfDiaries.add(foodDiary3);
-
         given(foodDiaryRepository.findByDate(LocalDate.now())).willReturn(Optional.of(listOfDiaries));
         //when
         List<FoodDiary> result = foodDiaryService.findByDate(LocalDate.now());
@@ -182,12 +176,9 @@ class FoodDiaryServiceTest {
     @Test
     void shouldReturnAllDiariesForOnlyOneUser() {
         //given
-        List<FoodDiary> listOfDiaries2 = new ArrayList<>();
-        listOfDiaries2.add(foodDiary1);
-        listOfDiaries2.add(foodDiary2);
-        listOfDiaries2.add(foodDiary3);
+
         Pageable pageable = PageRequest.of(0,3);
-        given(foodDiaryRepository.findAll(pageable)).willReturn(createTestPage(listOfDiaries2, pageable));
+        given(foodDiaryRepository.findAll(pageable)).willReturn(createTestPage(listOfDiaries, pageable));
         //when
         List<FoodDiary> foodDiaries = foodDiaryService.findAllDiariesPageable(mealooUser1, pageable);
         //then
@@ -219,11 +210,8 @@ class FoodDiaryServiceTest {
     void shouldFindDairyOfCurrentDateIfExistForGivenUser(){
         //given
         LocalDate date = LocalDate.of(2020, 8, 25);
-        foodDiary2.setDate(date);
-        List<FoodDiary> diaries = new ArrayList<>();
-        diaries.add(foodDiary1);
-        diaries.add(foodDiary2);
-        given(foodDiaryRepository.findAll()).willReturn(diaries);
+        listOfDiaries.get(1).setDate(date);
+        given(foodDiaryRepository.findAll()).willReturn(listOfDiaries);
         //when
         FoodDiary result = foodDiaryService.findDiaryOfDay(mealooUser1, date.toString());
         //then
@@ -244,6 +232,24 @@ class FoodDiaryServiceTest {
         //then
         assertAll(
                 () -> assertThat(result.getDate(), equalTo(newDiary.getDate())),
+                () -> assertThat(result.getTotalPrice(), equalTo(0.0F)),
+                () -> assertThat(result.getTotalCalories(), equalTo(0)),
+                () -> assertThat(result.getListOfMeals(), equalTo(Collections.emptyList())),
+                () -> assertThat(result.getMealMacronutrients().getTotalCarbohydrates(), equalTo(0))
+        );
+    }
+
+    @Test
+    void shouldCreateNewDiaryForCurrentDiaryIfNotExistForGivenUser2(){
+        //given
+        LocalDate date = LocalDate.of(2020, 8, 25);
+        given(foodDiaryRepository.findAll()).willReturn(listOfDiaries);
+        LocalDate currentDate = LocalDate.now();
+        //when
+        FoodDiary result = foodDiaryService.findDiaryOfDay(mealooUser1, date.toString());
+        //then
+        assertAll(
+                () -> assertThat(result.getDate(), equalTo(currentDate)),
                 () -> assertThat(result.getTotalPrice(), equalTo(0.0F)),
                 () -> assertThat(result.getTotalCalories(), equalTo(0)),
                 () -> assertThat(result.getListOfMeals(), equalTo(Collections.emptyList())),

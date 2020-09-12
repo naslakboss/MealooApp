@@ -52,6 +52,7 @@ class MealServiceTest {
     Product product1;
     Product product2;
     Product product3;
+
     Ingredient ingredient1;
     Ingredient ingredient2;
     Ingredient ingredient3;
@@ -168,8 +169,14 @@ class MealServiceTest {
         assertThrows(ResourceNotFoundException.class, () -> mealService.createListOfIngredients(meal1));
     }
     @Test
-    void save(){
-        //todo ???
+    void shouldSaveMeal(){
+        //given
+        given(productService.findByName("Rice")).willReturn(product1);
+        given(productService.findByName("Chicken")).willReturn(product2);
+        //when
+        Meal savedMeal = mealService.save(meal1);
+        //then
+        verify(mealRepository, times(1)).save(any());
     }
 
     @Test
@@ -277,6 +284,7 @@ class MealServiceTest {
             //given
             given(mealRepository.findByName("RiceAndChicken")).willReturn(meal1);
             Image image = new Image("path", "url", meal1);
+            meal1.setImages(Collections.singletonList(image));
             //when
             mealService.deleteImageFromMeal(meal1.getName(), "url");
             //then
