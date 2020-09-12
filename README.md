@@ -18,11 +18,11 @@ Make sure you have the Internet connection :D
 
 ## Built With
 
- Java 11
- Spring 5
- JUnit 5
- Mockito 2
- PostresSQL
+ Java 11 <br>
+ Spring 5 <br>
+ JUnit 5 <br>
+ Mockito 2 <br>
+ PostresSQL <br>
  
 
 ## Frontend Codebase Repository
