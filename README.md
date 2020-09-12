@@ -1,6 +1,5 @@
 # Mealoo Web Client
 
-Client Web app that generates meal recipes and recommendations based on filters such as user's age, BMI, location, weather data, etc.
 Web app that generates meal recipes automatically basend on filters such as BMI and weight goals.
 It also serves as a food diary where the user can create their own meals.
 
