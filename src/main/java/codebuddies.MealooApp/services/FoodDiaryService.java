@@ -7,6 +7,7 @@ import codebuddies.MealooApp.entities.user.FoodDiary;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.FoodDiaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.*;
@@ -48,6 +49,10 @@ public class FoodDiaryService {
         return foodDiaryRepository.findByDate(date).get();
     }
 
+    public List<FoodDiary> findAllDiariesPageable(MealooUser user, Pageable pageable) {
+        return foodDiaryRepository.findAll(pageable).stream()
+                .filter(foodDiary -> foodDiary.getMealooUser()==user).collect(Collectors.toList());
+    }
     public List<FoodDiary> findAllDiaries(MealooUser user) {
         return foodDiaryRepository.findAll().stream()
                 .filter(foodDiary -> foodDiary.getMealooUser()==user).collect(Collectors.toList());

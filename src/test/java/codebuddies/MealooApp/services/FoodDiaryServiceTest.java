@@ -19,6 +19,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
@@ -121,6 +125,10 @@ class FoodDiaryServiceTest {
         foodDiaryService = new FoodDiaryService(foodDiaryRepository, mealService, mealooUserService);
     }
 
+    Page<FoodDiary> createTestPage(List<FoodDiary> foodDiaries, Pageable pageable){
+        return new PageImpl<>(foodDiaries, pageable, foodDiaries.size());
+    }
+
     @Test
     void shouldSaveFoodDiary() {
         //given
@@ -178,9 +186,10 @@ class FoodDiaryServiceTest {
         listOfDiaries2.add(foodDiary1);
         listOfDiaries2.add(foodDiary2);
         listOfDiaries2.add(foodDiary3);
-        given(foodDiaryRepository.findAll()).willReturn(listOfDiaries2);
+        Pageable pageable = PageRequest.of(0,3);
+        given(foodDiaryRepository.findAll(pageable)).willReturn(createTestPage(listOfDiaries2, pageable));
         //when
-        List<FoodDiary> foodDiaries = foodDiaryService.findAllDiaries(mealooUser1);
+        List<FoodDiary> foodDiaries = foodDiaryService.findAllDiariesPageable(mealooUser1, pageable);
         //then
         assertAll(
                 () -> assertThat(foodDiaries.size(), equalTo(2)),

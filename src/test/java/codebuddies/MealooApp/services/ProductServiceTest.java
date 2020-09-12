@@ -13,9 +13,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.*;
@@ -36,7 +39,7 @@ class ProductServiceTest {
     Product product1;
     Product product2;
     Product product3;
-
+    List<Product> products;
     ProductService productService;
 
     @BeforeEach
@@ -44,22 +47,29 @@ class ProductServiceTest {
         product1 = new Product("Potato", 5, new Macronutrients(2, 17,0), ProductType.GRAINS);
         product2 = new Product("Beef", 30, new Macronutrients(26, 0, 15), ProductType.MEAT);
         product3 = new Product("Chicken", 12, new Macronutrients(22, 1, 4), ProductType.MEAT);
-
+        products = List.of(product1, product2, product3);
         productService = new ProductService(productRepository);
+    }
+    Page<Product> createTestPage(Pageable pageable){
+        List<Product> listOfProducts = products;
+        return new PageImpl<>(listOfProducts, pageable, listOfProducts.size());
     }
 
     @Test
     void findAllShouldReturnListOfProduct() {
         //given
-        when(productRepository.findAll()).thenReturn(Arrays.asList(product1, product2, product3));
+        Pageable pageable = PageRequest.of(0, 3);
+        when(productRepository.findAll(pageable)).thenReturn(createTestPage(pageable));
         //when
-        List<Product> products = productService.findAll();
+
+        Page<Product> products = productService.findAll(pageable);
+        List<Product> productsList = products.getContent();
         //then
         assertAll(
-                () -> assertThat(products.size(), equalTo(3)),
-                () -> assertThat(products.get(0).getName(), equalTo("Potato")),
-                () -> assertThat(products.get(1).getPrice(), equalTo(30.0)),
-                () -> assertThat(products.get(2).getMacronutrients().getProteinsPer100g(), equalTo(22))
+                () -> assertThat(productsList.size(), equalTo(3)),
+                () -> assertThat(productsList.get(0).getName(), equalTo("Potato")),
+                () -> assertThat(productsList.get(1).getPrice(), equalTo(30.0)),
+                () -> assertThat(productsList.get(2).getMacronutrients().getProteinsPer100g(), equalTo(22))
         );
     }
 

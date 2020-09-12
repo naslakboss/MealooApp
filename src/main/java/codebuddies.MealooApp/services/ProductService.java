@@ -6,6 +6,8 @@ import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.exceptions.ValidationException;
 import codebuddies.MealooApp.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,8 +23,8 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public Page<Product> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     public Product save(Product product) throws ValidationException {

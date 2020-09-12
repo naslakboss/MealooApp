@@ -10,6 +10,8 @@ import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.IngredientRepository;
 import codebuddies.MealooApp.repositories.MealRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -40,6 +42,10 @@ public class MealService {
 
     public List<Meal> findAll() {
         return mealRepository.findAll();
+    }
+
+    public Page<Meal> findAllPageable(Pageable pageable){
+        return mealRepository.findAll(pageable);
     }
 
     public boolean existsByName(String name) {

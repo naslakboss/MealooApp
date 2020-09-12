@@ -5,6 +5,7 @@ import codebuddies.MealooApp.dataProviders.FoodDiaryFacade;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.services.FoodDiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +29,8 @@ public class ClientController {
     }
 
     @GetMapping("/{username}/diaries")
-    public ResponseEntity<List<FoodDiaryDTO>> findAllDiaries(@PathVariable String username) throws ResourceNotFoundException {
-        return ResponseEntity.ok(foodDiaryFacade.findAllDiaries(username));
+    public ResponseEntity<List<FoodDiaryDTO>> findAllDiaries(@PathVariable String username, Pageable pageable) throws ResourceNotFoundException {
+        return ResponseEntity.ok(foodDiaryFacade.findAllDiaries(username, pageable));
     }
 
     @GetMapping("/{username}/current")

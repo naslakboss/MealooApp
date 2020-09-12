@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -32,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/products")
 //@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
 public class ProductController {
 
@@ -84,8 +85,8 @@ public class ProductController {
 
     // todo add pageable
     @GetMapping("")
-    public ResponseEntity<List<ProductDTO>> findAllProducts() {
-        return ResponseEntity.ok(productFacade.getAllProducts());
+    public ResponseEntity<List<ProductDTO>> findAllProducts(Pageable pageable) {
+        return ResponseEntity.ok(productFacade.getAllProducts(pageable));
     }
 
     @GetMapping("/{name}")

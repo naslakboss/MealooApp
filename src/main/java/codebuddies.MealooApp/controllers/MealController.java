@@ -10,6 +10,7 @@ import codebuddies.MealooApp.services.ImageService;
 import codebuddies.MealooApp.services.MealService;
 import codebuddies.MealooApp.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -90,8 +91,8 @@ public class MealController {
 //    }
 // todo add pageable
     @GetMapping("")
-    public ResponseEntity<List<MealDTO>> findAllMeals(){
-        return ResponseEntity.ok(mealFacade.findAllMeals());
+    public ResponseEntity<List<MealDTO>> findAllMeals(Pageable pageable){
+        return ResponseEntity.ok(mealFacade.findAllMeals(pageable));
     }
 
     @GetMapping("/{name}")

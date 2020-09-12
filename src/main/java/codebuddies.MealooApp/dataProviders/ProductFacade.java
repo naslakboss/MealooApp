@@ -5,8 +5,8 @@ import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.services.ProductService;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,10 +30,10 @@ public class ProductFacade {
     }
     
 
-    public List<ProductDTO> getAllProducts(){
+    public List<ProductDTO> getAllProducts(Pageable pageable){
 
 
-        return productService.findAll()
+        return productService.findAll(pageable)
                 .stream().map(product -> modelMapper.map(product, ProductDTO.class))
                 .collect(Collectors.toList());
 

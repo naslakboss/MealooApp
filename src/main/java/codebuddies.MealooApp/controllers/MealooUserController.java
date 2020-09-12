@@ -6,6 +6,8 @@ import codebuddies.MealooApp.services.MealooUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,8 +45,8 @@ public class MealooUserController {
 //        mealooUserService.save(client);
 //     }
     @GetMapping("")
-    public ResponseEntity<List<MealooUser>> findAllUsers(){
-        return ResponseEntity.ok(mealooUserService.findAll());
+    public ResponseEntity<Page<MealooUser>> findAllUsers(Pageable pageable){
+        return ResponseEntity.ok(mealooUserService.findAll(pageable));
     }
 
     @GetMapping("/{username}")

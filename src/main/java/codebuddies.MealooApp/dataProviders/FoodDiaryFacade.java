@@ -6,6 +6,7 @@ import codebuddies.MealooApp.services.MealooUserService;
 import codebuddies.MealooApp.services.FoodDiaryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,9 +44,9 @@ public class FoodDiaryFacade {
         return modelMapper.map(foodDiaryService.createNewDiary(user), FoodDiaryDTO.class);
     }
 
-    public List<FoodDiaryDTO> findAllDiaries(String username) throws ResourceNotFoundException {
+    public List<FoodDiaryDTO> findAllDiaries(String username, Pageable pageable) throws ResourceNotFoundException {
         MealooUser user = mealooUserService.findByUsername(username);
-        return foodDiaryService.findAllDiaries(user).stream()
+        return foodDiaryService.findAllDiariesPageable(user, pageable).stream()
                 .map(foodDiary -> modelMapper.map(foodDiary, FoodDiaryDTO.class))
                     .collect(Collectors.toList());
     }

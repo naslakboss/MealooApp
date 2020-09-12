@@ -11,6 +11,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
@@ -34,6 +38,7 @@ class MealooUserServiceTest {
     MealooUser user1;
     MealooUser user2;
     FoodDiary diary;
+    List<MealooUser> listOfUsers;
 
     @BeforeEach
     void setUp(){
@@ -41,14 +46,20 @@ class MealooUserServiceTest {
         user1.setMealooUserDetails(new MealooUserDetails(177, 83, 25, Sex.MALE, PhysicalActivity.MEDIUM));
         user2 = new MealooUser("Client", "pass", "cleint@gmail.com");
         diary = new FoodDiary(Collections.emptyList(), LocalDate.now(), user1);
+        listOfUsers = List.of(user1, user2);
         userService = new MealooUserService(userRepository);
+    }
+
+    Page<MealooUser> createTestPage(Pageable pageable){
+        return new PageImpl<>(listOfUsers, pageable, listOfUsers.size());
     }
     @Test
     void shouldReturnListOfUsers() {
         //given
-        given(userRepository.findAll()).willReturn(Arrays.asList(user1, user2));
+        Pageable pageable = PageRequest.of(0, 2);
+        given(userRepository.findAll(pageable)).willReturn(createTestPage(pageable));
         //when
-        List<MealooUser> users = userService.findAll();
+        List<MealooUser> users = userService.findAll(pageable).getContent();
         //then
         assertAll(
                 () -> assertThat(users.size(), equalTo(2)),

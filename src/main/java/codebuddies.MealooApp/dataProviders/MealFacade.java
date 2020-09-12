@@ -5,6 +5,7 @@ import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.services.MealService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.lang.module.ResolutionException;
@@ -28,8 +29,8 @@ public class MealFacade {
         // todo add total macro and calories
     }
 
-    public List<MealDTO> findAllMeals(){
-        List<MealDTO> mealsList = mealService.findAll().stream()
+    public List<MealDTO> findAllMeals(Pageable pageable){
+        List<MealDTO> mealsList = mealService.findAllPageable(pageable).stream()
                 .map(meal -> modelMapper.map(meal, MealDTO.class)).collect(Collectors.toList());
         return  mealsList;
     }

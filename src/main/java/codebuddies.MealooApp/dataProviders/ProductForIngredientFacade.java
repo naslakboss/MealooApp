@@ -3,6 +3,7 @@ package codebuddies.MealooApp.dataProviders;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.services.ProductService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,8 +24,8 @@ public class ProductForIngredientFacade {
     public ProductForIngredientDTO getProductByName(String name) throws ResourceNotFoundException {
         return modelMapper.map(productService.findByName(name), ProductForIngredientDTO.class);
     }
-    public List<ProductForIngredientDTO> getAllProducts(){
-        List<ProductForIngredientDTO> listOfProducts = productService.findAll()
+    public List<ProductForIngredientDTO> getAllProducts(Pageable pageable){
+        List<ProductForIngredientDTO> listOfProducts = productService.findAll(pageable)
                 .stream().map(product -> modelMapper.map(product, ProductForIngredientDTO.class))
                 .collect(Collectors.toList());
         return listOfProducts;
