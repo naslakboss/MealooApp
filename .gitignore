@@ -1,5 +1,8 @@
 HELP.md
 target/
+mydb3.dump
+mydata.sql
+latest.dump
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

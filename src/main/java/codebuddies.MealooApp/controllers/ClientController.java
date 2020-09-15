@@ -34,12 +34,12 @@ public class ClientController {
     }
 
     @GetMapping("/{username}/current")
-    public ResponseEntity<FoodDiaryDTO> getTodayDiary(@PathVariable String username) throws ResourceNotFoundException {
+    public ResponseEntity<FoodDiaryDTO> getCurrentDiary(@PathVariable String username) throws ResourceNotFoundException {
         return  ResponseEntity.ok(foodDiaryFacade.findTodaysDiary(username));
     }
 
     @GetMapping("/{username}/diary")
-    public ResponseEntity<FoodDiaryDTO> getDiaryOfGivenDay(@PathVariable String username, @RequestParam("date") String date) throws ResourceNotFoundException {
+    public ResponseEntity<FoodDiaryDTO> getDiaryOfChosenDay(@PathVariable String username, @RequestParam("date") String date) throws ResourceNotFoundException {
         return ResponseEntity.ok(foodDiaryFacade.findDiaryOfDay(username, date));
     }
 
@@ -49,17 +49,16 @@ public class ClientController {
     }
 
     @PostMapping("/{username}/add-meal")
-    public ResponseEntity<FoodDiaryDTO> addMealToDiary(@PathVariable String username, @RequestParam("mealName") String mealName) throws ResourceNotFoundException {
+    public ResponseEntity<FoodDiaryDTO> addMealToCurrentDiary(@PathVariable String username, @RequestParam("mealName") String mealName) throws ResourceNotFoundException {
         diaryService.addMealToCurrentDiary(username, mealName);
         return ResponseEntity.ok(foodDiaryFacade.findTodaysDiary(username));
     }
 
     @DeleteMapping("/{username}/delete-meal")
-    public ResponseEntity<FoodDiaryDTO> deleteMealFromDiary(@PathVariable String username, @RequestParam("mealName") String mealName) throws ResourceNotFoundException {
+    public ResponseEntity<FoodDiaryDTO> deleteMealFromCurrentDiary(@PathVariable String username, @RequestParam("mealName") String mealName) throws ResourceNotFoundException {
         diaryService.deleteMealFromCurrentDiary(username, mealName);
         return  ResponseEntity.ok(foodDiaryFacade.findTodaysDiary(username));
     }
-    // todo add algorithm
 
     @GetMapping("/{username}/generate-diary")
     public ResponseEntity<FoodDiaryDTO> generateListOfMealsAutomatically(@PathVariable String username
@@ -67,4 +66,5 @@ public class ClientController {
         diaryService.generateDiet(totalCalories, numbersOfMeals, username);
         return  ResponseEntity.ok(foodDiaryFacade.findTodaysDiary(username));
     }
+
 }
