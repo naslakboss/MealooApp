@@ -2,12 +2,12 @@ package codebuddies.MealooApp.controllers;
 
 import codebuddies.MealooApp.dataProviders.FoodDiaryDTO;
 import codebuddies.MealooApp.dataProviders.FoodDiaryFacade;
+import codebuddies.MealooApp.entities.user.WeightGoal;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.services.FoodDiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -60,11 +60,17 @@ public class ClientController {
         return  ResponseEntity.ok(foodDiaryFacade.findTodaysDiary(username));
     }
 
-    @GetMapping("/{username}/generate-diary")
+    @GetMapping("/{username}/generate-customized-diary")
     public ResponseEntity<FoodDiaryDTO> generateListOfMealsAutomatically(@PathVariable String username
                     , @RequestParam("totalCalories") int totalCalories, @RequestParam("numberOfMeals") int numbersOfMeals){
         diaryService.generateDiet(totalCalories, numbersOfMeals, username);
         return  ResponseEntity.ok(foodDiaryFacade.findTodaysDiary(username));
     }
 
+    @GetMapping("/{username}/generate-diary")
+    public ResponseEntity<FoodDiaryDTO> generateListOfMealsToLossAndTakeCaloriesFromNutritionSettings(@PathVariable String username
+                    , @RequestParam("numberOfMeals") int numbersOfMeals, @RequestParam("weightGoal") WeightGoal weightGoal ){
+        diaryService.generateDiet(numbersOfMeals, weightGoal, username);
+        return ResponseEntity.ok(foodDiaryFacade.findTodaysDiary(username));
+    }
 }

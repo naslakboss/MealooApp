@@ -4,6 +4,7 @@ import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
 import codebuddies.MealooApp.entities.user.MealooUser;
 import codebuddies.MealooApp.entities.user.FoodDiary;
+import codebuddies.MealooApp.entities.user.WeightGoal;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.FoodDiaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,5 +176,71 @@ public class FoodDiaryService {
                         .flatMap(Collection::stream)
                             .map(Meal::getName)
                                 .collect(Collectors.toList());
+    }
+
+    public FoodDiary generateDiet(int numbersOfMeals, WeightGoal weightGoal, String username) {
+        MealooUser user = mealooUserService.findByUsername(username);
+
+        if(numbersOfMeals < 3 || numbersOfMeals > 7){
+            throw new RuntimeException("Numbers of meals should vary from 3 to 7");
+        }
+        if(findTodaysDiary(user).getListOfMeals().size() != 0){
+            throw new RuntimeException("Meals for present day was already created");
+        }
+        int totalCalories = user.getNutritionSettings().getDailyCaloricGoal();
+            switch(weightGoal){
+                case LOSTHALFKGPERWEEK:
+                    totalCalories -= 500;
+                    break;
+                case LOSTQUARTERKGPERWEEK:
+                    totalCalories -= 250;
+                    break;
+                case MAINTAIN:
+                    break;
+                case GAINQUARTERKGPERWEEK:
+                    totalCalories += 250;
+                    break;
+                case GAINHALFKGPERWEEK:
+                    totalCalories += 500;
+                    break;
+                default:
+                System.out.println("No weight, or wrong goal has been chosen." +
+                        " Calculator will be assigned weight maintenance");
+        }
+        int perfectCaloricValue = totalCalories / numbersOfMeals;
+
+        List<String> namesOfMatchingMeals = mealService.findAllNamesOfMatchingMeals(perfectCaloricValue);
+
+        List<String> removedMeals = rejectMealsFromThreeDaysBack(user);
+
+        for(String meal : removedMeals){
+            namesOfMatchingMeals.remove(meal);
+        }
+
+        if(namesOfMatchingMeals.size() < numbersOfMeals){
+            throw new ResourceNotFoundException("Sorry, database does not contain required meals." +
+                    " Try to add new meals or create your own diary manually");
+        }
+
+        Random random = new Random();
+
+        for(int i = 0; i < numbersOfMeals - 1; i++){
+            int randomIndex = random.nextInt(namesOfMatchingMeals.size());
+            addMealToCurrentDiary(username, namesOfMatchingMeals.get(randomIndex));
+            namesOfMatchingMeals.remove(randomIndex);
+        }
+
+        int deficit = totalCalories - findTodaysDiary(user).getTotalCalories();
+
+        List<String> fixDeficit = mealService.findAllNamesOfMatchingMeals(deficit);
+
+        if(fixDeficit.isEmpty()){
+            throw new ResourceNotFoundException("Sorry, database does not contain required meals." +
+                    " Try to add new meals or create your own diary manually");
+        }
+
+        addMealToCurrentDiary(username, fixDeficit.get(random.nextInt(fixDeficit.size())));
+
+        return findTodaysDiary(user);
     }
 }
