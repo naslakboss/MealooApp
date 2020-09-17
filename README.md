@@ -6,7 +6,6 @@ It also serves as a food diary where users can create their own meals.
 ## Table of contents
 * General info
 * Features
-* Code Examples
 * Technologies 
 * Setup
 * Contributors
@@ -29,14 +28,12 @@ It also serves as a food diary where users can create their own meals.
  * Calculate caloric demand according to user goal : losing, gaining or keep weight
  * Create diaries for user : add or remove meals from current day 
  * Generate choosen numbers of meals and total calories for whole day
- * Program calulate total calories and price for whole meal and day automatically
+ * Program calculate total calories and price for whole meal and day automatically
   (The program ensures that meals from 3 days back will not appear)
   To-do list:
  * Addition rejection meal types and macronutrients preferences
  * Addition JWT and Oauth2 system to registration, login and security
  * Addition validation for products proportions 
-
-## Code Examples
 
 ## Setup
 
