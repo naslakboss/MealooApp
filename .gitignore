@@ -3,6 +3,11 @@ target/
 mydb3.dump
 mydata.sql
 latest.dump
+application.properties
+application-dev.properties
+application-heroku.properties
+application-test.properties
+
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

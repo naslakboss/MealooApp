@@ -4,6 +4,7 @@ import codebuddies.MealooApp.entities.image.Image;
 import codebuddies.MealooApp.repositories.ImageRepository;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -13,14 +14,20 @@ import java.util.Map;
 @Service
 public class ImageService {
 
+    @Value("${cloudinary.cloudNameValue}")
+    private static String cloudNameValue;
+    @Value("${cloudinary.apiKeyValue}")
+    private static String apiKeyValue;
+    @Value("${cloudinary.apiSecretValue}")
+    private static String apiSecretValue;
 
     private ImageRepository imageRepository;
 
     //todo Add improvement here
     private Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-            "cloud_name", "codebuddies",
-            "api_key", "568422233866872",
-            "api_secret", "Ux0UcCPbF-yjojxpiaH5dEpFXUQ"));
+            "cloud_name", cloudNameValue,
+            "api_key", apiKeyValue,
+            "api_secret", apiSecretValue));
 
     public ImageService(ImageRepository imageRepository){
         this.imageRepository = imageRepository;
