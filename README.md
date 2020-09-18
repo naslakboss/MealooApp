@@ -1,6 +1,6 @@
 # MealooApp 
 
-Web app that generates meal recipes automatically basend on filters such as BMI and weight goals.
+Web app that generates meal recipes automatically based on filters such as BMI and weight goals.
 It also serves as a food diary where users can create their own meals.
 
 ## Table of contents
@@ -13,8 +13,8 @@ It also serves as a food diary where users can create their own meals.
 ## General info
 
  The assumption of the application is to create a food diary where every user
- will have possibility to create own diary or generate, based on requirements . <br>
- Thanks to BMI and calories demand calculator and meals algorithm, the user will be able to get interesting meals
+ will have possibility to create own diary or generate them, based on requirements . <br>
+     Thanks to BMI calculator, caloric demand calculator and meals algorithm, the user will be able to get tasty meals
  and change weight according to his demands.
  
 ### Features
@@ -29,7 +29,7 @@ It also serves as a food diary where users can create their own meals.
  * Create diaries for user : add or remove meals from current day 
  * Generate choosen numbers of meals and total calories for whole day
  * Program calculate total calories and price for whole meal and day automatically
-  (The program ensures that meals from 3 days back will not appear)
+  (The program ensures that meals from 3 days back will not appear) <br>
   To-do list:
  * Addition rejection meal types and macronutrients preferences
  * Addition JWT and Oauth2 system to registration, login and security
@@ -37,7 +37,8 @@ It also serves as a food diary where users can create their own meals.
 
 ## Setup
 
- In order to add data to database application requires HTTP client, f.e Postman
+ In order to add data to database application requires HTTP client -> Postman <br>
+ Due to the development of the application, security is disabled.
 
 ## Technologies 
 
@@ -46,7 +47,7 @@ It also serves as a food diary where users can create their own meals.
  Hibernate <br>
  JUnit 5 <br>
  Mockito 2 <br>
- PostresSQL <br>
+ PostgresSQL <br>
  Cloudinary API <br>
  REST <br>
  Heroku <br>
@@ -56,6 +57,6 @@ It also serves as a food diary where users can create their own meals.
 * [Damian Naglak](https://github.com/naslakboss) - Backend Developer
 * [John Patrick Valera](https://github.com/withoutwax13) - Frontend Developer
      
-     Frontend Codebase Repository
+     Frontend Codebase Repository : <br>
      [Mealoo Web Client](https://github.com/withoutwax13/mealoo-web-client) - Built with ReactJS
 
