@@ -5,7 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-//todo This configuration class will be refractored to reduce code in service entities
+//todo create configuration to reduce code in services
 //@Configuration
 //public class CloudinaryConfig {
 //    @Value("${cloudinary.cloudNameValue}")

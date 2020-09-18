@@ -26,11 +26,11 @@ public class Image {
         this.meal = meal;
     }
 
-    public Long getId() {
+    Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    void setId(Long id) {
         this.id = id;
     }
 
@@ -38,7 +38,7 @@ public class Image {
         return filePath;
     }
 
-    public void setFilePath(String filePath) {
+    void setFilePath(String filePath) {
         this.filePath = filePath;
     }
 
@@ -46,7 +46,7 @@ public class Image {
         return fileUrl;
     }
 
-    public void setFileUrl(String fileUrl) {
+    void setFileUrl(String fileUrl) {
         this.fileUrl = fileUrl;
     }
 
@@ -54,7 +54,7 @@ public class Image {
         return meal;
     }
 
-    public void setMeal(Meal meal) {
+    void setMeal(Meal meal) {
         this.meal = meal;
     }
 }
