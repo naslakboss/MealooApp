@@ -59,11 +59,11 @@ public class Product {
 
     //todo set some params protected or private
 
-    public Long getId() {
+    Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    void setId(Long id) {
         this.id = id;
     }
 
@@ -111,7 +111,7 @@ public class Product {
         return ingredients;
     }
 
-    public void setIngredients(List<Ingredient> ingredients) {
+    void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 

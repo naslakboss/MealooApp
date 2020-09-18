@@ -61,11 +61,11 @@ public class FoodDiary {
         listOfMeals.remove(mealToDelete.get());
     }
 
-    public long getId() {
+    long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    void setId(long id) {
         this.id = id;
     }
 
@@ -73,7 +73,7 @@ public class FoodDiary {
         return listOfMeals;
     }
 
-    public void setListOfMeals(List<Meal> listOfMeals) {
+    void setListOfMeals(List<Meal> listOfMeals) {
         this.listOfMeals = listOfMeals;
     }
 

@@ -15,11 +15,11 @@ import java.util.Map;
 public class ImageService {
 
     @Value("${cloudinary.cloudNameValue}")
-    private static String cloudNameValue;
+    private String cloudNameValue;
     @Value("${cloudinary.apiKeyValue}")
-    private static String apiKeyValue;
+    private String apiKeyValue;
     @Value("${cloudinary.apiSecretValue}")
-    private static String apiSecretValue;
+    private String apiSecretValue;
 
     private ImageRepository imageRepository;
 

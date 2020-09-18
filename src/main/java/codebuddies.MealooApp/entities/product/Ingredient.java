@@ -30,11 +30,11 @@ public class Ingredient {
         this.product = product;
     }
 
-    public long getId() {
+    long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    void setId(long id) {
         this.id = id;
     }
 
@@ -54,7 +54,7 @@ public class Ingredient {
         this.product = product;
     }
 
-    public List<Meal> getMeals() {
+    List<Meal> getMeals() {
         return meals;
     }
 

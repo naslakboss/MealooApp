@@ -61,13 +61,11 @@ public class Meal {
         totalCalories = calculateCalories();
     }
 
-    //todo set some params protected or private
-
-    public Long getId() {
+    Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    void setId(Long id) {
         this.id = id;
     }
 
@@ -180,7 +178,7 @@ public class Meal {
         return new MealMacronutrients(calculareProteins(), calculateCarbohydrates(), calculateFats());
     }
 
-    public int calculateCalories() {
+    protected int calculateCalories() {
         return (calculateCarbohydrates() * 4) + (calculareProteins() * 4) + (calculateFats() * 9);
 
     }

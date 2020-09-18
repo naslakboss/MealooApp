@@ -38,7 +38,7 @@ public class Macronutrients {
         return proteinsPer100g;
     }
 
-    public void setProteinsPer100g(int proteinPer100g) {
+    void setProteinsPer100g(int proteinPer100g) {
         this.proteinsPer100g = proteinPer100g;
     }
 
