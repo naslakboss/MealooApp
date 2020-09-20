@@ -1,4 +1,4 @@
-package codebuddies.MealooApp.dataProviders;
+package codebuddies.MealooApp.dto;
 
 import codebuddies.MealooApp.entities.meal.MealDifficulty;
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;

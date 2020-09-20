@@ -1,5 +1,6 @@
-package codebuddies.MealooApp.dataProviders;
+package codebuddies.MealooApp.dataproviders;
 
+import codebuddies.MealooApp.dto.FoodDiaryDTO;
 import codebuddies.MealooApp.entities.user.MealooUser;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.services.MealooUserService;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class FoodDiaryFacade {
+public class FoodDiaryProvider {
 
     private FoodDiaryService foodDiaryService;
 
@@ -23,7 +24,7 @@ public class FoodDiaryFacade {
 
     @Autowired
 
-    public FoodDiaryFacade(FoodDiaryService foodDiaryService, MealooUserService mealooUserService, ModelMapper modelMapper) {
+    public FoodDiaryProvider(FoodDiaryService foodDiaryService, MealooUserService mealooUserService, ModelMapper modelMapper) {
         this.foodDiaryService = foodDiaryService;
         this.mealooUserService = mealooUserService;
         this.modelMapper = modelMapper;

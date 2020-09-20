@@ -1,36 +1,21 @@
 package codebuddies.MealooApp.controllers;
 
-import codebuddies.MealooApp.dataProviders.ProductDTO;
-import codebuddies.MealooApp.dataProviders.ProductFacade;
-import codebuddies.MealooApp.entities.product.Macronutrients;
+import codebuddies.MealooApp.dto.ProductDTO;
+import codebuddies.MealooApp.dataproviders.ProductProvider;
 import codebuddies.MealooApp.entities.product.Product;
-import codebuddies.MealooApp.entities.product.ProductType;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.exceptions.ValidationException;
 import codebuddies.MealooApp.services.ProductService;
 //import mealoapp.MealooAppp.services.ProductTypeService;
 //import codebuddies.MealooApp.services.ProductTypeService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.Valid;
-import javax.validation.executable.ValidateOnExecution;
-import java.io.DataInput;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/products")
@@ -39,12 +24,12 @@ public class ProductController {
 
     ProductService productService;
 
-    ProductFacade productFacade;
+    ProductProvider productProvider;
 
     @Autowired
-    public ProductController(ProductService productService, ProductFacade productFacade) {
+    public ProductController(ProductService productService, ProductProvider productProvider) {
         this.productService = productService;
-        this.productFacade = productFacade;
+        this.productProvider = productProvider;
     }
 
 //    @EventListener(ApplicationReadyEvent.class)
@@ -83,32 +68,29 @@ public class ProductController {
 //    }
 
 
-    // todo add pageable
     @GetMapping("")
-    public ResponseEntity<List<ProductDTO>> findAllProducts(Pageable pageable) {
-        return ResponseEntity.ok(productFacade.getAllProducts(pageable));
+    public ResponseEntity<Page<ProductDTO>> getAllProducts(Pageable pageable) {
+        return ResponseEntity.ok(productService.getAllProducts(pageable));
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<ProductDTO> findProductByName(@PathVariable String name) throws ResourceNotFoundException {
-        return ResponseEntity.ok(productFacade.getProductByName(name));
+    public ResponseEntity<ProductDTO> getProduct(@PathVariable String name){
+        return ResponseEntity.ok(productService.getProductByName(name));
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ProductDTO> addProduct(@Valid @RequestBody Product product) throws ResourceNotFoundException, ValidationException {
-        productService.save(product);
-        return ResponseEntity.ok(productFacade.getProductByName(product.getName()));
+    public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) throws ValidationException {
+        return ResponseEntity.ok(productService.createProduct(productDTO));
     }
 
-    @PatchMapping("/{name}")
-    public ResponseEntity<ProductDTO> patchProductByName(@PathVariable String name, @Valid @RequestBody Product product) throws ResourceNotFoundException, ValidationException {
-        Product patchedProduct = productService.updateByName(name, product);
-        return ResponseEntity.ok(productFacade.getProductByName(patchedProduct.getName()));
+    @PutMapping("/{name}")
+    public ResponseEntity<ProductDTO> updateProduct(@RequestBody @Valid ProductDTO productDTO,@PathVariable String name) throws ValidationException {
+        return  ResponseEntity.ok(productService.updateProductByName(productDTO, name));
     }
 
     @DeleteMapping("/{name}")
-    public ResponseEntity deleteByName(@PathVariable String name) throws ResourceNotFoundException {
-        productService.deleteByName(name);
+    public ResponseEntity deleteProduct(@PathVariable String name) throws ResourceNotFoundException {
+        productService.deleteProductByName(name);
         return ResponseEntity.ok("Product " + name + " was successfully deleted from Repository");
     }
 }

@@ -1,18 +1,16 @@
 package codebuddies.MealooApp.controllers;
 
-import codebuddies.MealooApp.dataProviders.MealDTO;
-import codebuddies.MealooApp.dataProviders.MealFacade;
+import codebuddies.MealooApp.dto.MealDTO;
+import codebuddies.MealooApp.dataproviders.MealProvider;
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.IngredientRepository;
 import codebuddies.MealooApp.repositories.MealRepository;
-import codebuddies.MealooApp.services.ImageService;
 import codebuddies.MealooApp.services.MealService;
 import codebuddies.MealooApp.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -26,7 +24,7 @@ public class MealController {
 
     private MealService mealService;
 
-    private MealFacade mealFacade;
+    private MealProvider mealProvider;
 
     private ProductService productService;
 
@@ -36,10 +34,10 @@ public class MealController {
     MealRepository mealRepository;
 
     @Autowired
-    public MealController(MealService mealService, MealFacade mealFacade,
+    public MealController(MealService mealService, MealProvider mealProvider,
                           ProductService productService, IngredientRepository ingredientRepository) {
         this.mealService = mealService;
-        this.mealFacade = mealFacade;
+        this.mealProvider = mealProvider;
         this.productService = productService;
         this.ingredientRepository = ingredientRepository;
     }
@@ -92,25 +90,25 @@ public class MealController {
 // todo add pageable
     @GetMapping("")
     public ResponseEntity<List<MealDTO>> findAllMeals(Pageable pageable){
-        return ResponseEntity.ok(mealFacade.findAllMeals(pageable));
+        return ResponseEntity.ok(mealProvider.findAllMeals(pageable));
     }
 
     @GetMapping("/{name}")
     public ResponseEntity<MealDTO> findMealByName(@PathVariable(value = "name") String name) throws ResourceNotFoundException {
-        MealDTO meal = mealFacade.findMealByName(name);
+        MealDTO meal = mealProvider.findMealByName(name);
         return ResponseEntity.ok().body(meal);
     }
 
     @PostMapping("/add")
     public ResponseEntity<MealDTO> createMeal(@RequestBody @Valid Meal meal) throws ResourceNotFoundException {
-        mealService.save(meal);
-        return ResponseEntity.ok(mealFacade.findMealByName(meal.getName()));
+//        mealService.save(meal);
+        return ResponseEntity.ok(mealProvider.findMealByName(meal.getName()));
     }
 
     @PostMapping("{name}/add-image")
     public ResponseEntity<MealDTO> addImageToMeal(@PathVariable String name, @RequestParam("filePath") String filePath) throws IOException {
         mealService.addImageToMeal(name, filePath);
-        return ResponseEntity.ok(mealFacade.findMealByName(name));
+        return ResponseEntity.ok(mealProvider.findMealByName(name));
     }
 
 //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
@@ -124,7 +122,7 @@ public class MealController {
     @PatchMapping("/{name}")
     public ResponseEntity<MealDTO> patchMealByName(@PathVariable String name, @Valid @RequestBody Meal meal) throws ResourceNotFoundException {
         Meal patchedMeal = mealService.updateByName(name, meal);
-        return ResponseEntity.ok(mealFacade.findMealByName(patchedMeal.getName()));
+        return ResponseEntity.ok(mealProvider.findMealByName(patchedMeal.getName()));
     }
 //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
     @Transactional

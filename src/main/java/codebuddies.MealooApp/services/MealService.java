@@ -1,5 +1,6 @@
 package codebuddies.MealooApp.services;
 
+import codebuddies.MealooApp.dto.ProductDTO;
 import codebuddies.MealooApp.entities.image.Image;
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.product.Ingredient;
@@ -60,31 +61,31 @@ public class MealService {
         return meal;
     }
 
-    public List<Ingredient> createListOfIngredients(Meal meal) throws ResourceNotFoundException {
-        List<String> productsNames = meal.getIngredients().stream()
-                .map(Ingredient::getProduct).map(Product::getName).collect(Collectors.toList());
-        List<Integer> amounts = meal.getIngredients().stream()
-                .map(Ingredient::getAmount).collect(Collectors.toList());
-        List<Ingredient> ingredientList = new ArrayList<>();
+//    public List<Ingredient> createListOfIngredients(Meal meal) throws ResourceNotFoundException {
+//        List<String> productsNames = meal.getIngredients().stream()
+//                .map(Ingredient::getProduct).map(Product::getName).collect(Collectors.toList());
+//        List<Integer> amounts = meal.getIngredients().stream()
+//                .map(Ingredient::getAmount).collect(Collectors.toList());
+//        List<Ingredient> ingredientList = new ArrayList<>();
+//
+//        for(int i = 0; i < productsNames.size(); i ++){
+//            if (amounts.get(i) <= 0) {
+//                throw new IllegalDataException("Product amount must be more than 0");
+//            }
+//            ProductDTO temporaryProduct = productService.getProductByName(productsNames.get(i));
+//            Ingredient temporary = new Ingredient(amounts.get(i)
+//                    , temporaryProduct);
+//            ingredientList.add(temporary);
+//            ingredientRepository.save(temporary);
+//        }
+//        return ingredientList;
+//    }
 
-        for(int i = 0; i < productsNames.size(); i ++){
-            if (amounts.get(i) <= 0) {
-                throw new IllegalDataException("Product amount must be more than 0");
-            }
-            Product temporaryProduct = productService.findByName(productsNames.get(i));
-            Ingredient temporary = new Ingredient(amounts.get(i)
-                    , temporaryProduct);
-            ingredientList.add(temporary);
-            ingredientRepository.save(temporary);
-        }
-        return ingredientList;
-    }
-
-    public Meal save(Meal meal) throws ResourceNotFoundException {
-        List<Ingredient> ingredientList = createListOfIngredients(meal);
-        Meal newMeal = new Meal(meal.getName(), ingredientList, meal.getMealDifficulty());
-        return mealRepository.save(newMeal);
-    }
+//    public Meal save(Meal meal) throws ResourceNotFoundException {
+//        List<Ingredient> ingredientList = createListOfIngredients(meal);
+//        Meal newMeal = new Meal(meal.getName(), ingredientList, meal.getMealDifficulty());
+//        return mealRepository.save(newMeal);
+//    }
 
     @Transactional
     public Meal updateByName(String name, Meal meal) throws ResourceNotFoundException {
@@ -97,9 +98,9 @@ public class MealService {
             foundedMeal.setName(meal.getName());
         }
 
-        if(meal.getIngredients() != null){
-            foundedMeal.setIngredients(createListOfIngredients(meal));
-        }
+//        if(meal.getIngredients() != null){
+//            foundedMeal.setIngredients(createListOfIngredients(meal));
+//        }
 
         if(meal.getMealDifficulty()!=null){
             foundedMeal.setMealDifficulty(meal.getMealDifficulty());
@@ -108,7 +109,7 @@ public class MealService {
             foundedMeal.setRecipe(meal.getRecipe());
         }
         foundedMeal.recalculateData();
-        save(foundedMeal);
+//        save(foundedMeal);
         return foundedMeal;
     }
     @Transactional

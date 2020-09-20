@@ -1,8 +1,6 @@
-package codebuddies.MealooApp.dataProviders;
+package codebuddies.MealooApp.dto;
 
-import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
-import codebuddies.MealooApp.entities.product.Macronutrients;
 
 import java.time.LocalDate;
 import java.util.List;

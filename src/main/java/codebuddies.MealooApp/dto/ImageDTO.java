@@ -1,4 +1,4 @@
-package codebuddies.MealooApp.dataProviders;
+package codebuddies.MealooApp.dto;
 
 public class ImageDTO {
 

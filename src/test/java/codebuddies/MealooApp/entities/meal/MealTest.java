@@ -32,9 +32,9 @@ class MealTest {
 
     @BeforeEach
     void setUp(){
-
-        product = new Product("Potato", 5, new Macronutrients(2, 17,0), ProductType.GRAINS);
-        product2 = new Product("Beef", 30, new Macronutrients(26, 0, 15), ProductType.MEAT);
+//
+//        product = new Product("Potato", 5, new Macronutrients(2, 17,0), ProductType.GRAINS);
+//        product2 = new Product("Beef", 30, new Macronutrients(26, 0, 15), ProductType.MEAT);
 
         ingredient1 = new Ingredient(300, product);
         ingredient2 = new Ingredient(200, product2);

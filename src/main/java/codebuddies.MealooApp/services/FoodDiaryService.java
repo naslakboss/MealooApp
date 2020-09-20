@@ -129,8 +129,6 @@ public class FoodDiaryService {
                                 .collect(Collectors.toList());
     }
 
-    // Method with custom calories
-
     public FoodDiary generateDiet(int totalCalories, int numbersOfMeals, String username) {
         MealooUser user = mealooUserService.findByUsername(username);
 
@@ -180,8 +178,6 @@ public class FoodDiaryService {
 
         return findTodaysDiary(user);
     }
-
-    // Method with ENUM and calculated caloric demand
 
     public FoodDiary generateDiet(int numbersOfMeals, WeightGoal weightGoal, String username) {
         MealooUser user = mealooUserService.findByUsername(username);

@@ -23,7 +23,7 @@ public class MealooUserService {
     public Page<MealooUser> findAll(Pageable pageable) {
         return mealooUserRepository.findAll(pageable);
     }
-    //todo bcrypt
+
     public MealooUser save(MealooUser user) {
         MealooUser newUser = new MealooUser(user.getUsername(), user.getPassword(), user.getEmail());
         newUser.setMealooUserRole(MealooUserRole.USER);

@@ -23,7 +23,6 @@ public class ImageService {
 
     private ImageRepository imageRepository;
 
-    //todo Add improvement here
     private Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
             "cloud_name", cloudNameValue,
             "api_key", apiKeyValue,

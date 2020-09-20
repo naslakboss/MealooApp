@@ -19,7 +19,7 @@ class ProductTest {
     void shouldReturnProperValueIfMacronutrientsHaveGoodFormat() {
         //given
          macronutrients = new Macronutrients(2, 17,0);
-         product = new Product("Potato", 3, macronutrients, ProductType.GRAINS);
+//         product = new Product("Potato", 3, macronutrients, ProductType.GRAINS);
         //when
         //then
         assertThat(product.getCaloriesPer100g(), equalTo(76));

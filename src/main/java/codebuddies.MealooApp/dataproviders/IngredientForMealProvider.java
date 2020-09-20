@@ -1,7 +1,7 @@
-package codebuddies.MealooApp.dataProviders;
+package codebuddies.MealooApp.dataproviders;
 
+import codebuddies.MealooApp.dto.IngredientForMealDTO;
 import codebuddies.MealooApp.repositories.IngredientRepository;
-import codebuddies.MealooApp.services.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class IngredientForMealFacade {
+public class IngredientForMealProvider {
 
     private IngredientRepository ingredientRepository;
 
     private ModelMapper modelMapper;
 
-    public IngredientForMealFacade(IngredientRepository ingredientRepository, ModelMapper modelMapper) {
+    public IngredientForMealProvider(IngredientRepository ingredientRepository, ModelMapper modelMapper) {
         this.ingredientRepository = ingredientRepository;
         this.modelMapper = modelMapper;
     }

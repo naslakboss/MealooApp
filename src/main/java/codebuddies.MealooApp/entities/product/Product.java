@@ -43,27 +43,22 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, double price, Macronutrients macronutrients, ProductType productType) {
+    public Product(String name, double price, Macronutrients macronutrients, int caloriesPer100g, ProductType productType) {
         this.name = name;
         this.price = price;
         this.macronutrients = macronutrients;
-        caloriesPer100g = calculateCaloriesPer100g();
+        this.caloriesPer100g = caloriesPer100g;
         this.productType = productType;
     }
 
 
-    public int calculateCaloriesPer100g(){
-        return (this.macronutrients.getCarbohydratesPer100g() * 4) +
-                    (this.macronutrients.getFatsPer100g() * 9) + (this.macronutrients.getProteinsPer100g() * 4);
-    }
-
     //todo set some params protected or private
 
-    Long getId() {
+    public Long getId() {
         return id;
     }
 
-    void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
