@@ -15,12 +15,9 @@ import java.util.Objects;
 @Entity
 public class Product {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
 
-    @NotBlank(message = "Product name is mandatory")
-//    @UniqueProduct
+
+    @Id
     private String name;
 
     @NotNull(message = "Price of product is mandatory")
@@ -53,14 +50,6 @@ public class Product {
 
 
     //todo set some params protected or private
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -117,7 +106,6 @@ public class Product {
         Product product = (Product) o;
         return price == product.price &&
                 caloriesPer100g == product.caloriesPer100g &&
-                Objects.equals(id, product.id) &&
                 Objects.equals(name, product.name) &&
                 Objects.equals(macronutrients, product.macronutrients) &&
                 productType == product.productType &&
@@ -126,13 +114,12 @@ public class Product {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price, caloriesPer100g, macronutrients, productType, ingredients);
+        return Objects.hash(name, price, caloriesPer100g, macronutrients, productType, ingredients);
     }
 
     @Override
     public String toString() {
         return "Product{" +
-                "id=" + id +
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", caloriesPer100g=" + caloriesPer100g +

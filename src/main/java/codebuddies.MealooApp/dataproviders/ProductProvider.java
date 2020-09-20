@@ -44,6 +44,12 @@ public class ProductProvider {
         return productDTO;
     }
 
+    public ProductDTO updateProduct(ProductDTO updatedProduct){
+        Product product = modelMapper.map(updatedProduct, Product.class);
+        productRepository.save(product);
+        return updatedProduct;
+    }
+
     public boolean existsByName(String name) {
         return productRepository.existsByName(name);
     }

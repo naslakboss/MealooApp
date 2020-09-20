@@ -57,12 +57,17 @@ public class ProductService {
                 + macronutrients.getFatsPer100g() * 9;
     }
 
-    @Transactional
-    public ProductDTO updateProductByName(ProductDTO productDTO, String name) throws ValidationException {
-        deleteProductByName(name);
-        checkTheCorrectnessOfQuantity(productDTO);
-        productDTO.setCaloriesPer100g(calculateCaloriesPer100g(productDTO));
-        return createProduct(productDTO);
+    public ProductDTO updateProductByName(ProductDTO productDTO, String name) {
+        ProductDTO updatedProduct = getProductByName(name);
+        updatedProduct.setName(productDTO.getName());
+        updatedProduct.setPrice(productDTO.getPrice());
+        updatedProduct.setCaloriesPer100g(calculateCaloriesPer100g(productDTO));
+        updatedProduct.getMacronutrients().setProteinsPer100g(productDTO.getMacronutrients().getProteinsPer100g());
+        updatedProduct.getMacronutrients().setCarbohydratesPer100g(productDTO.getMacronutrients().getCarbohydratesPer100g());
+        updatedProduct.getMacronutrients().setFatsPer100g(productDTO.getMacronutrients().getFatsPer100g());
+        updatedProduct.setProductType(productDTO.getProductType());
+
+        return productProvider.updateProduct(productDTO);
     }
 
     public boolean existsByName(String name) {
