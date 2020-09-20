@@ -35,7 +35,7 @@ public class ProductService {
 
     public ProductDTO createProduct(ProductDTO productDTO) throws ValidationException {
         checkTheCorrectnessOfQuantity(productDTO);
-        productDTO.setCaloriesPer100g(calculateCaloriesPer100g(productDTO));
+        calculateCaloriesPer100g(productDTO);
         return productProvider.createProduct(productDTO);
     }
 
@@ -51,17 +51,18 @@ public class ProductService {
         return true;
     }
 
-    public int calculateCaloriesPer100g(ProductDTO productDTO){
+    public void calculateCaloriesPer100g(ProductDTO productDTO){
         Macronutrients macronutrients = productDTO.getMacronutrients();
-        return macronutrients.getProteinsPer100g() * 4 + macronutrients.getCarbohydratesPer100g() * 4
+        int result = macronutrients.getProteinsPer100g() * 4 + macronutrients.getCarbohydratesPer100g() * 4
                 + macronutrients.getFatsPer100g() * 9;
+        productDTO.setCaloriesPer100g(result);
     }
 
     public ProductDTO updateProductByName(ProductDTO productDTO, String name) {
         ProductDTO updatedProduct = getProductByName(name);
         updatedProduct.setName(productDTO.getName());
         updatedProduct.setPrice(productDTO.getPrice());
-        updatedProduct.setCaloriesPer100g(calculateCaloriesPer100g(productDTO));
+        updatedProduct.setCaloriesPer100g(calculateCaloriesPer100g(productDTO););
         updatedProduct.getMacronutrients().setProteinsPer100g(productDTO.getMacronutrients().getProteinsPer100g());
         updatedProduct.getMacronutrients().setCarbohydratesPer100g(productDTO.getMacronutrients().getCarbohydratesPer100g());
         updatedProduct.getMacronutrients().setFatsPer100g(productDTO.getMacronutrients().getFatsPer100g());
