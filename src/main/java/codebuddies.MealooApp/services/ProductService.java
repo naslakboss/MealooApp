@@ -77,10 +77,7 @@ public class ProductService {
 
     @Transactional
     public void deleteProductByName(String name) throws ResourceNotFoundException {
-        if(!existsByName(name)){
-            throw new ResourceNotFoundException("This product cannot be deleted because it does not exist");
-        }
-        else productRepository.deleteByName(name);
+        productProvider.deleteByName(name);
     }
 
 

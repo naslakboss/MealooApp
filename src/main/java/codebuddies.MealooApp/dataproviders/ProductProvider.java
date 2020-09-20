@@ -53,4 +53,11 @@ public class ProductProvider {
     public boolean existsByName(String name) {
         return productRepository.existsByName(name);
     }
+
+    public void deleteByName(String name){
+        if(!existsByName(name)){
+            throw new ResourceNotFoundException("Product " + name +  " does not exist in database");
+        }
+        productRepository.deleteByName(name);
+    }
 }
