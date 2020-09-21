@@ -5,7 +5,6 @@ import codebuddies.MealooApp.dto.ProductDTO;
 import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.exceptions.ValidationException;
-import codebuddies.MealooApp.repositories.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,13 +14,9 @@ import javax.transaction.Transactional;
 @Service
 public class ProductService {
 
-
-    ProductRepository productRepository;
-
     ProductProvider productProvider;
 
-    public ProductService(ProductRepository productRepository, ProductProvider productProvider) {
-        this.productRepository = productRepository;
+    public ProductService(ProductProvider productProvider) {
         this.productProvider = productProvider;
     }
 
@@ -62,17 +57,13 @@ public class ProductService {
         ProductDTO updatedProduct = getProductByName(name);
         updatedProduct.setName(productDTO.getName());
         updatedProduct.setPrice(productDTO.getPrice());
-        updatedProduct.setCaloriesPer100g(calculateCaloriesPer100g(productDTO););
         updatedProduct.getMacronutrients().setProteinsPer100g(productDTO.getMacronutrients().getProteinsPer100g());
         updatedProduct.getMacronutrients().setCarbohydratesPer100g(productDTO.getMacronutrients().getCarbohydratesPer100g());
         updatedProduct.getMacronutrients().setFatsPer100g(productDTO.getMacronutrients().getFatsPer100g());
+        calculateCaloriesPer100g(updatedProduct);
         updatedProduct.setProductType(productDTO.getProductType());
 
         return productProvider.updateProduct(productDTO);
-    }
-
-    public boolean existsByName(String name) {
-        return productRepository.existsByName(name);
     }
 
     @Transactional

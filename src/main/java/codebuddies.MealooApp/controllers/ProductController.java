@@ -24,12 +24,9 @@ public class ProductController {
 
     ProductService productService;
 
-    ProductProvider productProvider;
-
     @Autowired
-    public ProductController(ProductService productService, ProductProvider productProvider) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
-        this.productProvider = productProvider;
     }
 
 //    @EventListener(ApplicationReadyEvent.class)
