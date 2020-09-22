@@ -29,9 +29,16 @@ public class ProductService {
     }
 
     public ProductDTO createProduct(ProductDTO productDTO) throws ValidationException {
+        if(existsByName(productDTO.getName())){
+            throw new IllegalArgumentException("Exist");
+        }
         checkTheCorrectnessOfQuantity(productDTO);
         calculateCaloriesPer100g(productDTO);
         return productProvider.createProduct(productDTO);
+    }
+
+    private boolean existsByName(String name) {
+        return productProvider.existsByName(name);
     }
 
     public boolean checkTheCorrectnessOfQuantity(ProductDTO productDTO) throws ValidationException {
@@ -63,11 +70,11 @@ public class ProductService {
         calculateCaloriesPer100g(updatedProduct);
         updatedProduct.setProductType(productDTO.getProductType());
 
-        return productProvider.updateProduct(productDTO);
+        return productProvider.updateProduct(updatedProduct);
     }
 
     @Transactional
-    public void deleteProductByName(String name) throws ResourceNotFoundException {
+    public void deleteProductByName(String name) {
         productProvider.deleteByName(name);
     }
 

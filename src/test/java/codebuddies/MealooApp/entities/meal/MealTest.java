@@ -64,7 +64,7 @@ class MealTest {
         //when
         int result = (amount1/100 * proteinsIn100gOfProduct1) + (amount2/100 * proteinsIn100gOfProduct2);
         //then
-        assertThat(meal.calculareProteins(), equalTo(result));
+        assertThat(meal.calculateProteins(), equalTo(result));
     }
 
     @Test
@@ -102,7 +102,7 @@ class MealTest {
         //when
         //then
         assertAll(
-                () -> assertThat(meal.getMealMacronutrients().getTotalProteins(), equalTo(meal.calculareProteins())),
+                () -> assertThat(meal.getMealMacronutrients().getTotalProteins(), equalTo(meal.calculateCalories())),
                 () -> assertThat(meal.getMealMacronutrients().getTotalCarbohydrates(), equalTo(meal.calculateCarbohydrates())),
                 () -> assertThat(meal.getMealMacronutrients().getTotalFats(), equalTo(meal.calculateFats()))
         );

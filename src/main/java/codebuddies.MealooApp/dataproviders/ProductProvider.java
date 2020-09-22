@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 public class ProductProvider {
 
     ModelMapper modelMapper;
-    ProductRepository productRepository;
 
+    ProductRepository productRepository;
 
     public ProductProvider(ProductRepository productRepository, ModelMapper modelMapper) {
         this.productRepository = productRepository;
@@ -27,7 +27,7 @@ public class ProductProvider {
 
     public Page<ProductDTO> getAllProducts(Pageable pageable){
         return productRepository.findAll(pageable).
-                map(products -> modelMapper.map(products, ProductDTO.class));
+                map(product -> modelMapper.map(product, ProductDTO.class));
 
     }
 

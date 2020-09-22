@@ -9,6 +9,7 @@ import codebuddies.MealooApp.repositories.MealRepository;
 import codebuddies.MealooApp.services.MealService;
 import codebuddies.MealooApp.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,22 +25,8 @@ public class MealController {
 
     private MealService mealService;
 
-    private MealProvider mealProvider;
-
-    private ProductService productService;
-
-    private IngredientRepository ingredientRepository;
-
-    @Autowired
-    MealRepository mealRepository;
-
-    @Autowired
-    public MealController(MealService mealService, MealProvider mealProvider,
-                          ProductService productService, IngredientRepository ingredientRepository) {
+    public MealController(MealService mealService) {
         this.mealService = mealService;
-        this.mealProvider = mealProvider;
-        this.productService = productService;
-        this.ingredientRepository = ingredientRepository;
     }
 
 //    @EventListener(ApplicationReadyEvent.class)
@@ -87,48 +74,44 @@ public class MealController {
 //        Meal newMeal4 = new Meal("OnlyBeef", Collections.singletonList(beefIn), MealDifficulty.INSANE);
 //        mealService.save(newMeal4);
 //    }
-// todo add pageable
+
+
     @GetMapping("")
-    public ResponseEntity<List<MealDTO>> findAllMeals(Pageable pageable){
-        return ResponseEntity.ok(mealProvider.findAllMeals(pageable));
+    public ResponseEntity<Page<MealDTO>> getAllMeals(Pageable pageable){
+        return ResponseEntity.ok(mealService.getAllMeals(pageable));
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<MealDTO> findMealByName(@PathVariable(value = "name") String name) throws ResourceNotFoundException {
-        MealDTO meal = mealProvider.findMealByName(name);
-        return ResponseEntity.ok().body(meal);
+    public ResponseEntity<MealDTO> getMeal(@PathVariable String name) {
+        return ResponseEntity.ok(mealService.getMealByName(name));
     }
 
     @PostMapping("/add")
-    public ResponseEntity<MealDTO> createMeal(@RequestBody @Valid Meal meal) throws ResourceNotFoundException {
-//        mealService.save(meal);
-        return ResponseEntity.ok(mealProvider.findMealByName(meal.getName()));
+    public ResponseEntity<MealDTO> createMeal(@Valid @RequestBody Meal meal){
+        return ResponseEntity.ok(mealService.createMeal(meal));
     }
 
-    @PostMapping("{name}/add-image")
-    public ResponseEntity<MealDTO> addImageToMeal(@PathVariable String name, @RequestParam("filePath") String filePath) throws IOException {
-        mealService.addImageToMeal(name, filePath);
-        return ResponseEntity.ok(mealProvider.findMealByName(name));
+    @PostMapping("{name}/image")
+    public ResponseEntity<MealDTO> addImage(@PathVariable String name, @RequestParam("filePath") String filePath) throws IOException {
+        return ResponseEntity.ok(mealService.addImageToMeal(name, filePath));
     }
 
 //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
-    @Transactional
-    @DeleteMapping("/{name}/delete-image")
-    public ResponseEntity deleteImageFromMeal(@PathVariable String name, @RequestParam("fileUrl") String fileUrl) throws IOException {
+    @DeleteMapping("/{name}/image")
+    public ResponseEntity deleteImage(@PathVariable String name, @RequestParam("fileUrl") String fileUrl) throws IOException {
         mealService.deleteImageFromMeal(name, fileUrl);
-        return ResponseEntity.ok("Image from meal " + name + " was successfully removed");
+        return ResponseEntity.ok("Image was successfully deleted from the meal");
     }
 
-    @PatchMapping("/{name}")
-    public ResponseEntity<MealDTO> patchMealByName(@PathVariable String name, @Valid @RequestBody Meal meal) throws ResourceNotFoundException {
-        Meal patchedMeal = mealService.updateByName(name, meal);
-        return ResponseEntity.ok(mealProvider.findMealByName(patchedMeal.getName()));
+    @PutMapping("/{name}")
+    public ResponseEntity<MealDTO> updateMeal(@Valid @RequestBody MealDTO mealDTO, @PathVariable String name) {
+        return ResponseEntity.ok(mealService.updateMealByName(mealDTO, name));
     }
+
 //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
-    @Transactional
     @DeleteMapping("/{name}")
-    public ResponseEntity deleteByName(@PathVariable String name) throws ResourceNotFoundException {
-        mealService.deleteByName(name);
+    public ResponseEntity deleteMeal(@PathVariable String name) {
+        mealService.deleteMealByName(name);
         return ResponseEntity.ok("Meal " + name + " was successfully deleted from Repository");
     }
 }

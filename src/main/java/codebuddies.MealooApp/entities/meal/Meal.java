@@ -2,22 +2,21 @@ package codebuddies.MealooApp.entities.meal;
 
 import codebuddies.MealooApp.entities.image.Image;
 import codebuddies.MealooApp.entities.product.Ingredient;
+import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.entities.user.FoodDiary;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.*;
 
 @Entity
 public class Meal {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     private String name;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Ingredient> ingredients;
 
     private double price;
@@ -59,14 +58,6 @@ public class Meal {
         this.recipe = recipe;
         mealMacronutrients = calculateMealMacronutrients();
         totalCalories = calculateCalories();
-    }
-
-    Long getId() {
-        return id;
-    }
-
-    void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -157,8 +148,9 @@ public class Meal {
         }
         return totalCarbohydrates;
     }
-    protected int calculareProteins(){
+    protected int calculateProteins(){
         int totalProteins = 0;
+        Product p = ingredients.get(0).getProduct();
         for(int i = 0; i < ingredients.size(); i++){
             totalProteins += ingredients.get(i).getProduct().getMacronutrients().getProteinsPer100g()
                     * ingredients.get(i).getAmount() / 100;
@@ -175,11 +167,11 @@ public class Meal {
     }
 
     protected MealMacronutrients calculateMealMacronutrients(){
-        return new MealMacronutrients(calculareProteins(), calculateCarbohydrates(), calculateFats());
+        return new MealMacronutrients(calculateProteins(), calculateCarbohydrates(), calculateFats());
     }
 
     protected int calculateCalories() {
-        return (calculateCarbohydrates() * 4) + (calculareProteins() * 4) + (calculateFats() * 9);
+        return (calculateCarbohydrates() * 4) + (calculateProteins() * 4) + (calculateFats() * 9);
 
     }
 
@@ -196,7 +188,6 @@ public class Meal {
         Meal meal = (Meal) o;
         return Double.compare(meal.price, price) == 0 &&
                 totalCalories == meal.totalCalories &&
-                Objects.equals(id, meal.id) &&
                 Objects.equals(name, meal.name) &&
                 Objects.equals(ingredients, meal.ingredients) &&
                 mealDifficulty == meal.mealDifficulty &&
@@ -208,13 +199,12 @@ public class Meal {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, ingredients, price, mealDifficulty, recipe, mealMacronutrients, totalCalories, foodDiaries, images);
+        return Objects.hash(name, ingredients, price, mealDifficulty, recipe, mealMacronutrients, totalCalories, foodDiaries, images);
     }
 
     @Override
     public String toString() {
         return "Meal{" +
-                "id=" + id +
                 ", name='" + name + '\'' +
                 ", ingredients=" + ingredients +
                 ", price=" + price +

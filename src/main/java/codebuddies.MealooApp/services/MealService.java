@@ -1,151 +1,83 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.dto.ProductDTO;
-import codebuddies.MealooApp.entities.image.Image;
+import codebuddies.MealooApp.dataproviders.MealProvider;
+import codebuddies.MealooApp.dto.ImageDTO;
+import codebuddies.MealooApp.dto.IngredientForMealDTO;
+import codebuddies.MealooApp.dto.MealDTO;
+import codebuddies.MealooApp.dto.ProductForIngredientDTO;
 import codebuddies.MealooApp.entities.meal.Meal;
-import codebuddies.MealooApp.entities.product.Ingredient;
-import codebuddies.MealooApp.entities.product.Product;
-import codebuddies.MealooApp.exceptions.IllegalDataException;
-import codebuddies.MealooApp.exceptions.MealIsNeededException;
-import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
-import codebuddies.MealooApp.repositories.IngredientRepository;
-import codebuddies.MealooApp.repositories.MealRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class MealService {
 
-    private ProductService productService;
-
-    private MealRepository mealRepository;
-
-    private IngredientRepository ingredientRepository;
-
     private ImageService imageService;
 
+    private IngredientService ingredientService;
+
+    private MealProvider mealProvider;
+
     @Autowired
-    public MealService(ProductService productService, MealRepository mealRepository
-            , IngredientRepository ingredientRepository, ImageService imageService) {
-
-        this.productService = productService;
-        this.mealRepository = mealRepository;
-        this.ingredientRepository = ingredientRepository;
+    public MealService(MealProvider mealProvider, ImageService imageService, IngredientService ingredientService) {
+        this.mealProvider = mealProvider;
         this.imageService = imageService;
+        this.ingredientService = ingredientService;
     }
 
-    public List<Meal> findAll() {
-        return mealRepository.findAll();
+
+    public Page<MealDTO> getAllMeals(Pageable pageable){
+        return mealProvider.getAllMeals(pageable);
     }
 
-    public Page<Meal> findAllPageable(Pageable pageable){
-        return mealRepository.findAll(pageable);
+    public MealDTO getMealByName(String name){
+        return mealProvider.getMealByName(name);
     }
 
-    public boolean existsByName(String name) {
-        return mealRepository.existsByName(name);
+    public MealDTO createMeal(Meal meal){
+        ingredientService.createIngredients(meal);
+        return mealProvider.createMeal(meal);
     }
 
-    public Meal findByName(String name) throws ResourceNotFoundException {
-        Meal meal = mealRepository.findByName(name);
-        if(meal == null){
-            throw new ResourceNotFoundException(name);
-        }
+    public MealDTO updateMealByName(MealDTO mealDTO, String name){
+        MealDTO updatedMeal = getMealByName(name);
+        updatedMeal.setName(mealDTO.getName());
+        updatedMeal.setIngredients(mealDTO.getIngredients());
+        updatedMeal.setPrice(mealDTO.getPrice());
+        updatedMeal.setMealDifficulty(mealDTO.getMealDifficulty());
+        updatedMeal.setMealMacronutrients(mealDTO.getMealMacronutrients());
+        updatedMeal.setTotalCalories(mealDTO.getTotalCalories());
+        updatedMeal.setRecipe(mealDTO.getRecipe());
+        updatedMeal.setImages(mealDTO.getImages());
+        return mealProvider.updateMeal(updatedMeal);
+    }
+    @Transactional
+    public void deleteMealByName(String name){
+        mealProvider.deleteByName(name);
+    }
+
+    public MealDTO addImageToMeal(String name, String filePath){
+        MealDTO meal = getMealByName(name);
+        imageService.createNewImage(meal, filePath);
         return meal;
     }
 
-//    public List<Ingredient> createListOfIngredients(Meal meal) throws ResourceNotFoundException {
-//        List<String> productsNames = meal.getIngredients().stream()
-//                .map(Ingredient::getProduct).map(Product::getName).collect(Collectors.toList());
-//        List<Integer> amounts = meal.getIngredients().stream()
-//                .map(Ingredient::getAmount).collect(Collectors.toList());
-//        List<Ingredient> ingredientList = new ArrayList<>();
+    public void deleteImageFromMeal(String name, String fileUrl){
+        MealDTO meal = getMealByName(name);
+        ImageDTO image = imageService.getImageByFileUrl(fileUrl);
+        meal.getImages().remove(image);
+    }
+
 //
-//        for(int i = 0; i < productsNames.size(); i ++){
-//            if (amounts.get(i) <= 0) {
-//                throw new IllegalDataException("Product amount must be more than 0");
-//            }
-//            ProductDTO temporaryProduct = productService.getProductByName(productsNames.get(i));
-//            Ingredient temporary = new Ingredient(amounts.get(i)
-//                    , temporaryProduct);
-//            ingredientList.add(temporary);
-//            ingredientRepository.save(temporary);
-//        }
-//        return ingredientList;
+//    public List<String> findAllNamesOfMatchingMeals(int perfectCaloricValue){
+//        return   findAll().stream()
+//                .filter(meal -> meal.getTotalCalories() > perfectCaloricValue - 100 &&
+//                    meal.getTotalCalories() < perfectCaloricValue + 100)
+//                        .map(Meal::getName).collect(Collectors.toList());
 //    }
-
-//    public Meal save(Meal meal) throws ResourceNotFoundException {
-//        List<Ingredient> ingredientList = createListOfIngredients(meal);
-//        Meal newMeal = new Meal(meal.getName(), ingredientList, meal.getMealDifficulty());
-//        return mealRepository.save(newMeal);
-//    }
-
-    @Transactional
-    public Meal updateByName(String name, Meal meal) throws ResourceNotFoundException {
-        Meal foundedMeal = findByName(name);
-
-        if(!foundedMeal.getFoodDiaries().isEmpty()){
-            throw new MealIsNeededException();
-        }
-        if(meal.getName() != null){
-            foundedMeal.setName(meal.getName());
-        }
-
-//        if(meal.getIngredients() != null){
-//            foundedMeal.setIngredients(createListOfIngredients(meal));
-//        }
-
-        if(meal.getMealDifficulty()!=null){
-            foundedMeal.setMealDifficulty(meal.getMealDifficulty());
-        }
-        if(meal.getRecipe()!=null){
-            foundedMeal.setRecipe(meal.getRecipe());
-        }
-        foundedMeal.recalculateData();
-//        save(foundedMeal);
-        return foundedMeal;
-    }
-    @Transactional
-    public void deleteByName(String name) throws ResourceNotFoundException {
-        if(!findByName(name).getFoodDiaries().isEmpty()){
-            throw new MealIsNeededException();
-        }
-        if(mealRepository.findByName(name) == null){
-            throw new ResourceNotFoundException("This meal does not exist in repository");
-        }
-        mealRepository.deleteByName(name);
-    }
-
-    public void addImageToMeal(String name, String filePath) throws IOException {
-        Meal meal = findByName(name);
-        Map result  =  imageService.addNewImage(filePath);
-        String imageUrl = result.get("url").toString();
-        Image newImg = new Image(filePath, imageUrl, meal);
-        imageService.save(newImg);
-    }
-
-    public void deleteImageFromMeal(String name, String fileUrl) throws IOException {
-        Meal meal = findByName(name);
-        Optional<String> imageUrl = meal.getImages().stream().map(Image::getFileUrl).findAny();
-        if(imageUrl.isEmpty()){
-            throw new ResourceNotFoundException("Image with given URL is not attached to this meal");
-        }
-        imageService.deleteByFileUrl(imageUrl.get());
-    }
-
-    public List<String> findAllNamesOfMatchingMeals(int perfectCaloricValue){
-        return   findAll().stream()
-                .filter(meal -> meal.getTotalCalories() > perfectCaloricValue - 100 &&
-                    meal.getTotalCalories() < perfectCaloricValue + 100)
-                        .map(Meal::getName).collect(Collectors.toList());
-    }
 
 }
 

@@ -9,13 +9,13 @@ import java.util.Optional;
 
 
 @Repository
-public interface MealRepository extends JpaRepository<Meal, Long> {
+public interface MealRepository extends JpaRepository<Meal, String> {
 
     Meal save(Meal meal);
 
     boolean existsByName(String name);
 
-    Meal findByName(String name);
+    Optional<Meal> findByName(String name);
 
     void deleteByName(String name);
 }

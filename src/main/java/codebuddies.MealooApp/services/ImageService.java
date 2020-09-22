@@ -1,5 +1,8 @@
 package codebuddies.MealooApp.services;
 
+import codebuddies.MealooApp.dataproviders.ImageProvider;
+import codebuddies.MealooApp.dto.ImageDTO;
+import codebuddies.MealooApp.dto.MealDTO;
 import codebuddies.MealooApp.entities.image.Image;
 import codebuddies.MealooApp.repositories.ImageRepository;
 import com.cloudinary.Cloudinary;
@@ -21,32 +24,39 @@ public class ImageService {
     @Value("${cloudinary.apiSecretValue}")
     private String apiSecretValue;
 
-    private ImageRepository imageRepository;
-
-    private Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+    private final Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
             "cloud_name", cloudNameValue,
             "api_key", apiKeyValue,
             "api_secret", apiSecretValue));
 
-    public ImageService(ImageRepository imageRepository){
-        this.imageRepository = imageRepository;
+    private ImageProvider imageProvider;
+
+    public ImageService(ImageProvider imageProvider){
+        this.imageProvider = imageProvider;
     }
 
-    public Map addNewImage(String filePath) throws IOException {
+    public void createNewImage(MealDTO mealDTO, String filePath) {
+        String imageUrl = uploadFile(filePath);
+        imageProvider.createNewImage(filePath, imageUrl, mealDTO);
+    }
+
+    public String uploadFile(String filePath) {
         File file = new File(filePath);
-        return cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+        Map result = null;
+        try{
+            //todo rework here
+            cloudinary.config.cloudName = cloudNameValue;
+            cloudinary.config.apiKey = apiKeyValue;
+            cloudinary.config.apiSecret = apiSecretValue;
+            result = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return result.get("url").toString();
     }
 
-    public Image save(Image image) {
-        return imageRepository.save(image);
-    }
-
-    public void delete(Image image){
-        imageRepository.delete(image);
-    }
-
-    public void deleteByFileUrl(String fileUrl) throws IOException {
-        imageRepository.deleteByFileUrl(fileUrl);
+    public ImageDTO getImageByFileUrl(String fileUrl){
+        return imageProvider.getImageByFileUrl(fileUrl);
     }
 
 }

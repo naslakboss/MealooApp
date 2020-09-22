@@ -2,13 +2,18 @@ package codebuddies.MealooApp.controllers;
 
 import codebuddies.MealooApp.dto.ProductDTO;
 import codebuddies.MealooApp.dataproviders.ProductProvider;
+import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.product.Product;
+import codebuddies.MealooApp.entities.product.ProductType;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.exceptions.ValidationException;
+import codebuddies.MealooApp.repositories.ProductRepository;
 import codebuddies.MealooApp.services.ProductService;
 //import mealoapp.MealooAppp.services.ProductTypeService;
 //import codebuddies.MealooApp.services.ProductTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +28,8 @@ import java.util.List;
 public class ProductController {
 
     ProductService productService;
+
+    ProductRepository productRepository;
 
     @Autowired
     public ProductController(ProductService productService) {
@@ -52,16 +59,16 @@ public class ProductController {
 //                new Macronutrients(7, 80, 1), ProductType.GRAINS);
 //        Product paprika = new Product("Paprika", 3,
 //                new Macronutrients(1, 7, 1), ProductType.VEGETABLES);
-//        productService.save(egg);
-//        productService.save(bread);
-//        productService.save(milk);
-//        productService.save(beef);
-//        productService.save(chicken);
-//        productService.save(pasta);
-//        productService.save(strawberry);
-//        productService.save(piers);
-//        productService.save(rice);
-//        productService.save(paprika);
+////        productRepository.save(egg);
+//        productRepository.save(bread);
+//        productRepository.save(milk);
+//        productRepository.save(beef);
+//        productRepository.save(chicken);
+//        productRepository.save(pasta);
+//        productRepository.save(strawberry);
+//        productRepository.save(piers);
+//        productRepository.save(rice);
+//        productRepository.save(paprika);
 //    }
 
 

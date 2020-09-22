@@ -1,9 +1,13 @@
 package codebuddies.MealooApp.dataproviders;
 
 import codebuddies.MealooApp.dto.MealDTO;
+import codebuddies.MealooApp.entities.meal.Meal;
+import codebuddies.MealooApp.entities.product.Ingredient;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
+import codebuddies.MealooApp.repositories.MealRepository;
 import codebuddies.MealooApp.services.MealService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -15,21 +19,45 @@ public class MealProvider {
 
     ModelMapper modelMapper;
 
-    MealService mealService;
+    MealRepository mealRepository;
 
-    public MealProvider(ModelMapper modelMapper, MealService mealService) {
+    public MealProvider(ModelMapper modelMapper, MealRepository mealRepository) {
         this.modelMapper = modelMapper;
-        this.mealService = mealService;
+        this.mealRepository = mealRepository;
     }
 
-    public MealDTO findMealByName(String name) throws ResourceNotFoundException {
-        return  modelMapper.map(mealService.findByName(name), MealDTO.class);
-        // todo add total macro and calories
+    public Page<MealDTO> getAllMeals(Pageable pageable){
+        return mealRepository.findAll(pageable)
+                .map(meal -> modelMapper.map(meal, MealDTO.class));
     }
 
-    public List<MealDTO> findAllMeals(Pageable pageable){
-        List<MealDTO> mealsList = mealService.findAllPageable(pageable).stream()
-                .map(meal -> modelMapper.map(meal, MealDTO.class)).collect(Collectors.toList());
-        return  mealsList;
+    public MealDTO getMealByName(String name){
+        Meal meal =  mealRepository.findByName(name).orElseThrow(() ->
+                new ResourceNotFoundException("Meal " + name + " does not exists"));
+        return modelMapper.map(meal, MealDTO.class);
+    }
+
+    public MealDTO createMeal(Meal meal){
+        Meal newMeal = mealRepository.save(new Meal
+                (meal.getName(),meal.getIngredients()
+                        , meal.getMealDifficulty(), meal.getRecipe()));
+        return modelMapper.map(newMeal, MealDTO.class);
+    }
+
+    public MealDTO updateMeal(MealDTO updatedMeal){
+        Meal meal = modelMapper.map(updatedMeal, Meal.class);
+        mealRepository.save(meal);
+        return updatedMeal;
+    }
+
+    public boolean existsByName(String name){
+        return mealRepository.existsByName(name);
+    }
+
+    public void deleteByName(String name){
+        if(!existsByName(name)){
+            throw new ResourceNotFoundException("Meal " + name + " does not exist in database");
+        }
+        mealRepository.deleteByName(name);
     }
 }
