@@ -3,6 +3,8 @@ package codebuddies.MealooApp.dto;
 import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.product.ProductType;
 
+import javax.validation.constraints.Max;
+
 public class ProductDTO {
 
     private String name;

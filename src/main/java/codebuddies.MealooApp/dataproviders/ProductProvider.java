@@ -16,13 +16,12 @@ import java.util.stream.Collectors;
 @Service
 public class ProductProvider {
 
-    ModelMapper modelMapper;
+    ModelMapper modelMapper = new ModelMapper();
 
     ProductRepository productRepository;
 
-    public ProductProvider(ProductRepository productRepository, ModelMapper modelMapper) {
+    public ProductProvider(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.modelMapper = modelMapper;
     }
 
     public Page<ProductDTO> getAllProducts(Pageable pageable){

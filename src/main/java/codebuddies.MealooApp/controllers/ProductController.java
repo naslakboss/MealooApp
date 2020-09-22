@@ -29,48 +29,10 @@ public class ProductController {
 
     ProductService productService;
 
-    ProductRepository productRepository;
-
     @Autowired
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
-
-//    @EventListener(ApplicationReadyEvent.class)
-//    public void fillDB() throws ValidationException {
-//
-//        Product egg = new Product("Eggs", 10,
-//                new Macronutrients(13, 1, 10), ProductType.DAIRY);
-//        Product bread = new Product("Bread", 3,
-//                new Macronutrients(9, 50, 3), ProductType.GRAINS);
-//        Product milk = new Product("Milk", 4,
-//                new Macronutrients(3, 4, 4), ProductType.DAIRY);
-//        Product beef = new Product("Beef", 30,
-//                new Macronutrients(30, 5, 30), ProductType.MEAT);
-//        Product chicken = new Product("Chicken", 15,
-//                new Macronutrients(22, 0, 1), ProductType.MEAT);
-//        Product pasta = new Product("Pasta", 8,
-//                new Macronutrients(12, 65, 2), ProductType.MEAT);
-//        Product strawberry = new Product("Strawberry", 5,
-//                new Macronutrients(2, 12, 2), ProductType.DAIRY);
-//        Product piers = new Product("ChickenBreast", 2,
-//                new Macronutrients(31, 0, 4), ProductType.MEAT);
-//        Product rice = new Product("WhiteRice", 1,
-//                new Macronutrients(7, 80, 1), ProductType.GRAINS);
-//        Product paprika = new Product("Paprika", 3,
-//                new Macronutrients(1, 7, 1), ProductType.VEGETABLES);
-////        productRepository.save(egg);
-//        productRepository.save(bread);
-//        productRepository.save(milk);
-//        productRepository.save(beef);
-//        productRepository.save(chicken);
-//        productRepository.save(pasta);
-//        productRepository.save(strawberry);
-//        productRepository.save(piers);
-//        productRepository.save(rice);
-//        productRepository.save(paprika);
-//    }
-
 
     @GetMapping("")
     public ResponseEntity<Page<ProductDTO>> getAllProducts(Pageable pageable) {
