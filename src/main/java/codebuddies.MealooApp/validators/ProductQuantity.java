@@ -11,8 +11,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ProductQuantityValidator.class)
 public @interface ProductQuantity {
-    String message() default "\"Total sum of Macronutrients in 100g of product\" +\n" +
-            "                    \" cannot exceed 100g\"";
+    String message() default "Total sum of Macronutrients in 100g of product" +
+            "                     cannot exceed 100g";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
