@@ -10,6 +10,6 @@ public class ResourceNotFoundException extends RuntimeException {
 
     public ResourceNotFoundException(String entity){
         super(entity +" does not exist in database. Check if the name is correct" +
-                "or display a list of all");
+                " or display a list of all");
     }
 }

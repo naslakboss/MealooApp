@@ -25,7 +25,6 @@ public class FoodDiaryProvider {
     }
 
     public Page<FoodDiaryDTO> getAllDiaries(MealooUser user, Pageable pageable){
-        //todo what if empty?
         return diaryRepository.findByMealooUser(user, pageable)
                 .map(diary -> modelMapper.map(diary, FoodDiaryDTO.class));
     }
@@ -43,6 +42,7 @@ public class FoodDiaryProvider {
 
     public FoodDiaryDTO updateDiary(FoodDiaryDTO diaryDTO, MealooUser user){
         FoodDiary diary = modelMapper.map(diaryDTO, FoodDiary.class);
+        diary.setId(diaryDTO.getId());
         diary.setMealooUser(user);
         diaryRepository.save(diary);
         return diaryDTO;

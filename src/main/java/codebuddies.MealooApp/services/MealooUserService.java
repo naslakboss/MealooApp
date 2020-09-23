@@ -33,20 +33,14 @@ public class MealooUserService {
     }
 
     public MealooUser updateUserByUsername(MealooUser user, String username){
-        MealooUser updatedUser = getUserByUsername(username);
-        updatedUser.setUsername(user.getUsername());
-        updatedUser.setPassword(user.getPassword());
-        updatedUser.setEmail(user.getEmail());
-        updatedUser.setMealooUserRole(user.getMealooUserRole());
-        updatedUser.setNutritionSettings(user.getNutritionSettings());
-        updatedUser.setMealooUserDetails(user.getMealooUserDetails());
-        return userProvider.updateUser(updatedUser);
+        user.setId(getUserByUsername(username).getId());
+        return userProvider.updateUser(user);
     }
 
     @Transactional
     public void deleteByUsername(String username) {
         if(!existsByName(username)){
-            throw new ResourceNotFoundException("User " + username + " does not exist in database");
+            throw new ResourceNotFoundException(username);
         }
         else userProvider.deleteUserByUsername(username);
     }

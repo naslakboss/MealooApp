@@ -24,7 +24,7 @@ public class MealooUserProvider {
 
     public MealooUser getUserByUsername(String username){
         return userRepository.findByUsername(username).orElseThrow(() ->
-                new ResourceNotFoundException("User " + username + " does not exist in database"));
+                new ResourceNotFoundException(username));
     }
 
     public MealooUser createUser(MealooUser user){

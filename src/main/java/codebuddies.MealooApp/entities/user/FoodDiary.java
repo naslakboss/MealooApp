@@ -2,11 +2,8 @@ package codebuddies.MealooApp.entities.user;
 
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
-import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -42,11 +39,10 @@ public class FoodDiary {
         this.listOfMeals = new ArrayList<>();
         this.date = date;
         this.mealooUser = mealooUser;
-        mealMacronutrients = calculateMealMacronutrients();
-        totalCalories = calculateCalories();
-        totalPrice = calculatePrice();
+        mealMacronutrients = new MealMacronutrients(0,0,0);
+        totalCalories = 0;
+        totalPrice = 0;
     }
-    //todo set some params protected or private
 
     public void addMeal(Meal meal){
         this.listOfMeals.add(meal);
@@ -117,27 +113,7 @@ public class FoodDiary {
         this.totalPrice = totalPrice;
     }
 
-    public float calculatePrice() {
-        return (float)listOfMeals.stream().mapToDouble(Meal::getPrice).sum();
-    }
 
-    public int calculateCalories(){
-        return listOfMeals.stream().mapToInt(Meal::getTotalCalories).sum();
-     }
-
-    public MealMacronutrients calculateMealMacronutrients(){
-        MealMacronutrients mealMacronutrients = new MealMacronutrients();
-        int totalCarbohydrates = listOfMeals.stream().map(Meal::getMealMacronutrients)
-                .mapToInt(MealMacronutrients::getTotalCarbohydrates).sum();
-        int totalProteins = listOfMeals.stream().map(Meal::getMealMacronutrients)
-                .mapToInt(MealMacronutrients::getTotalProteins).sum();
-        int totalFats = listOfMeals.stream().map(Meal::getMealMacronutrients)
-                .mapToInt(MealMacronutrients::getTotalFats).sum();
-        mealMacronutrients.setTotalCarbohydrates(totalCarbohydrates);
-        mealMacronutrients.setTotalProteins(totalProteins);
-        mealMacronutrients.setTotalFats(totalFats);
-        return mealMacronutrients;
-    }
 
 
 }

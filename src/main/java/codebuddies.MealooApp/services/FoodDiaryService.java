@@ -6,6 +6,7 @@ import codebuddies.MealooApp.dto.MealDTO;
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
 import codebuddies.MealooApp.entities.user.MealooUser;
 import codebuddies.MealooApp.entities.user.WeightGoal;
+import codebuddies.MealooApp.exceptions.RequiredMealsNotFoundException;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -138,25 +139,21 @@ public class FoodDiaryService {
         }
 
         if (namesOfMatchingMeals.size() < numberOfMeals) {
-            throw new ResourceNotFoundException("Sorry, database does not contain required meals." +
-                    " Try to add new meals or create your own diary manually");
+            throw new RequiredMealsNotFoundException("");
         }
 
         Random random = new Random();
 
-        for (int i = 0; i < numberOfMeals - 1; i++) {
-            int randomIndex = random.nextInt(namesOfMatchingMeals.size());
-            addMeal(username, namesOfMatchingMeals.get(randomIndex));
-            namesOfMatchingMeals.remove(randomIndex);
-        }
+        int randomIndex = random.nextInt(namesOfMatchingMeals.size());
+        addMeal(username, namesOfMatchingMeals.get(randomIndex));
+        namesOfMatchingMeals.remove(randomIndex);
 
         int deficit = totalCalories - getCurrentDiary(username).getTotalCalories();
 
         List<String> mealsToFixDeficit = mealService.findNamesOfMatchingMeals(deficit);
 
         if(mealsToFixDeficit.isEmpty()) {
-            throw new ResourceNotFoundException("Sorry, database does not contain required meals." +
-                    " Try to add new meals or create your own diary manually");
+            throw new RequiredMealsNotFoundException("");
         }
         addMeal(username, mealsToFixDeficit.get(random.nextInt(mealsToFixDeficit.size())));
 
@@ -210,11 +207,9 @@ public class FoodDiaryService {
 
         Random random = new Random();
 
-        for (int i = 0; i < numbersOfMeals - 1; i++) {
             int randomIndex = random.nextInt(namesOfMatchingMeals.size());
             addMeal(username, namesOfMatchingMeals.get(randomIndex));
             namesOfMatchingMeals.remove(randomIndex);
-        }
 
         int deficit = totalCalories - getCurrentDiary(username).getTotalCalories();
 

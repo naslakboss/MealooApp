@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MealProvider {
@@ -29,7 +30,7 @@ public class MealProvider {
 
     public MealDTO getMealByName(String name){
         Meal meal =  mealRepository.findByName(name).orElseThrow(() ->
-                new ResourceNotFoundException("Meal " + name + " does not exists"));
+                new ResourceNotFoundException(name));
         return modelMapper.map(meal, MealDTO.class);
     }
 
@@ -52,12 +53,14 @@ public class MealProvider {
 
     public void deleteByName(String name){
         if(!existsByName(name)){
-            throw new ResourceNotFoundException("Meal " + name + " does not exist in database");
+            throw new ResourceNotFoundException(name);
         }
         mealRepository.deleteByName(name);
     }
 
-    public List<String> findNamesOfMatchingMeals(int lowerBorder, int upperBorder) {
-        return mealRepository.findByTotalCaloriesBetween(lowerBorder, upperBorder);
+    public List<MealDTO> findNamesOfMatchingMeals(int lowerBorder, int upperBorder) {
+        List<Meal> meals = mealRepository.findByTotalCaloriesBetween(lowerBorder, upperBorder);
+        return meals.stream().map(meal -> modelMapper.map(meal, MealDTO.class))
+                .collect(Collectors.toList());
     }
 }

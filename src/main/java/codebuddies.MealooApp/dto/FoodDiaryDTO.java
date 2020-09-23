@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public class FoodDiaryDTO {
 
+    Long id;
+
     LocalDate date;
 
     List<MealDTO> listOfMeals;
@@ -22,13 +24,22 @@ public class FoodDiaryDTO {
     public FoodDiaryDTO() {
     }
 
-    public FoodDiaryDTO(LocalDate date, List<MealDTO> listOfMeals
+    public FoodDiaryDTO(Long id, LocalDate date, List<MealDTO> listOfMeals
             , MealMacronutrients mealMacronutrients, int totalCalories, double totalPrice) {
+        this.id = id;
         this.date = date;
         this.listOfMeals = listOfMeals;
         this.mealMacronutrients = mealMacronutrients;
         this.totalCalories = totalCalories;
         this.totalPrice = totalPrice;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public LocalDate getDate() {
@@ -74,12 +85,14 @@ public class FoodDiaryDTO {
     public void addMeal(MealDTO mealDTO){
          listOfMeals.add(mealDTO);
     }
+
     public void deleteMeal(MealDTO meal) {
         Optional<MealDTO> mealToDelete = listOfMeals.stream()
                 .filter(diaryMeals -> diaryMeals.getName().equals(meal.getName())).findAny();
         if(mealToDelete.isEmpty()){
-            throw new ResourceNotFoundException("This diary does not contain " + meal.getName());
+            throw new ResourceNotFoundException(meal.getName());
         }
         listOfMeals.remove(mealToDelete.get());
     }
+
 }

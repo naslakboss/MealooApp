@@ -19,5 +19,5 @@ public interface MealRepository extends JpaRepository<Meal, String> {
 
     void deleteByName(String name);
 
-    List<String> findByTotalCaloriesBetween(int lowerBorder, int upperBorder);
+    List<Meal> findByTotalCaloriesBetween(int lowerBorder, int upperBorder);
 }

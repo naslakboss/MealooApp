@@ -1,39 +1,7 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.entities.image.Image;
-import codebuddies.MealooApp.entities.meal.Meal;
-import codebuddies.MealooApp.entities.meal.MealDifficulty;
-import codebuddies.MealooApp.entities.product.Ingredient;
-import codebuddies.MealooApp.entities.product.Macronutrients;
-import codebuddies.MealooApp.entities.product.Product;
-import codebuddies.MealooApp.entities.product.ProductType;
-import codebuddies.MealooApp.entities.user.FoodDiary;
-import codebuddies.MealooApp.entities.user.MealooUser;
-import codebuddies.MealooApp.entities.user.NutritionSettings;
-import codebuddies.MealooApp.exceptions.IllegalDataException;
-import codebuddies.MealooApp.exceptions.MealIsNeededException;
-import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
-import codebuddies.MealooApp.repositories.IngredientRepository;
-import codebuddies.MealooApp.repositories.MealRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.*;
-
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 
 //@MockitoSettings(strictness = Strictness.STRICT_STUBS)

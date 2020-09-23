@@ -1,11 +1,9 @@
 package codebuddies.MealooApp.entities.product;
 
-import codebuddies.MealooApp.validators.UniqueProduct;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
@@ -15,14 +13,12 @@ import java.util.Objects;
 @Entity
 public class Product {
 
-
-
     @Id
     private String name;
 
-    @NotNull(message = "Price of product is mandatory")
+    @NotNull(message = "Product price is mandatory")
+    @Min(value = 0)
     private double price;
-    // todo add price in several currencies
 
     private int caloriesPer100g;
 
@@ -47,9 +43,6 @@ public class Product {
         this.caloriesPer100g = caloriesPer100g;
         this.productType = productType;
     }
-
-
-    //todo set some params protected or private
 
     public String getName() {
         return name;

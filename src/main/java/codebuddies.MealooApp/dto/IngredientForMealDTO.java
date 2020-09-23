@@ -1,9 +1,13 @@
 package codebuddies.MealooApp.dto;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 public class IngredientForMealDTO {
 
     ProductForIngredientDTO product;
-
+    @NotNull
+    @Min(value = 0, message = "Ingredient amount must be greater than 0")
     int amount;
 
     public IngredientForMealDTO() {

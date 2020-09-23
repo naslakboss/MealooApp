@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MealService {
@@ -42,17 +43,10 @@ public class MealService {
     }
 
     public MealDTO updateMealByName(MealDTO mealDTO, String name){
-        MealDTO updatedMeal = getMealByName(name);
-        updatedMeal.setName(mealDTO.getName());
-        updatedMeal.setIngredients(mealDTO.getIngredients());
-        updatedMeal.setPrice(mealDTO.getPrice());
-        updatedMeal.setMealDifficulty(mealDTO.getMealDifficulty());
-        updatedMeal.setMealMacronutrients(mealDTO.getMealMacronutrients());
-        updatedMeal.setTotalCalories(mealDTO.getTotalCalories());
-        updatedMeal.setRecipe(mealDTO.getRecipe());
-        updatedMeal.setImages(mealDTO.getImages());
-        return mealProvider.updateMeal(updatedMeal);
+        mealDTO.setName(name);
+        return mealProvider.updateMeal(mealDTO);
     }
+
     @Transactional
     public void deleteMealByName(String name){
         mealProvider.deleteByName(name);
@@ -73,17 +67,9 @@ public class MealService {
     public List<String> findNamesOfMatchingMeals(int perfectCaloricValue) {
         int lowerBorder = perfectCaloricValue - 100;
         int upperBorder = perfectCaloricValue + 100;
-        return mealProvider.findNamesOfMatchingMeals(lowerBorder, upperBorder);
+        return mealProvider.findNamesOfMatchingMeals(lowerBorder, upperBorder).stream()
+                .map(MealDTO::getName).collect(Collectors.toList());
     }
-
-
-//
-//    public List<String> findAllNamesOfMatchingMeals(int perfectCaloricValue){
-//        return   findAll().stream()
-//                .filter(meal -> meal.getTotalCalories() > perfectCaloricValue - 100 &&
-//                    meal.getTotalCalories() < perfectCaloricValue + 100)
-//                        .map(Meal::getName).collect(Collectors.toList());
-//    }
 
 }
 
