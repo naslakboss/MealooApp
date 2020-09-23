@@ -2,6 +2,7 @@ package codebuddies.MealooApp.services;
 
 import codebuddies.MealooApp.dataproviders.MealooUserProvider;
 import codebuddies.MealooApp.entities.user.*;
+import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,9 @@ public class MealooUserService {
     }
 
     public MealooUser createUser(MealooUser user){
+        if(existsByName(user.getUsername())){
+            throw new EntityAlreadyFoundException(user.getUsername());
+        }
         return userProvider.createUser(user);
     }
 
@@ -63,8 +67,8 @@ public class MealooUserService {
         result.put("Correct BMI for untrained people is from ", 18.5);
         result.put("to ", 25.0);
         result.put("Your caloric demand is :", caloricDemand);
-        result.put("If you want to gain about 0.5kg per week, you should eat about", caloricDemand + 500);
-        result.put("If you want to lose about 0.5kg per week, you should eat about", caloricDemand - 500);
+        result.put("To gain about 0.5kg per week, eat about", caloricDemand + 500);
+        result.put("To lose about 0.5kg per week, eat about", caloricDemand - 500);
         return result;
     }
 

@@ -4,6 +4,7 @@ import codebuddies.MealooApp.dataproviders.MealProvider;
 import codebuddies.MealooApp.dto.ImageDTO;
 import codebuddies.MealooApp.dto.MealDTO;
 import codebuddies.MealooApp.entities.meal.Meal;
+import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,10 +38,19 @@ public class MealService {
         return mealProvider.getMealByName(name);
     }
 
+    private boolean existByName(String name) {
+        return mealProvider.existsByName(name);
+    }
+
     public MealDTO createMeal(Meal meal){
+        if(existByName(meal.getName())){
+            throw new EntityAlreadyFoundException(meal.getName());
+        }
         ingredientService.createIngredients(meal);
         return mealProvider.createMeal(meal);
     }
+
+
 
     public MealDTO updateMealByName(MealDTO mealDTO, String name){
         mealDTO.setName(name);
