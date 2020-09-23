@@ -1,9 +1,11 @@
 package codebuddies.MealooApp.dto;
 
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public class FoodDiaryDTO {
 
@@ -67,5 +69,17 @@ public class FoodDiaryDTO {
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public void addMeal(MealDTO mealDTO){
+         listOfMeals.add(mealDTO);
+    }
+    public void deleteMeal(MealDTO meal) {
+        Optional<MealDTO> mealToDelete = listOfMeals.stream()
+                .filter(diaryMeals -> diaryMeals.getName().equals(meal.getName())).findAny();
+        if(mealToDelete.isEmpty()){
+            throw new ResourceNotFoundException("This diary does not contain " + meal.getName());
+        }
+        listOfMeals.remove(mealToDelete.get());
     }
 }

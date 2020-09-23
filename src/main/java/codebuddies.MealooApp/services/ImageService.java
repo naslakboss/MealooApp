@@ -3,8 +3,6 @@ package codebuddies.MealooApp.services;
 import codebuddies.MealooApp.dataproviders.ImageProvider;
 import codebuddies.MealooApp.dto.ImageDTO;
 import codebuddies.MealooApp.dto.MealDTO;
-import codebuddies.MealooApp.entities.image.Image;
-import codebuddies.MealooApp.repositories.ImageRepository;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,10 +22,7 @@ public class ImageService {
     @Value("${cloudinary.apiSecretValue}")
     private String apiSecretValue;
 
-    private final Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-            "cloud_name", cloudNameValue,
-            "api_key", apiKeyValue,
-            "api_secret", apiSecretValue));
+    Cloudinary cloudinary = new Cloudinary(ObjectUtils.emptyMap());
 
     private ImageProvider imageProvider;
 
@@ -44,7 +39,6 @@ public class ImageService {
         File file = new File(filePath);
         Map result = null;
         try{
-            //todo rework here
             cloudinary.config.cloudName = cloudNameValue;
             cloudinary.config.apiKey = apiKeyValue;
             cloudinary.config.apiSecret = apiSecretValue;

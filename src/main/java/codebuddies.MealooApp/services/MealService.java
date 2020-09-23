@@ -2,15 +2,14 @@ package codebuddies.MealooApp.services;
 
 import codebuddies.MealooApp.dataproviders.MealProvider;
 import codebuddies.MealooApp.dto.ImageDTO;
-import codebuddies.MealooApp.dto.IngredientForMealDTO;
 import codebuddies.MealooApp.dto.MealDTO;
-import codebuddies.MealooApp.dto.ProductForIngredientDTO;
 import codebuddies.MealooApp.entities.meal.Meal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class MealService {
@@ -70,6 +69,13 @@ public class MealService {
         ImageDTO image = imageService.getImageByFileUrl(fileUrl);
         meal.getImages().remove(image);
     }
+
+    public List<String> findNamesOfMatchingMeals(int perfectCaloricValue) {
+        int lowerBorder = perfectCaloricValue - 100;
+        int upperBorder = perfectCaloricValue + 100;
+        return mealProvider.findNamesOfMatchingMeals(lowerBorder, upperBorder);
+    }
+
 
 //
 //    public List<String> findAllNamesOfMatchingMeals(int perfectCaloricValue){

@@ -4,14 +4,10 @@ import codebuddies.MealooApp.dto.ProductDTO;
 import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.ProductRepository;
-import codebuddies.MealooApp.services.ProductService;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductProvider {

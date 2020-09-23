@@ -70,11 +70,11 @@ public class MealooUser {
 //    public void setDailyCaloricGoalFromCalculator(){
 //        nutritionSettings.setDailyCaloricGoal(mealooUserDetails.calculateCaloricDemand());
 //    }
-    Long getId() {
+    public Long getId() {
         return id;
     }
 
-    void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -98,7 +98,7 @@ public class MealooUser {
         return email;
     }
 
-    void setEmail(String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 

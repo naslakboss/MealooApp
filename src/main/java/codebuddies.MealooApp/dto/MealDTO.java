@@ -3,22 +3,26 @@ package codebuddies.MealooApp.dto;
 import codebuddies.MealooApp.entities.meal.MealDifficulty;
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class MealDTO {
-
+    @NotNull
     String name;
 
+    @NotNull
     List<IngredientForMealDTO> ingredients;
 
     double price;
 
+    @NotNull
     MealDifficulty mealDifficulty;
 
     MealMacronutrients mealMacronutrients;
 
     int totalCalories;
 
+    @NotNull
     String recipe;
 
     List<ImageDTO> images;

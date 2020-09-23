@@ -1,89 +1,71 @@
 package codebuddies.MealooApp.services;
 
+import codebuddies.MealooApp.dataproviders.MealooUserProvider;
 import codebuddies.MealooApp.entities.user.*;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
-import codebuddies.MealooApp.repositories.MealooUserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
 public class MealooUserService {
 
-    private MealooUserRepository mealooUserRepository;
+    private MealooUserProvider userProvider;
 
-    @Autowired
-    public MealooUserService(MealooUserRepository mealooUserRepository) {
-        this.mealooUserRepository = mealooUserRepository;
+
+    public MealooUserService(MealooUserProvider userProvider) {
+        this.userProvider = userProvider;
     }
 
-    public Page<MealooUser> findAll(Pageable pageable) {
-        return mealooUserRepository.findAll(pageable);
+    public Page<MealooUser> getAllUsers(Pageable pageable) {
+        return userProvider.getAllUsers(pageable);
     }
 
-    public MealooUser save(MealooUser user) {
-        MealooUser newUser = new MealooUser(user.getUsername(), user.getPassword(), user.getEmail());
-        newUser.setMealooUserRole(MealooUserRole.USER);
-        newUser.setNutritionSettings(new NutritionSettings(0));
-        newUser.setMealooUserDetails(new MealooUserDetails(0,0,0, Sex.MALE, PhysicalActivity.LITTLE));
-        return mealooUserRepository.save(newUser);
+    public MealooUser getUserByUsername(String username) {
+        return userProvider.getUserByUsername(username);
     }
 
-    public MealooUser findByUsername(String username) throws ResourceNotFoundException {
-        MealooUser user = mealooUserRepository.findByUsername(username);
-        if(user == null){
-            throw new ResourceNotFoundException(username);
-        }
-        return user;
+    public MealooUser createUser(MealooUser user){
+        return userProvider.createUser(user);
     }
 
-    public MealooUser updateByUsername(String username, MealooUser mealooUser) {
-        MealooUser patchedUser = mealooUserRepository.findByUsername(username);
-        if(mealooUser.getPassword()!= null) {
-            patchedUser.setPassword(mealooUser.getPassword());
-        }
-        if(mealooUser.getNutritionSettings().getDailyCaloricGoal() != 0){
-            patchedUser.getNutritionSettings().setDailyCaloricGoal(mealooUser.getNutritionSettings().getDailyCaloricGoal());
-        }
-        if(mealooUser.getMealooUserDetails().getAge() != 0){
-            patchedUser.getMealooUserDetails().setAge(mealooUser.getMealooUserDetails().getAge());
-        }
-        if(mealooUser.getMealooUserDetails().getHeight() != 0){
-            patchedUser.getMealooUserDetails().setHeight(mealooUser.getMealooUserDetails().getHeight());
-        }
-        if(mealooUser.getMealooUserDetails().getWeight() != 0){
-            patchedUser.getMealooUserDetails().setWeight(mealooUser.getMealooUserDetails().getWeight());
-        }
-        if(mealooUser.getMealooUserDetails().getPhysicalActivity() != null){
-            patchedUser.getMealooUserDetails().setPhysicalActivity(mealooUser.getMealooUserDetails().getPhysicalActivity());
-        }
-        if(mealooUser.getMealooUserDetails().getSex() != null){
-            patchedUser.getMealooUserDetails().setSex(mealooUser.getMealooUserDetails().getSex());
-        }
-        mealooUserRepository.save(patchedUser);
-        return patchedUser;
+    public MealooUser updateUserByUsername(MealooUser user, String username){
+        MealooUser updatedUser = getUserByUsername(username);
+        updatedUser.setUsername(user.getUsername());
+        updatedUser.setPassword(user.getPassword());
+        updatedUser.setEmail(user.getEmail());
+        updatedUser.setMealooUserRole(user.getMealooUserRole());
+        updatedUser.setNutritionSettings(user.getNutritionSettings());
+        updatedUser.setMealooUserDetails(user.getMealooUserDetails());
+        return userProvider.updateUser(updatedUser);
     }
 
+    @Transactional
     public void deleteByUsername(String username) {
-        MealooUser user = mealooUserRepository.findByUsername(username);
-        if(user == null){
-            throw new ResourceNotFoundException(username);
-        } else {
-            mealooUserRepository.deleteByUsername(username);
+        if(!existsByName(username)){
+            throw new ResourceNotFoundException("User " + username + " does not exist in database");
         }
+        else userProvider.deleteUserByUsername(username);
+    }
+
+    public boolean existsByName(String username){
+        return userProvider.existsByUsername(username);
     }
 
 
 
-    public Map calculateBMIAndCaloricDemand(MealooUser user) {
+    public Map calculateBMIAndCaloricDemand(String username) {
+        MealooUser user = getUserByUsername(username);
         Map<String, Double> result = new LinkedHashMap<>();
         double userBMI = user.getMealooUserDetails()
                 .calculateBMI();
         result.put("Your BMI is : ", userBMI);
+
         double caloricDemand = user.getMealooUserDetails().calculateCaloricDemand();
+
         result.put("Correct BMI for untrained people is from ", 18.5);
         result.put("to ", 25.0);
         result.put("Your caloric demand is :", caloricDemand);

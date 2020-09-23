@@ -2,19 +2,29 @@ package codebuddies.MealooApp.dto;
 
 import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.product.ProductType;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class ProductDTO {
 
+    @NotNull
     private String name;
 
+    @NotNull(message = "Product price is mandatory")
+    @Min(value = 0)
     private double price;
 
     private int caloriesPer100g;
 
+    @Valid
     private Macronutrients macronutrients;
 
+    @NotNull(message = "Product Type is mandatory")
     private ProductType productType;
 
     public ProductDTO() {

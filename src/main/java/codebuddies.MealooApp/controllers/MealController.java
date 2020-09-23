@@ -1,23 +1,14 @@
 package codebuddies.MealooApp.controllers;
 
 import codebuddies.MealooApp.dto.MealDTO;
-import codebuddies.MealooApp.dataproviders.MealProvider;
 import codebuddies.MealooApp.entities.meal.Meal;
-import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
-import codebuddies.MealooApp.repositories.IngredientRepository;
-import codebuddies.MealooApp.repositories.MealRepository;
 import codebuddies.MealooApp.services.MealService;
-import codebuddies.MealooApp.services.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.*;
 
 @RestController
 @RequestMapping("/meals")
@@ -28,53 +19,6 @@ public class MealController {
     public MealController(MealService mealService) {
         this.mealService = mealService;
     }
-
-//    @EventListener(ApplicationReadyEvent.class)
-//    public void testNewMeal(){
-//
-//        Product bread = productService.findByName("Bread");
-//        Product egg = productService.findByName("Eggs");
-//        Product milk = productService.findByName("Milk");
-//        Product beef = productService.findByName("Beef");
-//        Product chicken = productService.findByName("Chicken");
-//        Product pasta = productService.findByName("Pasta");
-//        Product strawberry = productService.findByName("Strawberry");
-//        Product chickenBreast = productService.findByName("ChickenBreast");
-//        Product rice = productService.findByName("WhiteRice");
-//        Product paprika = productService.findByName("Paprika");
-//
-//        Ingredient breadI = new Ingredient(300, bread);
-//        Ingredient milkI = new Ingredient(500, milk);
-//        Ingredient beefI = new Ingredient(200, beef);
-//        Ingredient chickenI = new Ingredient(600, chicken);
-//        Ingredient pastaI = new Ingredient(200, pasta);
-//        Ingredient strawberryI = new Ingredient(1000, strawberry);
-//
-//        ingredientRepository.save(breadI);
-//        ingredientRepository.save(milkI);
-//        ingredientRepository.save(beefI);
-//        ingredientRepository.save(chickenI);
-//        ingredientRepository.save(pastaI);
-//        ingredientRepository.save(strawberryI);
-//
-//        Ingredient milkIn = ingredientRepository.findById(milkI.getId()).get();
-//        Ingredient beefIn = ingredientRepository.findById(beefI.getId()).get();
-//        Ingredient chickenIn = ingredientRepository.findById(chickenI.getId()).get();
-//        Ingredient pastaIn = ingredientRepository.findById(pastaI.getId()).get();
-//        Ingredient strawberryIn = ingredientRepository.findById(strawberryI.getId()).get();
-//
-//        List<Ingredient>  pastaAndChicken = Arrays.asList(pastaIn,chickenIn);
-//        Meal newMeal2 = new Meal("PastaAndChicken", pastaAndChicken, MealDifficulty.MEDIUM);
-//        mealService.save(newMeal2);
-//
-//        List<Ingredient>  milkAndStrawberry = Arrays.asList(milkIn,strawberryIn);
-//        Meal newMeal3 = new Meal("MilkAndStrawberry", milkAndStrawberry, MealDifficulty.HARD);
-//        mealService.save(newMeal3);
-//
-//        Meal newMeal4 = new Meal("OnlyBeef", Collections.singletonList(beefIn), MealDifficulty.INSANE);
-//        mealService.save(newMeal4);
-//    }
-
 
     @GetMapping("")
     public ResponseEntity<Page<MealDTO>> getAllMeals(Pageable pageable){

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +21,6 @@ public class FoodDiary {
     private long id;
 
     @ManyToMany
-    @JsonIgnoreProperties("foodDiaries")
     private List<Meal> listOfMeals;
 
     public LocalDate date;
@@ -39,7 +39,7 @@ public class FoodDiary {
     }
 
     public FoodDiary (List<Meal> listOfMeals, LocalDate date, MealooUser mealooUser) {
-        this.listOfMeals = listOfMeals;
+        this.listOfMeals = new ArrayList<>();
         this.date = date;
         this.mealooUser = mealooUser;
         mealMacronutrients = calculateMealMacronutrients();
@@ -49,7 +49,7 @@ public class FoodDiary {
     //todo set some params protected or private
 
     public void addMeal(Meal meal){
-        listOfMeals.add(meal);
+        this.listOfMeals.add(meal);
     }
 
     public void deleteMeal(Meal meal) {
@@ -61,11 +61,11 @@ public class FoodDiary {
         listOfMeals.remove(mealToDelete.get());
     }
 
-    long getId() {
+    public long getId() {
         return id;
     }
 
-    void setId(long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -73,7 +73,7 @@ public class FoodDiary {
         return listOfMeals;
     }
 
-    void setListOfMeals(List<Meal> listOfMeals) {
+    public void setListOfMeals(List<Meal> listOfMeals) {
         this.listOfMeals = listOfMeals;
     }
 
@@ -89,7 +89,7 @@ public class FoodDiary {
         return mealooUser;
     }
 
-    public void setMealooUser(MealooUser mealooUsers) {
+    public void setMealooUser(MealooUser mealooUser) {
         this.mealooUser = mealooUser;
     }
 
@@ -138,5 +138,6 @@ public class FoodDiary {
         mealMacronutrients.setTotalFats(totalFats);
         return mealMacronutrients;
     }
+
 
 }

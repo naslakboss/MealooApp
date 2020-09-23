@@ -2,17 +2,14 @@ package codebuddies.MealooApp.dataproviders;
 
 import codebuddies.MealooApp.dto.MealDTO;
 import codebuddies.MealooApp.entities.meal.Meal;
-import codebuddies.MealooApp.entities.product.Ingredient;
+
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.MealRepository;
-import codebuddies.MealooApp.services.MealService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MealProvider {
@@ -58,5 +55,9 @@ public class MealProvider {
             throw new ResourceNotFoundException("Meal " + name + " does not exist in database");
         }
         mealRepository.deleteByName(name);
+    }
+
+    public List<String> findNamesOfMatchingMeals(int lowerBorder, int upperBorder) {
+        return mealRepository.findByTotalCaloriesBetween(lowerBorder, upperBorder);
     }
 }

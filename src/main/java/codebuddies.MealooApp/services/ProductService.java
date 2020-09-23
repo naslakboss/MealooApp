@@ -3,7 +3,6 @@ package codebuddies.MealooApp.services;
 import codebuddies.MealooApp.dataproviders.ProductProvider;
 import codebuddies.MealooApp.dto.ProductDTO;
 import codebuddies.MealooApp.entities.product.Macronutrients;
-import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.exceptions.ValidationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +29,7 @@ public class ProductService {
 
     public ProductDTO createProduct(ProductDTO productDTO) throws ValidationException {
         if(existsByName(productDTO.getName())){
-            throw new IllegalArgumentException("Exist");
+            throw new IllegalArgumentException("Product of name " + productDTO.getName() + " exists in database");
         }
         checkTheCorrectnessOfQuantity(productDTO);
         calculateCaloriesPer100g(productDTO);

@@ -1,26 +1,15 @@
 package codebuddies.MealooApp.controllers;
 
 import codebuddies.MealooApp.dto.ProductDTO;
-import codebuddies.MealooApp.dataproviders.ProductProvider;
-import codebuddies.MealooApp.entities.product.Macronutrients;
-import codebuddies.MealooApp.entities.product.Product;
-import codebuddies.MealooApp.entities.product.ProductType;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.exceptions.ValidationException;
-import codebuddies.MealooApp.repositories.ProductRepository;
 import codebuddies.MealooApp.services.ProductService;
-//import mealoapp.MealooAppp.services.ProductTypeService;
-//import codebuddies.MealooApp.services.ProductTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/products")
