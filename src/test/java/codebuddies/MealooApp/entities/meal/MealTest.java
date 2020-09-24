@@ -32,9 +32,9 @@ class MealTest {
 
     @BeforeEach
     void setUp(){
-//
-//        product = new Product("Potato", 5, new Macronutrients(2, 17,0), ProductType.GRAINS);
-//        product2 = new Product("Beef", 30, new Macronutrients(26, 0, 15), ProductType.MEAT);
+
+        product = new Product("Potato", 5,  new Macronutrients(2, 17,0), 75, ProductType.GRAINS);
+        product2 = new Product("Beef", 30, new Macronutrients(26, 0, 15), 250, ProductType.MEAT);
 
         ingredient1 = new Ingredient(300, product);
         ingredient2 = new Ingredient(200, product2);
@@ -46,11 +46,11 @@ class MealTest {
 
     @Test
     void creatingMealWithProperIngredientShouldCalculatePriceAutomaticallyAndCorrect() {
-        //given
-        //when
-        // 5 * 0,3 + 30 * 0,2 = 7.5
+        //given + when
+        double calculations = product.getPrice() * ingredient1.getAmount()/1000
+                + product2.getPrice() * ingredient2.getAmount()/1000;
         //then
-        assertThat(meal.getPrice(), equalTo(7.5));
+        assertThat(meal.getPrice(), equalTo(calculations));
     }
 
     @Test
@@ -102,7 +102,7 @@ class MealTest {
         //when
         //then
         assertAll(
-                () -> assertThat(meal.getMealMacronutrients().getTotalProteins(), equalTo(meal.calculateCalories())),
+                () -> assertThat(meal.getMealMacronutrients().getTotalProteins(), equalTo(meal.calculateProteins())),
                 () -> assertThat(meal.getMealMacronutrients().getTotalCarbohydrates(), equalTo(meal.calculateCarbohydrates())),
                 () -> assertThat(meal.getMealMacronutrients().getTotalFats(), equalTo(meal.calculateFats()))
         );

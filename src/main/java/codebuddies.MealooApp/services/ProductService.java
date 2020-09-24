@@ -4,6 +4,7 @@ import codebuddies.MealooApp.dataproviders.ProductProvider;
 import codebuddies.MealooApp.dto.ProductDTO;
 import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.exceptions.ValidationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +37,7 @@ public class ProductService {
         return productProvider.createProduct(productDTO);
     }
 
-    private boolean existsByName(String name) {
+    public boolean existsByName(String name) {
         return productProvider.existsByName(name);
     }
 
@@ -54,6 +55,9 @@ public class ProductService {
 
     @Transactional
     public void deleteProductByName(String name) {
+        if(!existsByName(name)){
+            throw new ResourceNotFoundException(name);
+        }
         productProvider.deleteByName(name);
     }
 

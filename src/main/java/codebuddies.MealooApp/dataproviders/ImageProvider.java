@@ -28,9 +28,12 @@ public class ImageProvider {
     }
 
     public ImageDTO getImageByFileUrl(String fileUrl) {
-        Image image = imageRepository.findByFileUrl(fileUrl).orElseThrow(() ->
-                new ResourceNotFoundException(fileUrl));
+        Image image = imageRepository.findByFileUrl(fileUrl).get();
 
         return modelMapper.map(image, ImageDTO.class);
+    }
+
+    public boolean existsByFileUrl(String fileUrl) {
+        return imageRepository.existsByFileUrl(fileUrl);
     }
 }

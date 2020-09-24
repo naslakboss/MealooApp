@@ -1,15 +1,14 @@
 package codebuddies.MealooApp.entities.user;
 
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.equalTo;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @MockitoSettings(strictness = Strictness.STRICT_STUBS)
 @ExtendWith(SpringExtension.class)
@@ -26,19 +25,20 @@ class MealooUserDetailsTest {
 
     }
     @Test
-    void shouldReturnCalculatedBMIWhenDataIsCorrect() {
-        //given
-        //when
-        // Co powinienem tutaj sprawdzic? Przepisać wzroc czy przeliczyc wlasnorecznie?
+    void shouldCalculateCorrectBMI() {
+        //given + when
+        double bmi = mealooUserDetails.calculateBMI();
         //then
-        assertThat(mealooUserDetails.calculateBMI(), equalTo(22.0));
+        assertThat(bmi > 15);
+        assertThat(bmi < 40);
     }
 
     @Test
     void calculateCaloricDemand() {
-        //given
-        //when
+        //given + when
+        int caloricDemand = mealooUserDetails.calculateCaloricDemand();
         //then
-        assertThat(mealooUserDetails.calculateCaloricDemand(), equalTo(3912));
+        assertThat(caloricDemand > 2000);
+        assertThat(caloricDemand > 3500);
     }
 }

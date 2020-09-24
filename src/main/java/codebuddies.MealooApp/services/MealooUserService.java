@@ -27,6 +27,9 @@ public class MealooUserService {
     }
 
     public MealooUserDTO getUserByUsername(String username) {
+        if(!existsByName(username)){
+            throw new ResourceNotFoundException(username);
+        }
         return userProvider.getUserByUsername(username);
     }
 
@@ -38,6 +41,9 @@ public class MealooUserService {
     }
 
     public MealooUserDTO updateUserByUsername(MealooUserDTO user, String username){
+        if(!existsByName(username)){
+            throw new ResourceNotFoundException(username);
+        }
         user.setId(getUserByUsername(username).getId());
         return userProvider.updateUser(user);
     }

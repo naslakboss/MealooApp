@@ -29,8 +29,7 @@ public class MealProvider {
     }
 
     public MealDTO getMealByName(String name){
-        Meal meal =  mealRepository.findByName(name).orElseThrow(() ->
-                new ResourceNotFoundException(name));
+        Meal meal =  mealRepository.findByName(name).get();
         return modelMapper.map(meal, MealDTO.class);
     }
 
@@ -52,9 +51,6 @@ public class MealProvider {
     }
 
     public void deleteByName(String name){
-        if(!existsByName(name)){
-            throw new ResourceNotFoundException(name);
-        }
         mealRepository.deleteByName(name);
     }
 

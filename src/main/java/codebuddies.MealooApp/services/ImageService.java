@@ -3,6 +3,7 @@ package codebuddies.MealooApp.services;
 import codebuddies.MealooApp.dataproviders.ImageProvider;
 import codebuddies.MealooApp.dto.ImageDTO;
 import codebuddies.MealooApp.dto.MealDTO;
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,7 +51,14 @@ public class ImageService {
     }
 
     public ImageDTO getImageByFileUrl(String fileUrl){
+        if(!existsByFileUrl(fileUrl)){
+            throw new ResourceNotFoundException(fileUrl);
+        }
         return imageProvider.getImageByFileUrl(fileUrl);
+    }
+
+    private boolean existsByFileUrl(String fileUrl) {
+        return imageProvider.existsByFileUrl(fileUrl);
     }
 
 }

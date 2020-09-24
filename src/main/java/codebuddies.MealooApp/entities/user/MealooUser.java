@@ -66,10 +66,7 @@ public class MealooUser {
         this.nutritionSettings = nutritionSettings;
         this.mealooUserDetails = mealooUserDetails;
     }
-    // todo add this functionality
-//    public void setDailyCaloricGoalFromCalculator(){
-//        nutritionSettings.setDailyCaloricGoal(mealooUserDetails.calculateCaloricDemand());
-//    }
+
     public Long getId() {
         return id;
     }

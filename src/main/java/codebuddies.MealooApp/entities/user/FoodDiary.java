@@ -2,13 +2,11 @@ package codebuddies.MealooApp.entities.user;
 
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
-import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 public class FoodDiary {
@@ -42,19 +40,6 @@ public class FoodDiary {
         mealMacronutrients = new MealMacronutrients(0,0,0);
         totalCalories = 0;
         totalPrice = 0;
-    }
-
-    public void addMeal(Meal meal){
-        this.listOfMeals.add(meal);
-    }
-
-    public void deleteMeal(Meal meal) {
-        Optional<Meal> mealToDelete = listOfMeals.stream()
-                    .filter(diaryMeals -> diaryMeals.getName().equals(meal.getName())).findAny();
-        if(mealToDelete.isEmpty()){
-            throw new ResourceNotFoundException("This diary does not contain " + meal.getName());
-        }
-        listOfMeals.remove(mealToDelete.get());
     }
 
     public long getId() {

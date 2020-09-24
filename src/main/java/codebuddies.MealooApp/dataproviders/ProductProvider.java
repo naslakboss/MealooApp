@@ -27,8 +27,7 @@ public class ProductProvider {
     }
 
     public ProductDTO getProductByName(String name) {
-        Product product = productRepository.findByName(name).orElseThrow(() ->
-                new ResourceNotFoundException(name));
+        Product product = productRepository.findByName(name).get();
         return modelMapper.map(product, ProductDTO.class);
 
     }
@@ -50,9 +49,6 @@ public class ProductProvider {
     }
 
     public void deleteByName(String name){
-        if(!existsByName(name)){
-            throw new ResourceNotFoundException(name);
-        }
         productRepository.deleteByName(name);
     }
 }

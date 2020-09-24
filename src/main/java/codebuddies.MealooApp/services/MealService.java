@@ -5,6 +5,7 @@ import codebuddies.MealooApp.dto.ImageDTO;
 import codebuddies.MealooApp.dto.MealDTO;
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,15 +36,18 @@ public class MealService {
     }
 
     public MealDTO getMealByName(String name){
+        if(!existsByName(name)){
+            throw new ResourceNotFoundException(name);
+        }
         return mealProvider.getMealByName(name);
     }
 
-    private boolean existByName(String name) {
+    public boolean existsByName(String name) {
         return mealProvider.existsByName(name);
     }
 
     public MealDTO createMeal(Meal meal){
-        if(existByName(meal.getName())){
+        if(existsByName(meal.getName())){
             throw new EntityAlreadyFoundException(meal.getName());
         }
         ingredientService.createIngredients(meal);
@@ -57,6 +61,9 @@ public class MealService {
 
     @Transactional
     public void deleteMealByName(String name){
+        if(!existsByName(name)){
+            throw new ResourceNotFoundException(name);
+        }
         mealProvider.deleteByName(name);
     }
 
