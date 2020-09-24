@@ -1,5 +1,6 @@
 package codebuddies.MealooApp.controllers;
 
+import codebuddies.MealooApp.dto.MealooUserDTO;
 import codebuddies.MealooApp.entities.user.*;
 
 import codebuddies.MealooApp.services.MealooUserService;
@@ -23,23 +24,23 @@ public class MealooUserController {
     }
 
     @GetMapping("")
-    public ResponseEntity<Page<MealooUser>> getAllUsers(Pageable pageable) {
+    public ResponseEntity<Page<MealooUserDTO>> getAllUsers(Pageable pageable) {
         return ResponseEntity.ok(userService.getAllUsers(pageable));
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<MealooUser> getUser(@PathVariable String username) {
+    public ResponseEntity<MealooUserDTO> getUser(@PathVariable String username) {
         return ResponseEntity.ok(userService.getUserByUsername(username));
     }
 
     @PostMapping("/add")
-    public ResponseEntity<MealooUser> createUser(@Valid @RequestBody MealooUser user){
+    public ResponseEntity<MealooUserDTO> createUser(@Valid @RequestBody MealooUserDTO user){
         return ResponseEntity.ok(userService.createUser(user));
     }
 
     @PutMapping("/{username}")
-    public ResponseEntity<MealooUser> updateUser
-            (@Valid @RequestBody MealooUser user, @PathVariable String username){
+    public ResponseEntity<MealooUserDTO> updateUser
+            (@Valid @RequestBody MealooUserDTO user, @PathVariable String username){
         return ResponseEntity.ok(userService.updateUserByUsername(user, username));
 
     }

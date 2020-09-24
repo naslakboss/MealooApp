@@ -1,6 +1,7 @@
 package codebuddies.MealooApp.services;
 
 import codebuddies.MealooApp.dataproviders.MealooUserProvider;
+import codebuddies.MealooApp.dto.MealooUserDTO;
 import codebuddies.MealooApp.entities.user.*;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
@@ -21,22 +22,22 @@ public class MealooUserService {
         this.userProvider = userProvider;
     }
 
-    public Page<MealooUser> getAllUsers(Pageable pageable) {
+    public Page<MealooUserDTO> getAllUsers(Pageable pageable) {
         return userProvider.getAllUsers(pageable);
     }
 
-    public MealooUser getUserByUsername(String username) {
+    public MealooUserDTO getUserByUsername(String username) {
         return userProvider.getUserByUsername(username);
     }
 
-    public MealooUser createUser(MealooUser user){
+    public MealooUserDTO createUser(MealooUserDTO user){
         if(existsByName(user.getUsername())){
             throw new EntityAlreadyFoundException(user.getUsername());
         }
         return userProvider.createUser(user);
     }
 
-    public MealooUser updateUserByUsername(MealooUser user, String username){
+    public MealooUserDTO updateUserByUsername(MealooUserDTO user, String username){
         user.setId(getUserByUsername(username).getId());
         return userProvider.updateUser(user);
     }
@@ -56,7 +57,7 @@ public class MealooUserService {
 
 
     public Map calculateBMIAndCaloricDemand(String username) {
-        MealooUser user = getUserByUsername(username);
+        MealooUserDTO user = getUserByUsername(username);
         Map<String, Double> result = new LinkedHashMap<>();
         double userBMI = user.getMealooUserDetails()
                 .calculateBMI();

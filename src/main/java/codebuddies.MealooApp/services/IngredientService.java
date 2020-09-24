@@ -28,7 +28,7 @@ public class IngredientService {
     }
 
     public void createIngredients(Meal meal) {
-        List<String> productNames= meal.getIngredients().stream()
+        List<String> productNames = meal.getIngredients().stream()
                 .map(Ingredient::getProduct)
                 .map(Product::getName)
                 .collect(Collectors.toList());

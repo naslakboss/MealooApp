@@ -3,6 +3,7 @@ package codebuddies.MealooApp.services;
 import codebuddies.MealooApp.dataproviders.FoodDiaryProvider;
 import codebuddies.MealooApp.dto.FoodDiaryDTO;
 import codebuddies.MealooApp.dto.MealDTO;
+import codebuddies.MealooApp.dto.MealooUserDTO;
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
 import codebuddies.MealooApp.entities.user.MealooUser;
 import codebuddies.MealooApp.entities.user.WeightGoal;
@@ -33,24 +34,24 @@ public class FoodDiaryService {
     }
 
     public Page<FoodDiaryDTO> getAllDiaries(String username, Pageable pageable){
-        MealooUser user = userService.getUserByUsername(username);
+        MealooUserDTO user = userService.getUserByUsername(username);
         return diaryProvider.getAllDiaries(user, pageable);
     }
 
     public FoodDiaryDTO getCurrentDiary(String username){
         LocalDate currentDate = LocalDate.now();
-        MealooUser user = userService.getUserByUsername(username);
+        MealooUserDTO user = userService.getUserByUsername(username);
         return diaryProvider.getDiaryByDate(user, currentDate);
     }
 
     public FoodDiaryDTO getDiaryByDate(String username, String textDate){
         LocalDate date = LocalDate.parse(textDate);
-        MealooUser user = userService.getUserByUsername(username);
+        MealooUserDTO user = userService.getUserByUsername(username);
         return diaryProvider.getDiaryByDate(user, date);
     }
 
     public FoodDiaryDTO createDiary(String username) {
-        MealooUser user = userService.getUserByUsername(username);
+        MealooUserDTO user = userService.getUserByUsername(username);
         LocalDate currentDate = LocalDate.now();
         return diaryProvider.createDiary(user, currentDate);
     }
@@ -89,7 +90,7 @@ public class FoodDiaryService {
     public FoodDiaryDTO addMeal(String username, String mealName){
         FoodDiaryDTO diary = getCurrentDiary(username);
         MealDTO meal = mealService.getMealByName(mealName);
-        MealooUser user = userService.getUserByUsername(username);
+        MealooUserDTO user = userService.getUserByUsername(username);
 
         diary.addMeal(meal);
         recalculateData(diary);
@@ -99,14 +100,14 @@ public class FoodDiaryService {
     public FoodDiaryDTO deleteMeal(String username, String mealName){
         FoodDiaryDTO diary = getCurrentDiary(username);
         MealDTO meal = mealService.getMealByName(mealName);
-        MealooUser user = userService.getUserByUsername(username);
+        MealooUserDTO user = userService.getUserByUsername(username);
 
         diary.deleteMeal(meal);
         recalculateData(diary);
         return diaryProvider.updateDiary(diary, user);
     }
 
-    private List<String> rejectMealsFromThreeDaysBack(MealooUser user) {
+    private List<String> rejectMealsFromThreeDaysBack(MealooUserDTO user) {
         LocalDate threeDaysBack = LocalDate.now().minusDays(3);
         return diaryProvider.rejectMealsFromThreeDaysBack(user, threeDaysBack).stream()
                 .flatMap(diary -> diary.getListOfMeals().stream())
@@ -115,7 +116,7 @@ public class FoodDiaryService {
 
 
     public FoodDiaryDTO generateDiet(int totalCalories, int numberOfMeals, String username){
-        MealooUser user = userService.getUserByUsername(username);
+        MealooUserDTO user = userService.getUserByUsername(username);
 
         if (totalCalories < 0 || totalCalories > 10000) {
             throw new RuntimeException("Total calories should be higher than 0 and less than 10000," +
@@ -143,10 +144,11 @@ public class FoodDiaryService {
         }
 
         Random random = new Random();
-
-        int randomIndex = random.nextInt(namesOfMatchingMeals.size());
-        addMeal(username, namesOfMatchingMeals.get(randomIndex));
-        namesOfMatchingMeals.remove(randomIndex);
+        for(int i = 0; i < numberOfMeals; i ++) {
+            int randomIndex = random.nextInt(namesOfMatchingMeals.size());
+            addMeal(username, namesOfMatchingMeals.get(randomIndex));
+            namesOfMatchingMeals.remove(randomIndex);
+        }
 
         int deficit = totalCalories - getCurrentDiary(username).getTotalCalories();
 
@@ -160,10 +162,10 @@ public class FoodDiaryService {
         return getCurrentDiary(username);
     }
 
-    public FoodDiaryDTO generateDiet(int numbersOfMeals, WeightGoal weightGoal, String username) {
-        MealooUser user = userService.getUserByUsername(username);
+    public FoodDiaryDTO generateDiet(int numberOfMeals, WeightGoal weightGoal, String username) {
+        MealooUserDTO user = userService.getUserByUsername(username);
 
-        if (numbersOfMeals < 3 || numbersOfMeals > 7) {
+        if (numberOfMeals < 3 || numberOfMeals > 7) {
             throw new RuntimeException("Numbers of meals should vary from 3 to 7");
         }
         if (getCurrentDiary(username).getListOfMeals().size() != 0) {
@@ -190,7 +192,8 @@ public class FoodDiaryService {
                 System.out.println("No weight, or wrong goal has been chosen." +
                         " Calculator will be assigned weight maintenance");
         }
-        int perfectCaloricValue = totalCalories / numbersOfMeals;
+
+        int perfectCaloricValue = totalCalories / numberOfMeals;
 
         List<String> namesOfMatchingMeals = mealService.findNamesOfMatchingMeals(perfectCaloricValue);
 
@@ -200,17 +203,17 @@ public class FoodDiaryService {
             namesOfMatchingMeals.remove(meal);
         }
 
-        if (namesOfMatchingMeals.size() < numbersOfMeals) {
+        if (namesOfMatchingMeals.size() < numberOfMeals) {
             throw new ResourceNotFoundException("Sorry, database does not contain required meals." +
                     " Try to add new meals or create your own diary manually");
         }
 
         Random random = new Random();
-
+        for(int i = 0; i < numberOfMeals; i ++) {
             int randomIndex = random.nextInt(namesOfMatchingMeals.size());
             addMeal(username, namesOfMatchingMeals.get(randomIndex));
             namesOfMatchingMeals.remove(randomIndex);
-
+        }
         int deficit = totalCalories - getCurrentDiary(username).getTotalCalories();
 
         List<String> fixDeficit = mealService.findNamesOfMatchingMeals(deficit);

@@ -50,8 +50,6 @@ public class MealService {
         return mealProvider.createMeal(meal);
     }
 
-
-
     public MealDTO updateMealByName(MealDTO mealDTO, String name){
         mealDTO.setName(name);
         return mealProvider.updateMeal(mealDTO);

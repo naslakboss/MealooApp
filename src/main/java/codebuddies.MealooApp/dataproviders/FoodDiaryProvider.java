@@ -1,6 +1,7 @@
 package codebuddies.MealooApp.dataproviders;
 
 import codebuddies.MealooApp.dto.FoodDiaryDTO;
+import codebuddies.MealooApp.dto.MealooUserDTO;
 import codebuddies.MealooApp.entities.user.FoodDiary;
 import codebuddies.MealooApp.entities.user.MealooUser;
 import codebuddies.MealooApp.repositories.FoodDiaryRepository;
@@ -24,32 +25,42 @@ public class FoodDiaryProvider {
         this.diaryRepository = diaryRepository;
     }
 
-    public Page<FoodDiaryDTO> getAllDiaries(MealooUser user, Pageable pageable){
+    public Page<FoodDiaryDTO> getAllDiaries(MealooUserDTO userDTO, Pageable pageable){
+        MealooUser user = modelMapper.map(userDTO, MealooUser.class);
+
         return diaryRepository.findByMealooUser(user, pageable)
                 .map(diary -> modelMapper.map(diary, FoodDiaryDTO.class));
     }
 
-    public FoodDiaryDTO getDiaryByDate(MealooUser user, LocalDate date){
+    public FoodDiaryDTO getDiaryByDate(MealooUserDTO userDTO, LocalDate date){
+         MealooUser user = modelMapper.map(userDTO, MealooUser.class);
          FoodDiary diary = diaryRepository.findByMealooUserAndDate(user, date);
+
          return modelMapper.map(diary, FoodDiaryDTO.class);
     }
 
-    public FoodDiaryDTO createDiary(MealooUser user, LocalDate currentDate) {
+    public FoodDiaryDTO createDiary(MealooUserDTO userDTO, LocalDate currentDate) {
+        MealooUser user = modelMapper.map(userDTO, MealooUser.class);
         FoodDiary diary = new FoodDiary(new ArrayList<>(), currentDate, user);
         diaryRepository.save(diary);
+
         return modelMapper.map(diary, FoodDiaryDTO.class);
     }
 
-    public FoodDiaryDTO updateDiary(FoodDiaryDTO diaryDTO, MealooUser user){
+    public FoodDiaryDTO updateDiary(FoodDiaryDTO diaryDTO, MealooUserDTO userDTO){
+        MealooUser user = modelMapper.map(userDTO, MealooUser.class);
         FoodDiary diary = modelMapper.map(diaryDTO, FoodDiary.class);
         diary.setId(diaryDTO.getId());
         diary.setMealooUser(user);
         diaryRepository.save(diary);
+
         return diaryDTO;
     }
 
-    public List<FoodDiaryDTO> rejectMealsFromThreeDaysBack(MealooUser user, LocalDate threeDaysBack) {
+    public List<FoodDiaryDTO> rejectMealsFromThreeDaysBack(MealooUserDTO userDTO, LocalDate threeDaysBack){
+        MealooUser user = modelMapper.map(userDTO, MealooUser.class);
         List<FoodDiary> list = diaryRepository.findByMealooUserAndDateAfter(user, threeDaysBack);
+
         return list.stream().map(diary -> modelMapper.map(diary, FoodDiaryDTO.class))
                 .collect(Collectors.toList());
     }

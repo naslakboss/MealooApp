@@ -22,7 +22,6 @@ public class ImageProvider {
     }
 
     public void createNewImage(String filePath, String imageUrl, MealDTO mealDTO) {
-        System.out.println(mealDTO.toString());
         Meal meal = modelMapper.map(mealDTO, Meal.class);
         Image image = new Image(filePath, imageUrl, meal);
         imageRepository.save(image);
@@ -30,7 +29,7 @@ public class ImageProvider {
 
     public ImageDTO getImageByFileUrl(String fileUrl) {
         Image image = imageRepository.findByFileUrl(fileUrl).orElseThrow(() ->
-                new ResourceNotFoundException("Image of URL : " + fileUrl + " does not exist in database"));
+                new ResourceNotFoundException(fileUrl));
 
         return modelMapper.map(image, ImageDTO.class);
     }
