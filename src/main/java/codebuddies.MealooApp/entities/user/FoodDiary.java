@@ -20,7 +20,7 @@ public class FoodDiary {
 
     public LocalDate date;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JsonIgnore
     private MealooUser mealooUser;
 

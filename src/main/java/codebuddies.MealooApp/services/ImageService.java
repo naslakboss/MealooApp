@@ -31,6 +31,17 @@ public class ImageService {
         this.imageProvider = imageProvider;
     }
 
+    private boolean existsByFileUrl(String fileUrl) {
+        return imageProvider.existsByFileUrl(fileUrl);
+    }
+
+    public ImageDTO getImageByFileUrl(String fileUrl){
+        if(!existsByFileUrl(fileUrl)){
+            throw new ResourceNotFoundException(fileUrl);
+        }
+        return imageProvider.getImageByFileUrl(fileUrl);
+    }
+
     public void createNewImage(MealDTO mealDTO, String filePath) {
         String imageUrl = uploadFile(filePath);
         imageProvider.createNewImage(filePath, imageUrl, mealDTO);
@@ -49,16 +60,4 @@ public class ImageService {
         }
         return result.get("url").toString();
     }
-
-    public ImageDTO getImageByFileUrl(String fileUrl){
-        if(!existsByFileUrl(fileUrl)){
-            throw new ResourceNotFoundException(fileUrl);
-        }
-        return imageProvider.getImageByFileUrl(fileUrl);
-    }
-
-    private boolean existsByFileUrl(String fileUrl) {
-        return imageProvider.existsByFileUrl(fileUrl);
-    }
-
 }

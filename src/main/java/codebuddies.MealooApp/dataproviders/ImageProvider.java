@@ -12,12 +12,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ImageProvider {
 
-    private ModelMapper modelMapper;
+    private ModelMapper modelMapper = new ModelMapper();
 
     private ImageRepository imageRepository;
 
-    public ImageProvider(ModelMapper modelMapper, ImageRepository imageRepository) {
-        this.modelMapper = modelMapper;
+    public ImageProvider(ImageRepository imageRepository) {
         this.imageRepository = imageRepository;
     }
 

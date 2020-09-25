@@ -56,13 +56,6 @@ public class FoodDiaryService {
         return diaryProvider.createDiary(user, currentDate);
     }
 
-    public void recalculateData(FoodDiaryDTO diary){
-        recalculateMealMacronutrients(diary);
-        recalculatePrice(diary);
-        recalculateTotalCalories(diary);
-
-    }
-
     private void recalculateMealMacronutrients(FoodDiaryDTO diary) {
         List<MealDTO> meals = diary.getListOfMeals();
         int totalCarbohydrates = meals.stream().map(MealDTO::getMealMacronutrients)
@@ -71,11 +64,12 @@ public class FoodDiaryService {
                 .mapToInt(MealMacronutrients::getTotalProteins).sum();
         int totalFats = meals.stream().map(MealDTO::getMealMacronutrients)
                 .mapToInt(MealMacronutrients::getTotalFats).sum();
-        MealMacronutrients macros = new MealMacronutrients(totalProteins, totalCarbohydrates, totalFats);
-        diary.setMealMacronutrients(macros);
+        diary.getMealMacronutrients().setTotalCarbohydrates(totalCarbohydrates);
+        diary.getMealMacronutrients().setTotalProteins(totalProteins);
+        diary.getMealMacronutrients().setTotalFats(totalFats);
     }
 
-    private void recalculatePrice(FoodDiaryDTO diary) {
+    void recalculatePrice(FoodDiaryDTO diary) {
         List<MealDTO> meals = diary.getListOfMeals();
         double totalPrice = meals.stream().mapToDouble(MealDTO::getPrice).sum();
         diary.setTotalPrice(totalPrice);
@@ -85,6 +79,13 @@ public class FoodDiaryService {
         List<MealDTO> meals = diary.getListOfMeals();
         int totalCalories = meals.stream().mapToInt(MealDTO::getTotalCalories).sum();
         diary.setTotalCalories(totalCalories);
+    }
+
+    public void recalculateData(FoodDiaryDTO diary){
+        recalculateMealMacronutrients(diary);
+        recalculatePrice(diary);
+        recalculateTotalCalories(diary);
+
     }
 
     public FoodDiaryDTO addMeal(String username, String mealName){
@@ -107,11 +108,29 @@ public class FoodDiaryService {
         return diaryProvider.updateDiary(diary, user);
     }
 
-    private List<String> rejectMealsFromThreeDaysBack(MealooUserDTO user) {
+     List<String> rejectMealsFromThreeDaysBack(MealooUserDTO user) {
         LocalDate threeDaysBack = LocalDate.now().minusDays(3);
         return diaryProvider.rejectMealsFromThreeDaysBack(user, threeDaysBack).stream()
                 .flatMap(diary -> diary.getListOfMeals().stream())
                 .map(MealDTO::getName).collect(Collectors.toList());
+    }
+
+    public List<String> discardMismatchedMeals(List<String> matchingMeals, List<String> rejectedMeals){
+        for(String meal : rejectedMeals){
+            matchingMeals.remove(meal);
+        }
+        return matchingMeals;
+    }
+
+    public void addMatchingMealsToDiary(String username, List<String> namesOfMatchingMeals, int numberOfMeals){
+
+        Random random = new Random();
+
+        for(int i = 0; i < numberOfMeals; i ++) {
+            int randomIndex = random.nextInt(namesOfMatchingMeals.size());
+            addMeal(username, namesOfMatchingMeals.get(randomIndex));
+            namesOfMatchingMeals.remove(randomIndex);
+        }
     }
 
 
@@ -135,20 +154,13 @@ public class FoodDiaryService {
 
         List<String> rejectedMeals = rejectMealsFromThreeDaysBack(user);
 
-        for(String mealName : rejectedMeals){
-            namesOfMatchingMeals.remove(mealName);
-        }
+        namesOfMatchingMeals = discardMismatchedMeals(namesOfMatchingMeals, rejectedMeals);
 
         if (namesOfMatchingMeals.size() < numberOfMeals) {
             throw new RequiredMealsNotFoundException("");
         }
 
-        Random random = new Random();
-        for(int i = 0; i < numberOfMeals; i ++) {
-            int randomIndex = random.nextInt(namesOfMatchingMeals.size());
-            addMeal(username, namesOfMatchingMeals.get(randomIndex));
-            namesOfMatchingMeals.remove(randomIndex);
-        }
+        addMatchingMealsToDiary(username, namesOfMatchingMeals, numberOfMeals);
 
         int deficit = totalCalories - getCurrentDiary(username).getTotalCalories();
 
@@ -157,7 +169,8 @@ public class FoodDiaryService {
         if(mealsToFixDeficit.isEmpty()) {
             throw new RequiredMealsNotFoundException("");
         }
-        addMeal(username, mealsToFixDeficit.get(random.nextInt(mealsToFixDeficit.size())));
+
+        addMatchingMealsToDiary(username, mealsToFixDeficit, 1);
 
         return getCurrentDiary(username);
     }
@@ -190,7 +203,7 @@ public class FoodDiaryService {
                 break;
             default:
                 System.out.println("No weight, or wrong goal has been chosen." +
-                        " Calculator will be assigned weight maintenance");
+                        " Calculator will be assigned to weight maintenance");
         }
 
         int perfectCaloricValue = totalCalories / numberOfMeals;
@@ -199,31 +212,23 @@ public class FoodDiaryService {
 
         List<String> removedMeals = rejectMealsFromThreeDaysBack(user);
 
-        for (String meal : removedMeals) {
-            namesOfMatchingMeals.remove(meal);
-        }
+        namesOfMatchingMeals = discardMismatchedMeals(namesOfMatchingMeals, removedMeals);
 
         if (namesOfMatchingMeals.size() < numberOfMeals) {
-            throw new ResourceNotFoundException("Sorry, database does not contain required meals." +
-                    " Try to add new meals or create your own diary manually");
+            throw new RequiredMealsNotFoundException("");
         }
 
-        Random random = new Random();
-        for(int i = 0; i < numberOfMeals; i ++) {
-            int randomIndex = random.nextInt(namesOfMatchingMeals.size());
-            addMeal(username, namesOfMatchingMeals.get(randomIndex));
-            namesOfMatchingMeals.remove(randomIndex);
-        }
+        addMatchingMealsToDiary(username, namesOfMatchingMeals, numberOfMeals);
+
         int deficit = totalCalories - getCurrentDiary(username).getTotalCalories();
 
         List<String> fixDeficit = mealService.findNamesOfMatchingMeals(deficit);
 
         if (fixDeficit.isEmpty()) {
-            throw new ResourceNotFoundException("Sorry, database does not contain required meals." +
-                    " Try to add new meals or create your own diary manually");
+            throw new RequiredMealsNotFoundException("");
         }
 
-        addMeal(username, fixDeficit.get(random.nextInt(fixDeficit.size())));
+        addMatchingMealsToDiary(username, namesOfMatchingMeals, 1);
 
         return getCurrentDiary(username);
     }
