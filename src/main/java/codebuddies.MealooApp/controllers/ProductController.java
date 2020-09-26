@@ -1,14 +1,13 @@
 package codebuddies.MealooApp.controllers;
 
 import codebuddies.MealooApp.dto.ProductDTO;
-import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
-import codebuddies.MealooApp.exceptions.ValidationException;
 import codebuddies.MealooApp.services.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 
 @RestController
@@ -18,7 +17,6 @@ public class ProductController {
 
     ProductService productService;
 
-    @Autowired
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
@@ -29,22 +27,22 @@ public class ProductController {
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<ProductDTO> getProduct(@PathVariable String name){
+    public ResponseEntity<ProductDTO> getProduct(@PathVariable String name) {
         return ResponseEntity.ok(productService.getProductByName(name));
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) throws ValidationException {
-        return ResponseEntity.ok(productService.createProduct(productDTO));
+    public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO product) {
+        return ResponseEntity.ok(productService.createProduct(product));
     }
 
     @PutMapping("/{name}")
-    public ResponseEntity<ProductDTO> updateProduct(@RequestBody @Valid ProductDTO productDTO,@PathVariable String name) throws ValidationException {
-        return  ResponseEntity.ok(productService.updateProductByName(productDTO, name));
+    public ResponseEntity<ProductDTO> updateProduct(@Valid @RequestBody ProductDTO product, @PathVariable String name) {
+        return ResponseEntity.ok(productService.updateProductByName(product, name));
     }
 
     @DeleteMapping("/{name}")
-    public ResponseEntity deleteProduct(@PathVariable String name) throws ResourceNotFoundException {
+    public ResponseEntity deleteProduct(@PathVariable String name) {
         productService.deleteProductByName(name);
         return ResponseEntity.ok("Product " + name + " was successfully deleted from Repository");
     }

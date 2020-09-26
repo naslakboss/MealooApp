@@ -3,6 +3,7 @@ package codebuddies.MealooApp.controllers;
 import codebuddies.MealooApp.dto.FoodDiaryDTO;
 import codebuddies.MealooApp.entities.user.WeightGoal;
 import codebuddies.MealooApp.services.FoodDiaryService;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;

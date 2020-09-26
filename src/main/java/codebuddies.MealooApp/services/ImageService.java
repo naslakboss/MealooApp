@@ -4,8 +4,10 @@ import codebuddies.MealooApp.dataproviders.ImageProvider;
 import codebuddies.MealooApp.dto.ImageDTO;
 import codebuddies.MealooApp.dto.MealDTO;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
+
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +29,7 @@ public class ImageService {
 
     private ImageProvider imageProvider;
 
-    public ImageService(ImageProvider imageProvider){
+    public ImageService(ImageProvider imageProvider) {
         this.imageProvider = imageProvider;
     }
 
@@ -35,8 +37,8 @@ public class ImageService {
         return imageProvider.existsByFileUrl(fileUrl);
     }
 
-    public ImageDTO getImageByFileUrl(String fileUrl){
-        if(!existsByFileUrl(fileUrl)){
+    public ImageDTO getImageByFileUrl(String fileUrl) {
+        if (!existsByFileUrl(fileUrl)) {
             throw new ResourceNotFoundException(fileUrl);
         }
         return imageProvider.getImageByFileUrl(fileUrl);
@@ -50,12 +52,12 @@ public class ImageService {
     public String uploadFile(String filePath) {
         File file = new File(filePath);
         Map result = null;
-        try{
+        try {
             cloudinary.config.cloudName = cloudNameValue;
             cloudinary.config.apiKey = apiKeyValue;
             cloudinary.config.apiSecret = apiSecretValue;
             result = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return result.get("url").toString();

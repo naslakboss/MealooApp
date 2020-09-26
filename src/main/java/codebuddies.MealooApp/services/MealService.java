@@ -3,13 +3,14 @@ package codebuddies.MealooApp.services;
 import codebuddies.MealooApp.dataproviders.MealProvider;
 import codebuddies.MealooApp.dto.ImageDTO;
 import codebuddies.MealooApp.dto.MealDTO;
-import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,49 +32,49 @@ public class MealService {
     }
 
 
-    public Page<MealDTO> getAllMeals(Pageable pageable){
+    public Page<MealDTO> getAllMeals(Pageable pageable) {
         return mealProvider.getAllMeals(pageable);
-    }
-
-    public MealDTO getMealByName(String name){
-        if(!existsByName(name)){
-            throw new ResourceNotFoundException(name);
-        }
-        return mealProvider.getMealByName(name);
     }
 
     public boolean existsByName(String name) {
         return mealProvider.existsByName(name);
     }
 
-    public MealDTO createMeal(Meal meal){
-        if(existsByName(meal.getName())){
+    public MealDTO getMealByName(String name) {
+        if (!existsByName(name)) {
+            throw new ResourceNotFoundException(name);
+        }
+        return mealProvider.getMealByName(name);
+    }
+
+    public MealDTO createMeal(MealDTO meal) {
+        if (existsByName(meal.getName())) {
             throw new EntityAlreadyFoundException(meal.getName());
         }
         ingredientService.createIngredients(meal);
         return mealProvider.createMeal(meal);
     }
 
-    public MealDTO updateMealByName(MealDTO mealDTO, String name){
-        mealDTO.setName(name);
-        return mealProvider.updateMeal(mealDTO);
+    public MealDTO updateMealByName(MealDTO meal, String name) {
+        meal.setName(name);
+        return mealProvider.updateMeal(meal);
     }
 
     @Transactional
-    public void deleteMealByName(String name){
-        if(!existsByName(name)){
+    public void deleteMealByName(String name) {
+        if (!existsByName(name)) {
             throw new ResourceNotFoundException(name);
         }
         mealProvider.deleteByName(name);
     }
 
-    public MealDTO addImageToMeal(String name, String filePath){
+    public MealDTO addImageToMeal(String name, String filePath) {
         MealDTO meal = getMealByName(name);
         imageService.createNewImage(meal, filePath);
         return meal;
     }
 
-    public void deleteImageFromMeal(String name, String fileUrl){
+    public void deleteImageFromMeal(String name, String fileUrl) {
         MealDTO meal = getMealByName(name);
         ImageDTO image = imageService.getImageByFileUrl(fileUrl);
         meal.getImages().remove(image);

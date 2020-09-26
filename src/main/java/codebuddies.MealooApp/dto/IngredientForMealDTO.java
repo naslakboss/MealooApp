@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 public class IngredientForMealDTO {
 
     ProductForIngredientDTO product;
+
     @NotNull
     @Min(value = 0, message = "Ingredient amount must be greater than 0")
     int amount;
@@ -13,7 +14,7 @@ public class IngredientForMealDTO {
     public IngredientForMealDTO() {
     }
 
-    public IngredientForMealDTO( ProductForIngredientDTO product, int amount) {
+    public IngredientForMealDTO(ProductForIngredientDTO product, int amount) {
         this.product = product;
         this.amount = amount;
     }

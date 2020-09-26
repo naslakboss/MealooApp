@@ -1,8 +1,8 @@
 package codebuddies.MealooApp.repositories;
 
-import codebuddies.MealooApp.dto.MealooUserDTO;
 import codebuddies.MealooApp.entities.user.FoodDiary;
 import codebuddies.MealooApp.entities.user.MealooUser;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

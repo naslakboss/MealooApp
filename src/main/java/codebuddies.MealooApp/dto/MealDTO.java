@@ -36,7 +36,7 @@ public class MealDTO {
 
     public MealDTO(String name, List<IngredientForMealDTO> ingredients, double price,
                    MealDifficulty mealDifficulty, MealMacronutrients mealMacronutrients, int totalCalories, String recipe
-                    ,List<ImageDTO> images) {
+            , List<ImageDTO> images) {
         this.name = name;
         this.ingredients = ingredients;
         this.price = price;

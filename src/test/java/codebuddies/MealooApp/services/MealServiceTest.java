@@ -4,7 +4,6 @@ package codebuddies.MealooApp.services;
 import codebuddies.MealooApp.dataproviders.MealProvider;
 import codebuddies.MealooApp.dto.ImageDTO;
 import codebuddies.MealooApp.dto.MealDTO;
-import codebuddies.MealooApp.dto.ProductDTO;
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.meal.MealDifficulty;
 import codebuddies.MealooApp.entities.product.Ingredient;
@@ -13,6 +12,7 @@ import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.entities.product.ProductType;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
+
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,21 +27,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.assertj.core.api.Assertions.doesNotHave;
-import static org.hamcrest.Matchers.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.not;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 
@@ -85,7 +80,7 @@ class MealServiceTest {
     MealService mealService;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
 
         mapper = new ModelMapper();
 
@@ -94,7 +89,7 @@ class MealServiceTest {
         product2 = new Product("Chicken", 12
                 , new Macronutrients(22, 1, 4), 121, ProductType.MEAT);
         product3 = new Product("Strawberry", 8
-                , new Macronutrients(1, 8, 0), 32,  ProductType.GRAINS);
+                , new Macronutrients(1, 8, 0), 32, ProductType.GRAINS);
 
         ingredient1 = new Ingredient(100, product1);
         ingredient2 = new Ingredient(200, product2);
@@ -104,7 +99,7 @@ class MealServiceTest {
         listOfIngredients2 = Arrays.asList(ingredient1, ingredient3);
         listOfIngredients3 = Arrays.asList(ingredient2, ingredient3);
 
-        mealEntity1  = new Meal("RiceAndChicken", listOfIngredients1, MealDifficulty.MEDIUM);
+        mealEntity1 = new Meal("RiceAndChicken", listOfIngredients1, MealDifficulty.MEDIUM);
         meal1 = mapper.map(mealEntity1, MealDTO.class);
 
         mealEntity2 = new Meal("RiceAndStrawberry", listOfIngredients2, MealDifficulty.EASY);
@@ -119,7 +114,7 @@ class MealServiceTest {
 
     }
 
-    public Page<MealDTO> createTestPage(Pageable pageable){
+    public Page<MealDTO> createTestPage(Pageable pageable) {
         List<MealDTO> listOfMeals = meals;
         return new PageImpl<>(listOfMeals, pageable, listOfMeals.size());
     }
@@ -129,8 +124,10 @@ class MealServiceTest {
         //given
         Pageable pageable = PageRequest.of(0, 3);
         when(mealProvider.getAllMeals(pageable)).thenReturn(createTestPage(pageable));
+
         //when
         Page<MealDTO> listOfMeals = mealService.getAllMeals(pageable);
+
         //then
         assertAll(
                 () -> assertThat(listOfMeals.getSize(), equalTo(3)),
@@ -139,61 +136,67 @@ class MealServiceTest {
     }
 
     @Test
-    void shouldReturnProperMealIfExists(){
+    void shouldReturnProperMealIfExists() {
         //given
         given(mealProvider.getMealByName("RiceAndChicken")).willReturn(meal1);
         given(mealProvider.existsByName("RiceAndChicken")).willReturn(true);
+
         //when
         MealDTO meal = mealService.getMealByName("RiceAndChicken");
+
         //then
         assertThat(meal, equalTo(meal1));
     }
 
     @Test
-    void shouldThrowResourceNotFoundExceptionIfMealDoesNotExistDuringFinding(){
+    void shouldThrowResourceNotFoundExceptionIfMealDoesNotExistDuringFinding() {
         //given + when
         given(mealProvider.existsByName("badName")).willReturn(false);
+
         //then
         assertThrows(ResourceNotFoundException.class, () ->
                 mealService.getMealByName("badName"));
     }
 
     @Test
-    void shouldDeleteMealIfExists(){
+    void shouldDeleteMealIfExists() {
         //given
         given(mealProvider.existsByName("goodName")).willReturn(true);
+
         //when
         mealService.deleteMealByName("goodName");
+
         //then
         verify(mealProvider, times(1)).deleteByName("goodName");
     }
 
     @Test
-    void shouldThrowAResourceNotFoundExceptionIfMealIsNotExistsDuringRemoval(){
-        //given + when
-        //then
+    void shouldThrowAResourceNotFoundExceptionIfMealIsNotExistsDuringRemoval() {
         assertThrows(ResourceNotFoundException.class, () -> mealService.deleteMealByName("Cola"));
     }
 
     @Test
-    void shouldThrowEntityAlreadyFoundExceptionDuringCreatingMealIfMealOfGivenNameExists(){
+    void shouldThrowEntityAlreadyFoundExceptionDuringCreatingMealIfMealOfGivenNameExists() {
         //given + when
         given(mealProvider.existsByName("RiceAndChicken")).willReturn(true);
+
         //then
         assertThrows(EntityAlreadyFoundException.class, () ->
-                mealService.createMeal(mealEntity1));
+                mealService.createMeal(meal1));
     }
 
     @Test
-    void shouldCreateMealWithProperIngredientsIfMealDidNotExistBefore(){
+    void shouldCreateMealWithProperIngredientsIfMealDidNotExistBefore() {
         //given
         given(mealProvider.existsByName("RiceAndChicken")).willReturn(false);
-        given(mealProvider.createMeal(mealEntity1)).willReturn(meal1);
+        given(mealProvider.createMeal(meal1)).willReturn(meal1);
+
         //when
-        MealDTO createdMeal = mealService.createMeal(mealEntity1);
+        MealDTO createdMeal = mealService.createMeal(meal1);
+
         //then
         assertAll(
-                () -> verify(ingredientService, times(1)).createIngredients(mealEntity1),
+                () -> verify(ingredientService, times(1)).createIngredients(meal1),
                 () -> assertThat(createdMeal.getName(), equalTo("RiceAndChicken")),
                 () -> assertThat(createdMeal.getIngredients().get(0).getProduct().getName(), equalTo("Rice")),
                 () -> assertThat(createdMeal.getIngredients().get(1).getAmount(), equalTo(ingredient2.getAmount()))
@@ -201,11 +204,13 @@ class MealServiceTest {
     }
 
     @Test
-    void shouldUpdateMeal(){
+    void shouldUpdateMeal() {
         //given
         given(mealProvider.updateMeal(meal2)).willReturn(meal2);
+
         //when
         MealDTO updatedMeal = mealService.updateMealByName(meal2, "RiceAndChicken");
+
         //then
         assertAll(
                 () -> assertThat(updatedMeal.getName(), equalTo("RiceAndChicken")),
@@ -214,50 +219,57 @@ class MealServiceTest {
     }
 
     @Test
-    void shouldCreateNewImageWhenNameOfMealIsCorrect(){
+    void shouldCreateNewImageWhenNameOfMealIsCorrect() {
         //given
         given(mealProvider.existsByName("RiceAndChicken")).willReturn(true);
         given(mealProvider.getMealByName("RiceAndChicken")).willReturn(meal1);
+
         //when
         MealDTO meal = mealService.addImageToMeal("RiceAndChicken", "filePath");
+
         //then
         verify(imageService, times(1)).createNewImage(meal1, "filePath");
     }
 
     @Test
-    void shouldThrowResourceNotFoundExceptionWhenMealDoesNotExistDuringAddingImage(){
+    void shouldThrowResourceNotFoundExceptionWhenMealDoesNotExistDuringAddingImage() {
         //given + when
         given(mealProvider.existsByName("RiceAndChicken")).willReturn(false);
+
         //then
         assertThrows(ResourceNotFoundException.class, () ->
                 mealService.addImageToMeal("RiceAndChicken", "filePath"));
     }
 
     @Test
-    void shouldDeleteImageFromMealIfMealDoesExist(){
+    void shouldDeleteImageFromMealIfMealDoesExist() {
         //given
         given(mealProvider.existsByName("RiceAndChicken")).willReturn(true);
         ImageDTO image = new ImageDTO("fileUrl");
         given(imageService.getImageByFileUrl("fileUrl")).willReturn(image);
+
         List<ImageDTO> imagesList = new ArrayList<>();
         imagesList.add(image);
         meal1.setImages(imagesList);
 
         given(mealProvider.getMealByName("RiceAndChicken")).willReturn(meal1);
         //when
+
         mealService.deleteImageFromMeal("RiceAndChicken", "fileUrl");
         //then
         assertThat(meal1.getImages(), Matchers.not(contains(image)));
     }
 
     @Test
-    void shouldReturnNamesOfMatchingMeals(){
+    void shouldReturnNamesOfMatchingMeals() {
         //given
         int perfectCaloricValue = 500;
         given(mealProvider.findNamesOfMatchingMeals(perfectCaloricValue - 100, perfectCaloricValue + 100))
                 .willReturn(meals);
+
         //when
         List<String> matchingMealsNames = mealService.findNamesOfMatchingMeals(perfectCaloricValue);
+
         //then
         assertAll(
                 () -> assertThat(matchingMealsNames.get(0), is(meals.get(0).getName())),

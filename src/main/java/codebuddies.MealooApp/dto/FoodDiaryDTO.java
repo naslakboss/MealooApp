@@ -21,7 +21,7 @@ public class FoodDiaryDTO {
 
     double totalPrice;
 
-    public FoodDiaryDTO() {
+    private FoodDiaryDTO() {
     }
 
     public FoodDiaryDTO(Long id, LocalDate date, List<MealDTO> listOfMeals
@@ -80,19 +80,6 @@ public class FoodDiaryDTO {
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
-    }
-
-    public void addMeal(MealDTO mealDTO){
-         listOfMeals.add(mealDTO);
-    }
-
-    public void deleteMeal(MealDTO meal) {
-        Optional<MealDTO> mealToDelete = listOfMeals.stream()
-                .filter(diaryMeals -> diaryMeals.getName().equals(meal.getName())).findAny();
-        if(mealToDelete.isEmpty()){
-            throw new ResourceNotFoundException(meal.getName());
-        }
-        listOfMeals.remove(mealToDelete.get());
     }
 
 }

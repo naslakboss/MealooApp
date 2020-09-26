@@ -1,14 +1,15 @@
 package codebuddies.MealooApp.controllers;
 
 import codebuddies.MealooApp.dto.MealooUserDTO;
-import codebuddies.MealooApp.entities.user.*;
-
 import codebuddies.MealooApp.services.MealooUserService;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
+
 import java.util.Map;
 
 @RestController
@@ -34,20 +35,20 @@ public class MealooUserController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<MealooUserDTO> createUser(@Valid @RequestBody MealooUserDTO user){
+    public ResponseEntity<MealooUserDTO> createUser(@Valid @RequestBody MealooUserDTO user) {
         return ResponseEntity.ok(userService.createUser(user));
     }
 
     @PutMapping("/{username}")
     public ResponseEntity<MealooUserDTO> updateUser
-            (@Valid @RequestBody MealooUserDTO user, @PathVariable String username){
+            (@Valid @RequestBody MealooUserDTO user, @PathVariable String username) {
         return ResponseEntity.ok(userService.updateUserByUsername(user, username));
 
     }
 
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{username}")
-    public ResponseEntity deleteUser(@PathVariable String username){
+    public ResponseEntity deleteUser(@PathVariable String username) {
         userService.deleteByUsername(username);
         return ResponseEntity.ok("User " + username + " was successfully deleted from database");
     }

@@ -8,7 +8,6 @@ public class ProductForIngredientDTO {
 
     int caloriesPer100g;
 
-
     public ProductForIngredientDTO() {
     }
 

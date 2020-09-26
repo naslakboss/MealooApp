@@ -4,9 +4,10 @@ import codebuddies.MealooApp.dto.ImageDTO;
 import codebuddies.MealooApp.dto.MealDTO;
 import codebuddies.MealooApp.entities.image.Image;
 import codebuddies.MealooApp.entities.meal.Meal;
-import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.ImageRepository;
+
 import org.modelmapper.ModelMapper;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +21,10 @@ public class ImageProvider {
         this.imageRepository = imageRepository;
     }
 
+    public boolean existsByFileUrl(String fileUrl) {
+        return imageRepository.existsByFileUrl(fileUrl);
+    }
+
     public void createNewImage(String filePath, String imageUrl, MealDTO mealDTO) {
         Meal meal = modelMapper.map(mealDTO, Meal.class);
         Image image = new Image(filePath, imageUrl, meal);
@@ -30,9 +35,5 @@ public class ImageProvider {
         Image image = imageRepository.findByFileUrl(fileUrl).get();
 
         return modelMapper.map(image, ImageDTO.class);
-    }
-
-    public boolean existsByFileUrl(String fileUrl) {
-        return imageRepository.existsByFileUrl(fileUrl);
     }
 }

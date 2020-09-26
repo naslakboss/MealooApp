@@ -2,12 +2,11 @@ package codebuddies.MealooApp.config.security;
 
 import codebuddies.MealooApp.entities.user.MealooUser;
 import codebuddies.MealooApp.repositories.MealooUserRepository;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.util.Optional;
 
 import static org.springframework.security.core.userdetails.User.*;
 
@@ -21,13 +20,13 @@ public class MealooUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<MealooUser> mealooUser = mealooUserRepository.findByUsername(username);
+        MealooUser mealooUser = mealooUserRepository.findByUsername(username);
         UserBuilder builder = null;
 
-        if(mealooUser.isPresent()){
+        if(mealooUser != null){
             builder = org.springframework.security.core.userdetails.User.withUsername(username);
-            builder.password(new BCryptPasswordEncoder().encode(mealooUser.get().getPassword()));
-            builder.roles(mealooUser.get().getMealooUserRole().toString());
+            builder.password(new BCryptPasswordEncoder().encode(mealooUser.getPassword()));
+            builder.roles(mealooUser.getMealooUserRole().toString());
         }
         else{
             throw new UsernameNotFoundException(username);

@@ -5,9 +5,9 @@ import codebuddies.MealooApp.entities.product.Ingredient;
 import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.entities.user.FoodDiary;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.*;
 
 @Entity
@@ -51,11 +51,9 @@ public class Meal {
     }
 
     public Meal(String name, List<Ingredient> ingredients, MealDifficulty mealDifficulty, String recipe) {
-        this.name = name;
-        this.ingredients = ingredients;
-        this.price = calculatePrice();
-        this.mealDifficulty = mealDifficulty;
+        this(name, ingredients, mealDifficulty);
         this.recipe = recipe;
+        this.price = calculatePrice();
         mealMacronutrients = calculateMealMacronutrients();
         totalCalories = calculateCalories();
     }
@@ -132,41 +130,43 @@ public class Meal {
         this.images = images;
     }
 
-    public double calculatePrice(){
+    public double calculatePrice() {
         double totalPrice = 0;
-        for(int i = 0; i < ingredients.size(); i++){
-            totalPrice  += (ingredients.get(i).getProduct().getPrice() * ingredients.get(i).getAmount()/1000);
+        for (int i = 0; i < ingredients.size(); i++) {
+            totalPrice += (ingredients.get(i).getProduct().getPrice() * ingredients.get(i).getAmount() / 1000);
         }
         return totalPrice;
     }
 
-    protected int calculateCarbohydrates(){
+    protected int calculateCarbohydrates() {
         int totalCarbohydrates = 0;
-        for(int i = 0; i < ingredients.size() ; i++){
+        for (int i = 0; i < ingredients.size(); i++) {
             totalCarbohydrates += ingredients.get(i).getProduct().getMacronutrients().getCarbohydratesPer100g()
-                    * ingredients.get(i).getAmount()  / 100;
+                    * ingredients.get(i).getAmount() / 100;
         }
         return totalCarbohydrates;
     }
-    protected int calculateProteins(){
+
+    protected int calculateProteins() {
         int totalProteins = 0;
         Product p = ingredients.get(0).getProduct();
-        for(int i = 0; i < ingredients.size(); i++){
+        for (int i = 0; i < ingredients.size(); i++) {
             totalProteins += ingredients.get(i).getProduct().getMacronutrients().getProteinsPer100g()
                     * ingredients.get(i).getAmount() / 100;
         }
         return totalProteins;
     }
-    protected int calculateFats(){
+
+    protected int calculateFats() {
         int totalFats = 0;
-        for(int i = 0; i < ingredients.size() ; i++){
+        for (int i = 0; i < ingredients.size(); i++) {
             totalFats += ingredients.get(i).getProduct().getMacronutrients().getFatsPer100g()
                     * ingredients.get(i).getAmount() / 100;
         }
         return totalFats;
     }
 
-    protected MealMacronutrients calculateMealMacronutrients(){
+    protected MealMacronutrients calculateMealMacronutrients() {
         return new MealMacronutrients(calculateProteins(), calculateCarbohydrates(), calculateFats());
     }
 
@@ -175,7 +175,7 @@ public class Meal {
 
     }
 
-    public void recalculateData(){
+    public void recalculateData() {
         setPrice(calculatePrice());
         setMealMacronutrients(calculateMealMacronutrients());
         setTotalCalories(calculateCalories());

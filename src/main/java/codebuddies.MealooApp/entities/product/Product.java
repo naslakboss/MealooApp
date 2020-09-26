@@ -1,13 +1,13 @@
 package codebuddies.MealooApp.entities.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
-
 
 
 @Entity

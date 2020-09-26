@@ -1,10 +1,13 @@
 package codebuddies.MealooApp.dataproviders;
 
-import codebuddies.MealooApp.dto.ProductDTO;
+import codebuddies.MealooApp.dto.IngredientForMealDTO;
+import codebuddies.MealooApp.dto.ProductForIngredientDTO;
 import codebuddies.MealooApp.entities.product.Ingredient;
 import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.repositories.IngredientRepository;
+
 import org.modelmapper.ModelMapper;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,8 +21,10 @@ public class IngredientProvider {
         this.ingredientRepository = ingredientRepository;
     }
 
-    public Ingredient createIngredient(ProductDTO productDTO, Integer amountOfProduct){
+    public IngredientForMealDTO createIngredient(ProductForIngredientDTO productDTO, Integer amountOfProduct) {
         Product product = modelMapper.map(productDTO, Product.class);
-        return new Ingredient(amountOfProduct, product);
+        Ingredient ingredient = new Ingredient(amountOfProduct, product);
+
+        return modelMapper.map(ingredient, IngredientForMealDTO.class);
     }
 }

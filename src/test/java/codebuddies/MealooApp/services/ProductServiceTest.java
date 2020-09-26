@@ -3,10 +3,8 @@ package codebuddies.MealooApp.services;
 import codebuddies.MealooApp.dataproviders.ProductProvider;
 import codebuddies.MealooApp.dto.ProductDTO;
 import codebuddies.MealooApp.entities.product.Macronutrients;
-import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.entities.product.ProductType;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
-import codebuddies.MealooApp.exceptions.ValidationException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -41,7 +38,9 @@ class ProductServiceTest {
     ProductDTO product1;
     ProductDTO product2;
     ProductDTO product3;
+
     List<ProductDTO> products;
+
     ProductService productService;
 
 
@@ -50,7 +49,9 @@ class ProductServiceTest {
         product1 = new ProductDTO("Potato", 5,  75, new Macronutrients(2, 17,0),  ProductType.GRAINS);
         product2 = new ProductDTO("Beef", 30, 250, new Macronutrients(26, 0, 15), ProductType.MEAT);
         product3 = new ProductDTO("Chicken", 12, 121, new Macronutrients(22, 1, 4), ProductType.MEAT);
+
         products = List.of(product1, product2, product3);
+
         productService = new ProductService(productProvider);
     }
 
@@ -64,10 +65,11 @@ class ProductServiceTest {
         //given
         Pageable pageable = PageRequest.of(0, 3);
         when(productProvider.getAllProducts(pageable)).thenReturn(createTestPage(pageable));
-        //when
 
+        //when
         Page<ProductDTO> products = productService.getAllProducts(pageable);
         List<ProductDTO> productsList = products.getContent();
+
         //then
         assertAll(
                 () -> assertThat(productsList.size(), equalTo(3)),
@@ -82,8 +84,10 @@ class ProductServiceTest {
         //given
         ProductType grains = ProductType.GRAINS;
         when(productProvider.getProductByName("Potato")).thenReturn(product1);
+
         //when
         ProductDTO potato = productService.getProductByName("Potato");
+
         //then
         assertAll(
                 () -> assertThat(potato.getName(), equalTo("Potato")),
@@ -96,16 +100,19 @@ class ProductServiceTest {
     void findByNameShouldThrowsAnResourceNotFoundExceptionProductIsNotExists(){
         //given + when
         when(productProvider.getProductByName("BadName")).thenThrow(ResourceNotFoundException.class);
+
         //then
         assertThrows(ResourceNotFoundException.class, () -> productService.getProductByName("BadName"));
     }
 
     @Test
-    void saveProductTestOK() throws ValidationException {
+    void saveProductTestOK() {
         //given
         when(productProvider.createProduct(product3)).thenReturn(product3);
+
         //when
         ProductDTO product = productService.createProduct(product3);
+
         //then
         assertAll(
                 () -> assertThat(product.getName(), equalTo("Chicken")),
@@ -118,6 +125,7 @@ class ProductServiceTest {
     void shouldReturnTrueIfProductExists(){
         //given + when
         when(productProvider.existsByName(anyString())).thenReturn(true);
+
         //then
         assertTrue(productService.existsByName("Lettuce"));
     }
@@ -126,6 +134,7 @@ class ProductServiceTest {
     void shouldReturnFalseIfProductNotExists(){
         //given + when
         when(productProvider.existsByName(anyString())).thenReturn(false);
+
         //then
         assertFalse(productService.existsByName("Hamburger"));
     }
@@ -136,17 +145,20 @@ class ProductServiceTest {
     void shouldThrowAnExceptionWhenProductToUpdateDoesNotExist() {
         //given + when
         when(productProvider.getProductByName(anyString())).thenThrow(ResourceNotFoundException.class);
+
         //then
         assertThrows(ResourceNotFoundException.class, () -> productService.getProductByName("FrenchFries"));
     }
 
     @Test
-    void shouldUpdateProductDataWhenProductExistsAndNewDataFormatIsCorrect() throws ValidationException {
+    void shouldUpdateProductDataWhenProductExistsAndNewDataFormatIsCorrect() {
         //given
         ProductDTO newData = new ProductDTO("ChickenTenderloin", 18, 90, new Macronutrients(17, 1, 2), ProductType.MEAT);
         when(productProvider.updateProduct(newData)).thenReturn(newData);
+
         //when
         ProductDTO productAfterUpdate = productService.updateProductByName(newData, "Chicken");
+
         //then
         assertAll(
                 () -> assertThat(productAfterUpdate.getName(), equalTo("Chicken")),
@@ -162,8 +174,10 @@ class ProductServiceTest {
         //given
         when(productProvider.existsByName("Chicken")).thenReturn(true);
         doNothing().when(productProvider).deleteByName("Chicken");
+
         //when
         productService.deleteProductByName("Chicken");
+
         //then
         verify(productProvider, times(1)).deleteByName("Chicken");
     }
@@ -172,6 +186,7 @@ class ProductServiceTest {
     void shouldThrowAnExceptionDuringRemovalWhenProductDoesNotExist(){
         //given + when
         when(productProvider.existsByName("BadName")).thenReturn(false);
+
         //then
         assertThrows(ResourceNotFoundException.class, () -> productService.deleteProductByName("BadName"));
     }

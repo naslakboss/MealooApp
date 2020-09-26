@@ -2,6 +2,7 @@ package codebuddies.MealooApp.entities.product;
 
 import codebuddies.MealooApp.entities.meal.Meal;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.util.List;

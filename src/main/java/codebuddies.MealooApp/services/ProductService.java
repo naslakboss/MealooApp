@@ -2,10 +2,11 @@ package codebuddies.MealooApp.services;
 
 import codebuddies.MealooApp.dataproviders.ProductProvider;
 import codebuddies.MealooApp.dto.ProductDTO;
+import codebuddies.MealooApp.dto.ProductForIngredientDTO;
 import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
-import codebuddies.MealooApp.exceptions.ValidationException;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,27 +26,35 @@ public class ProductService {
         return productProvider.getAllProducts(pageable);
     }
 
-    public ProductDTO getProductByName(String name) {
-        return productProvider.getProductByName(name);
-    }
-
-    public ProductDTO createProduct(ProductDTO productDTO) {
-        if(existsByName(productDTO.getName())){
-            throw new EntityAlreadyFoundException(productDTO.getName());
-        }
-        calculateCaloriesPer100g(productDTO);
-        return productProvider.createProduct(productDTO);
-    }
-
     public boolean existsByName(String name) {
         return productProvider.existsByName(name);
     }
 
-    public void calculateCaloriesPer100g(ProductDTO productDTO){
-        Macronutrients macronutrients = productDTO.getMacronutrients();
-        int result = macronutrients.getProteinsPer100g() * 4 + macronutrients.getCarbohydratesPer100g() * 4
+    public ProductDTO getProductByName(String name) {
+        return productProvider.getProductByName(name);
+    }
+
+    public ProductForIngredientDTO getProductForIngredientByName(String name) {
+        return productProvider.getProductForIngredientByName(name);
+    }
+
+    public ProductDTO createProduct(ProductDTO product) {
+        if (existsByName(product.getName())) {
+            throw new EntityAlreadyFoundException(product.getName());
+        }
+        calculateCaloriesPer100g(product);
+        return productProvider.createProduct(product);
+    }
+
+    public void calculateCaloriesPer100g(ProductDTO product) {
+        Macronutrients macronutrients = product.getMacronutrients();
+
+        int result =
+                  macronutrients.getProteinsPer100g() * 4
+                + macronutrients.getCarbohydratesPer100g() * 4
                 + macronutrients.getFatsPer100g() * 9;
-        productDTO.setCaloriesPer100g(result);
+
+        product.setCaloriesPer100g(result);
     }
 
     public ProductDTO updateProductByName(ProductDTO product, String name) {
@@ -55,11 +64,10 @@ public class ProductService {
 
     @Transactional
     public void deleteProductByName(String name) {
-        if(!existsByName(name)){
+        if (!existsByName(name)) {
             throw new ResourceNotFoundException(name);
         }
         productProvider.deleteByName(name);
     }
-
 
 }
