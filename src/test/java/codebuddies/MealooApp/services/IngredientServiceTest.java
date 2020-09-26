@@ -87,7 +87,6 @@ class IngredientServiceTest {
 
     @Test
     void shouldCreateIngredients() {
-
         //given
         given(productService.getProductForIngredientByName("Carrot")).willReturn(product1);
         given(productService.getProductForIngredientByName("Apple")).willReturn(product2);
