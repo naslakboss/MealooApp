@@ -201,19 +201,4 @@ public class Meal {
     public int hashCode() {
         return Objects.hash(name, ingredients, price, mealDifficulty, recipe, mealMacronutrients, totalCalories, foodDiaries, images);
     }
-
-    @Override
-    public String toString() {
-        return "Meal{" +
-                ", name='" + name + '\'' +
-                ", ingredients=" + ingredients +
-                ", price=" + price +
-                ", mealDifficulty=" + mealDifficulty +
-                ", recipe='" + recipe + '\'' +
-                ", mealMacronutrients=" + mealMacronutrients +
-                ", totalCalories=" + totalCalories +
-                ", foodDiaries=" + foodDiaries +
-                ", images=" + images +
-                '}';
-    }
 }

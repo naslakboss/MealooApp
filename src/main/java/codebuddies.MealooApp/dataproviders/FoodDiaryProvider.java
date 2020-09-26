@@ -4,6 +4,7 @@ import codebuddies.MealooApp.dto.FoodDiaryDTO;
 import codebuddies.MealooApp.dto.MealooUserDTO;
 import codebuddies.MealooApp.entities.user.FoodDiary;
 import codebuddies.MealooApp.entities.user.MealooUser;
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.FoodDiaryRepository;
 
 import org.modelmapper.ModelMapper;
@@ -37,7 +38,8 @@ public class FoodDiaryProvider {
 
     public FoodDiaryDTO getDiaryByDate(MealooUserDTO userDTO, LocalDate date) {
         MealooUser user = modelMapper.map(userDTO, MealooUser.class);
-        FoodDiary diary = diaryRepository.findByMealooUserAndDate(user, date);
+        FoodDiary diary = diaryRepository.findByMealooUserAndDate(user, date).orElseThrow(() ->
+                new RuntimeException("Diary of " + date + " does not exist in databse"));
 
         return modelMapper.map(diary, FoodDiaryDTO.class);
     }
@@ -53,7 +55,6 @@ public class FoodDiaryProvider {
     public FoodDiaryDTO updateDiary(FoodDiaryDTO diaryDTO, MealooUserDTO userDTO) {
         MealooUser user = modelMapper.map(userDTO, MealooUser.class);
         FoodDiary diary = modelMapper.map(diaryDTO, FoodDiary.class);
-        diary.setId(diaryDTO.getId());
         diary.setMealooUser(user);
         diaryRepository.save(diary);
 

@@ -31,9 +31,6 @@ public class MealooUserService {
     }
 
     public MealooUserDTO getUserByUsername(String username) {
-        if (!existsByName(username)) {
-            throw new ResourceNotFoundException(username);
-        }
         return userProvider.getUserByUsername(username);
     }
 
@@ -54,9 +51,7 @@ public class MealooUserService {
 
     @Transactional
     public void deleteByUsername(String username) {
-        if (!existsByName(username)) {
-            throw new ResourceNotFoundException(username);
-        } else userProvider.deleteUserByUsername(username);
+        userProvider.deleteUserByUsername(username);
     }
 
     public Map calculateBMIAndCaloricDemand(String username) {

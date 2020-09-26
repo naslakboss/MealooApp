@@ -2,6 +2,7 @@ package codebuddies.MealooApp.dataproviders;
 
 import codebuddies.MealooApp.dto.MealooUserDTO;
 import codebuddies.MealooApp.entities.user.MealooUser;
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.MealooUserRepository;
 
 import org.modelmapper.ModelMapper;
@@ -31,6 +32,9 @@ public class MealooUserProvider {
     }
 
     public MealooUserDTO getUserByUsername(String username) {
+        if(!existsByUsername(username)){
+            throw new ResourceNotFoundException(username);
+        }
         MealooUser user = userRepository.findByUsername(username);
 
         return modelMapper.map(user, MealooUserDTO.class);
@@ -51,6 +55,9 @@ public class MealooUserProvider {
     }
 
     public void deleteUserByUsername(String username) {
+        if(!existsByUsername(username)){
+            throw new ResourceNotFoundException(username);
+        }
         userRepository.deleteByUsername(username);
     }
 

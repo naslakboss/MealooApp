@@ -20,7 +20,7 @@ public interface FoodDiaryRepository extends JpaRepository<FoodDiary, Long> {
     Page<FoodDiary> findByMealooUser(MealooUser mealooUser, Pageable pageable);
 
 
-    FoodDiary findByMealooUserAndDate(MealooUser mealooUser, LocalDate date);
+    Optional<FoodDiary> findByMealooUserAndDate(MealooUser mealooUser, LocalDate date);
 
     List<FoodDiary> findByMealooUserAndDateAfter(MealooUser mealooUser, LocalDate after);
 }

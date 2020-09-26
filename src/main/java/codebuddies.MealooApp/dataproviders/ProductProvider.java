@@ -3,6 +3,7 @@ package codebuddies.MealooApp.dataproviders;
 import codebuddies.MealooApp.dto.ProductDTO;
 import codebuddies.MealooApp.dto.ProductForIngredientDTO;
 import codebuddies.MealooApp.entities.product.Product;
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.ProductRepository;
 
 import org.modelmapper.ModelMapper;
@@ -33,13 +34,15 @@ public class ProductProvider {
     }
 
     public ProductDTO getProductByName(String name) {
-        Product product = productRepository.findByName(name);
+        Product product = productRepository.findByName(name).orElseThrow(() ->
+                new ResourceNotFoundException(name));
 
         return modelMapper.map(product, ProductDTO.class);
     }
 
     public ProductForIngredientDTO getProductForIngredientByName(String name) {
-        Product product = productRepository.findByName(name);
+        Product product = productRepository.findByName(name).orElseThrow(() ->
+                new ResourceNotFoundException(name));
 
         return modelMapper.map(product, ProductForIngredientDTO.class);
     }
@@ -59,6 +62,9 @@ public class ProductProvider {
     }
 
     public void deleteByName(String name) {
+        if(!existsByName(name)){
+            throw new ResourceNotFoundException(name);
+        }
         productRepository.deleteByName(name);
     }
 

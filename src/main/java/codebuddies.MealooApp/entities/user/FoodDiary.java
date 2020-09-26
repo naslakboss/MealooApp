@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class FoodDiary {
@@ -98,7 +99,22 @@ public class FoodDiary {
         this.totalPrice = totalPrice;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FoodDiary foodDiary = (FoodDiary) o;
+        return id == foodDiary.id &&
+                totalCalories == foodDiary.totalCalories &&
+                Float.compare(foodDiary.totalPrice, totalPrice) == 0 &&
+                Objects.equals(listOfMeals, foodDiary.listOfMeals) &&
+                Objects.equals(date, foodDiary.date) &&
+                Objects.equals(mealooUser, foodDiary.mealooUser) &&
+                Objects.equals(mealMacronutrients, foodDiary.mealMacronutrients);
+    }
 
-
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, listOfMeals, date, mealooUser, mealMacronutrients, totalCalories, totalPrice);
+    }
 }

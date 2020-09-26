@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -46,11 +45,11 @@ class MealooUserServiceTest {
     void setUp() {
         user1 = new MealooUserDTO(1L, "Admin", "pass", MealooUserRole.ADMIN, "admin@gmail.com"
                 , new NutritionSettings(3500)
-                , new MealooUserDetails(180, 90, 22, Sex.MALE, PhysicalActivity.HIGH));
+                , new MealooUserDetails(180, 90, 22, Sex.MALE, PhysicalActivity.HIGH), Collections.emptyList());
 
         user2 = new MealooUserDTO(2L, "User", "secret", MealooUserRole.USER, "user@gmail.com"
                 , new NutritionSettings(2500)
-                , new MealooUserDetails(170, 80, 27, Sex.FEMALE, PhysicalActivity.LITTLE));
+                , new MealooUserDetails(170, 80, 27, Sex.FEMALE, PhysicalActivity.LITTLE), Collections.emptyList());
 
         listOfUsers = List.of(user1, user2);
 
@@ -132,7 +131,7 @@ class MealooUserServiceTest {
 
         MealooUserDTO user3 = new MealooUserDTO(3L, "Menager", "secretPIN", MealooUserRole.MODERATOR, "manager@gmail.com"
                 , new NutritionSettings(3000)
-                , new MealooUserDetails(178, 85, 30, Sex.FEMALE, PhysicalActivity.NONE));
+                , new MealooUserDetails(178, 85, 30, Sex.FEMALE, PhysicalActivity.NONE), Collections.emptyList());
         given(userProvider.updateUser(user3)).willReturn(user3);
 
         //when

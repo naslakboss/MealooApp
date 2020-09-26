@@ -91,8 +91,7 @@ public class FoodDiaryService {
         FoodDiaryDTO diary = getCurrentDiary(username);
         MealDTO meal = mealService.getMealByName(mealName);
         MealooUserDTO user = userService.getUserByUsername(username);
-
-        diary.getListOfMeals().add(meal);
+        diary.addMeal(meal);
         recalculateData(diary);
         return diaryProvider.updateDiary(diary, user);
     }
@@ -101,8 +100,7 @@ public class FoodDiaryService {
         FoodDiaryDTO diary = getCurrentDiary(username);
         MealDTO meal = mealService.getMealByName(mealName);
         MealooUserDTO user = userService.getUserByUsername(username);
-
-        diary.getListOfMeals().remove(meal);
+        diary.deleteMeal(meal);
         recalculateData(diary);
         return diaryProvider.updateDiary(diary, user);
     }

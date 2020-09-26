@@ -5,7 +5,6 @@ import codebuddies.MealooApp.dto.ProductDTO;
 import codebuddies.MealooApp.dto.ProductForIngredientDTO;
 import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
-import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -64,9 +63,6 @@ public class ProductService {
 
     @Transactional
     public void deleteProductByName(String name) {
-        if (!existsByName(name)) {
-            throw new ResourceNotFoundException(name);
-        }
         productProvider.deleteByName(name);
     }
 

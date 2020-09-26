@@ -4,6 +4,7 @@ import codebuddies.MealooApp.dto.ImageDTO;
 import codebuddies.MealooApp.dto.MealDTO;
 import codebuddies.MealooApp.entities.image.Image;
 import codebuddies.MealooApp.entities.meal.Meal;
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.ImageRepository;
 
 import org.modelmapper.ModelMapper;
@@ -32,7 +33,8 @@ public class ImageProvider {
     }
 
     public ImageDTO getImageByFileUrl(String fileUrl) {
-        Image image = imageRepository.findByFileUrl(fileUrl).get();
+        Image image = imageRepository.findByFileUrl(fileUrl).orElseThrow(() ->
+                new ResourceNotFoundException(fileUrl));
 
         return modelMapper.map(image, ImageDTO.class);
     }

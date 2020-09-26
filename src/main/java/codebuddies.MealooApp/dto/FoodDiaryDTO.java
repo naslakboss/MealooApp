@@ -82,4 +82,16 @@ public class FoodDiaryDTO {
         this.totalPrice = totalPrice;
     }
 
+    public void addMeal(MealDTO meal){
+        listOfMeals.add(meal);
+    }
+
+    public void deleteMeal(MealDTO meal){
+        MealDTO mealToDelete = listOfMeals.stream()
+                .filter(x -> x.getName().equals(meal.getName())).findAny()
+                .orElseThrow(() ->
+                        new RuntimeException("This diary does not contain" + meal.getName()));
+        listOfMeals.remove(mealToDelete);
+    }
+
 }

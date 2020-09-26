@@ -10,6 +10,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class MealooUser {
@@ -135,4 +136,23 @@ public class MealooUser {
         this.mealooUserRole = mealooUserRole;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MealooUser that = (MealooUser) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(username, that.username) &&
+                Objects.equals(password, that.password) &&
+                mealooUserRole == that.mealooUserRole &&
+                Objects.equals(email, that.email) &&
+                Objects.equals(nutritionSettings, that.nutritionSettings) &&
+                Objects.equals(foodDiaries, that.foodDiaries) &&
+                Objects.equals(mealooUserDetails, that.mealooUserDetails);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password, mealooUserRole, email, nutritionSettings, foodDiaries, mealooUserDetails);
+    }
 }
