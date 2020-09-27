@@ -1,6 +1,8 @@
 package codebuddies.MealooApp.dto;
 
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
+import codebuddies.MealooApp.entities.user.MealooUser;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,17 +21,20 @@ public class FoodDiaryDTO {
 
     double totalPrice;
 
+    @JsonIgnore
+    MealooUserDTO mealooUser;
+
     private FoodDiaryDTO() {
     }
 
-    public FoodDiaryDTO(Long id, LocalDate date, List<MealDTO> listOfMeals
-            , MealMacronutrients mealMacronutrients, int totalCalories, double totalPrice) {
-        this.id = id;
+    public FoodDiaryDTO(LocalDate date, List<MealDTO> listOfMeals
+            , MealMacronutrients mealMacronutrients, int totalCalories, double totalPrice, MealooUserDTO mealooUser) {
         this.date = date;
         this.listOfMeals = listOfMeals;
         this.mealMacronutrients = mealMacronutrients;
         this.totalCalories = totalCalories;
         this.totalPrice = totalPrice;
+        this.mealooUser = mealooUser;
     }
 
     public Long getId() {
@@ -78,6 +83,14 @@ public class FoodDiaryDTO {
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public MealooUserDTO getMealooUser() {
+        return mealooUser;
+    }
+
+    public void setMealooUser(MealooUserDTO mealooUser) {
+        this.mealooUser = mealooUser;
     }
 
     public void addMeal(MealDTO meal){

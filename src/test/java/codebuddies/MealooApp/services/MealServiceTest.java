@@ -11,7 +11,6 @@ import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.entities.product.ProductType;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
-import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +25,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;

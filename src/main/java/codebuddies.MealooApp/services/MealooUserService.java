@@ -30,6 +30,10 @@ public class MealooUserService {
         return userProvider.existsByUsername(username);
     }
 
+    public MealooUserDTO getUserById(int id){
+        return userProvider.getUserById(id);
+    }
+
     public MealooUserDTO getUserByUsername(String username) {
         return userProvider.getUserByUsername(username);
     }

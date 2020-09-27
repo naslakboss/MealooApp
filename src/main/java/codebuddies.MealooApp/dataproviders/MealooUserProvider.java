@@ -40,6 +40,12 @@ public class MealooUserProvider {
         return modelMapper.map(user, MealooUserDTO.class);
     }
 
+    public MealooUserDTO getUserById(long id){
+        MealooUser user = userRepository.findById(id).orElseThrow( () ->
+                new ResourceNotFoundException("" + id));
+        return modelMapper.map(user, MealooUserDTO.class);
+    }
+
     public MealooUserDTO createUser(MealooUserDTO user) {
         MealooUser newUser = modelMapper.map(user, MealooUser.class);
         userRepository.save(newUser);

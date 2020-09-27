@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/client")
-@PreAuthorize("#username == authentication.principal.username or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
+//@PreAuthorize("#username == authentication.principal.username or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
 public class ClientController {
 
     private FoodDiaryService diaryService;
@@ -21,45 +21,46 @@ public class ClientController {
         this.diaryService = diaryService;
     }
 
-    @GetMapping("/{username}/diaries")
-    public ResponseEntity<Page<FoodDiaryDTO>> getAllDiaries(@PathVariable String username, Pageable pageable) {
-        return ResponseEntity.ok(diaryService.getAllDiaries(username, pageable));
+    @GetMapping("/{id}/diaries")
+    public ResponseEntity<Page<FoodDiaryDTO>> getAllDiaries(@PathVariable int id, Pageable pageable) {
+        return ResponseEntity.ok(diaryService.getAllDiaries(id, pageable));
     }
 
-    @GetMapping("/{username}/current")
-    public ResponseEntity<FoodDiaryDTO> getCurrentDiary(@PathVariable String username) {
-        return ResponseEntity.ok(diaryService.getCurrentDiary(username));
+    @GetMapping("/{id}/current")
+    public ResponseEntity<FoodDiaryDTO> getCurrentDiary(@PathVariable int id) {
+        return ResponseEntity.ok(diaryService.getCurrentDiary(id));
     }
 
-    @GetMapping("/{username}/diary")
-    public ResponseEntity<FoodDiaryDTO> getDiaryOfChosenDay(@PathVariable String username, @RequestParam("date") String date){
-        return ResponseEntity.ok(diaryService.getDiaryByDate(username, date));
+    @GetMapping("/{id}/diary")
+    public ResponseEntity<FoodDiaryDTO> getDiaryOfChosenDay(@PathVariable int id, @RequestParam("date") String date){
+        return ResponseEntity.ok(diaryService.getDiaryByDate(id, date));
     }
 
-    @PostMapping("/{username}/diary")
-    public ResponseEntity<FoodDiaryDTO> createDiary(@PathVariable String username) {
-        return ResponseEntity.ok(diaryService.createDiary(username));
+    @PostMapping("/{id}/diary")
+    public ResponseEntity<FoodDiaryDTO> createDiary(@PathVariable int id) {
+        return ResponseEntity.ok(diaryService.createDiary(id));
     }
 
-    @PostMapping("/{username}/add-meal")
-    public ResponseEntity<FoodDiaryDTO> addMeal(@PathVariable String username, @RequestParam("mealName") String mealName) {
-        return ResponseEntity.ok(diaryService.addMeal(username, mealName));
+    @PostMapping("/{id}/add-meal")
+    public ResponseEntity<FoodDiaryDTO> addMeal(@PathVariable int id, @RequestParam("mealName") String mealName) {
+        return ResponseEntity.ok(diaryService.addMeal(id, mealName));
     }
 
-    @DeleteMapping("/{username}/delete-meal")
-    public ResponseEntity<FoodDiaryDTO> deleteMeal(@PathVariable String username, @RequestParam("mealName") String mealName) {
-        return ResponseEntity.ok(diaryService.deleteMeal(username, mealName));
+    @DeleteMapping("/{id}/delete-meal")
+    public ResponseEntity<FoodDiaryDTO> deleteMeal(@PathVariable int id, @RequestParam("mealName") String mealName) {
+        return ResponseEntity.ok(diaryService.deleteMeal(id, mealName));
     }
 
-    @GetMapping("/{username}/generate-customized-diary")
-    public ResponseEntity<FoodDiaryDTO> generateListOfMealsAutomatically(@PathVariable String username
+    @GetMapping("/{id}/generate-customized-diary")
+    public ResponseEntity<FoodDiaryDTO> generateListOfMealsAutomatically(@PathVariable int id
                     , @RequestParam("totalCalories") int totalCalories, @RequestParam("numberOfMeals") int numberOfMeals){
-        return ResponseEntity.ok(diaryService.generateDiet(totalCalories, numberOfMeals, username));
+        return ResponseEntity.ok(diaryService.generateDiet(totalCalories, numberOfMeals, id));
     }
 
-    @GetMapping("/{username}/generate-diary")
-    public ResponseEntity<FoodDiaryDTO> generateListOfMealsTakingCaloriesFromNutritionSettings(@PathVariable String username
-                    , @RequestParam("numberOfMeals") int numberOfMeals, @RequestParam("weightGoal") WeightGoal weightGoal ){
-        return ResponseEntity.ok(diaryService.generateDiet(numberOfMeals, weightGoal, username));
+    @GetMapping("/{id}/generate-diary")
+    public ResponseEntity<FoodDiaryDTO> generateListOfMealsAccordingToWeightGoal(
+                    @PathVariable int id, @RequestParam("numberOfMeals") int numberOfMeals
+                    , @RequestParam int totalCalories, @RequestParam("weightGoal") WeightGoal weightGoal){
+        return ResponseEntity.ok(diaryService.generateDiet(numberOfMeals, numberOfMeals, weightGoal, id));
     }
 }

@@ -38,11 +38,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .anyRequest().authenticated()
-                .and().formLogin().defaultSuccessUrl("/meals", true)
-                .permitAll()
-                .and().logout().logoutSuccessUrl("/login");
+//        http.authorizeRequests()
+//                .anyRequest().authenticated()
+//                .and().formLogin().defaultSuccessUrl("/meals", true)
+//                .permitAll()
+//                .and().logout().logoutSuccessUrl("/login");
         http.csrf().disable()
                 .authorizeRequests().anyRequest().permitAll();
     }

@@ -36,27 +36,24 @@ public class FoodDiaryService {
         this.mealService = mealService;
     }
 
-    public Page<FoodDiaryDTO> getAllDiaries(String username, Pageable pageable) {
-        MealooUserDTO user = userService.getUserByUsername(username);
-        return diaryProvider.getAllDiaries(user, pageable);
+    public Page<FoodDiaryDTO> getAllDiaries(int id, Pageable pageable) {
+        return diaryProvider.getAllDiaries(id, pageable);
     }
 
-    public FoodDiaryDTO getCurrentDiary(String username) {
+    public FoodDiaryDTO getCurrentDiary(int id) {
         LocalDate currentDate = LocalDate.now();
-        MealooUserDTO user = userService.getUserByUsername(username);
-        return diaryProvider.getDiaryByDate(user, currentDate);
+        return diaryProvider.getDiaryByDate(id, currentDate);
     }
 
-    public FoodDiaryDTO getDiaryByDate(String username, String textDate) {
+    public FoodDiaryDTO getDiaryByDate(int id, String textDate) {
         LocalDate date = LocalDate.parse(textDate);
-        MealooUserDTO user = userService.getUserByUsername(username);
-        return diaryProvider.getDiaryByDate(user, date);
+        return diaryProvider.getDiaryByDate(id, date);
     }
 
-    public FoodDiaryDTO createDiary(String username) {
-        MealooUserDTO user = userService.getUserByUsername(username);
+    public FoodDiaryDTO createDiary(int id) {
         LocalDate currentDate = LocalDate.now();
-        return diaryProvider.createDiary(user, currentDate);
+        MealooUserDTO user = userService.getUserById(id);
+        return diaryProvider.createDiary(currentDate, user);
     }
 
     private void recalculateMealMacronutrients(FoodDiaryDTO diary) {
@@ -91,27 +88,25 @@ public class FoodDiaryService {
 
     }
 
-    public FoodDiaryDTO addMeal(String username, String mealName) {
-        FoodDiaryDTO diary = getCurrentDiary(username);
+    public FoodDiaryDTO addMeal(int id, String mealName) {
+        FoodDiaryDTO diary = getCurrentDiary(id);
         MealDTO meal = mealService.getMealByName(mealName);
-        MealooUserDTO user = userService.getUserByUsername(username);
         diary.addMeal(meal);
         recalculateData(diary);
-        return diaryProvider.updateDiary(diary, user);
+        return diaryProvider.updateDiary(diary);
     }
 
-    public FoodDiaryDTO deleteMeal(String username, String mealName) {
-        FoodDiaryDTO diary = getCurrentDiary(username);
+    public FoodDiaryDTO deleteMeal(int id, String mealName) {
+        FoodDiaryDTO diary = getCurrentDiary(id);
         MealDTO meal = mealService.getMealByName(mealName);
-        MealooUserDTO user = userService.getUserByUsername(username);
         diary.deleteMeal(meal);
         recalculateData(diary);
-        return diaryProvider.updateDiary(diary, user);
+        return diaryProvider.updateDiary(diary);
     }
 
-    List<String> rejectMealsFromThreeDaysBack(MealooUserDTO user) {
+    List<String> rejectMealsFromThreeDaysBack(int id) {
         LocalDate threeDaysBack = LocalDate.now().minusDays(3);
-        return diaryProvider.rejectMealsFromThreeDaysBack(user, threeDaysBack).stream()
+        return diaryProvider.rejectMealsFromThreeDaysBack(id, threeDaysBack).stream()
                 .flatMap(diary -> diary.getListOfMeals().stream())
                 .map(MealDTO::getName).collect(Collectors.toList());
     }
@@ -123,17 +118,16 @@ public class FoodDiaryService {
         return matchingMeals;
     }
 
-    public void addMatchingMealsToDiary(String username, List<String> namesOfMatchingMeals, int numberOfMeals) {
+    public void addMatchingMealsToDiary(int id, List<String> namesOfMatchingMeals, int numberOfMeals) {
 
         for (int i = 0; i < numberOfMeals; i++) {
             int randomIndex = rand.nextInt(namesOfMatchingMeals.size());
-            addMeal(username, namesOfMatchingMeals.get(randomIndex));
+            addMeal(id, namesOfMatchingMeals.get(randomIndex));
             namesOfMatchingMeals.remove(randomIndex);
         }
     }
 
-    public FoodDiaryDTO generateDiet(int totalCalories, int numberOfMeals, String username) {
-        MealooUserDTO user = userService.getUserByUsername(username);
+    public FoodDiaryDTO generateDiet(int totalCalories, int numberOfMeals, int id) {
 
         if (totalCalories < 0 || totalCalories > 10000) {
             throw new IllegalArgumentException("Total calories should be higher than 0 and less than 10000," +
@@ -142,7 +136,7 @@ public class FoodDiaryService {
         if (numberOfMeals < 3 || numberOfMeals > 7) {
             throw new IllegalArgumentException("Numbers of meals should vary from 3 to 7");
         }
-        if (!getCurrentDiary(username).getListOfMeals().isEmpty()){
+        if (!getCurrentDiary(id).getListOfMeals().isEmpty()){
             throw new IllegalArgumentException("Meals for present day was already created");
         }
 
@@ -150,7 +144,7 @@ public class FoodDiaryService {
 
         List<String> namesOfMatchingMeals = mealService.findNamesOfMatchingMeals(perfectCaloricValue);
 
-        List<String> rejectedMeals = rejectMealsFromThreeDaysBack(user);
+        List<String> rejectedMeals = rejectMealsFromThreeDaysBack(id);
 
         namesOfMatchingMeals = discardMismatchedMeals(namesOfMatchingMeals, rejectedMeals);
 
@@ -158,9 +152,9 @@ public class FoodDiaryService {
             throw new RequiredMealsNotFoundException("");
         }
 
-        addMatchingMealsToDiary(username, namesOfMatchingMeals, numberOfMeals);
+        addMatchingMealsToDiary(id, namesOfMatchingMeals, numberOfMeals);
 
-        int deficit = totalCalories - getCurrentDiary(username).getTotalCalories();
+        int deficit = totalCalories - getCurrentDiary(id).getTotalCalories();
 
         List<String> mealsToFixDeficit = mealService.findNamesOfMatchingMeals(deficit);
 
@@ -168,21 +162,19 @@ public class FoodDiaryService {
             throw new RequiredMealsNotFoundException("");
         }
 
-        addMatchingMealsToDiary(username, mealsToFixDeficit, 1);
+        addMatchingMealsToDiary(id, mealsToFixDeficit, 1);
 
-        return getCurrentDiary(username);
+        return getCurrentDiary(id);
     }
 
-    public FoodDiaryDTO generateDiet(int numberOfMeals, WeightGoal weightGoal, String username) {
-        MealooUserDTO user = userService.getUserByUsername(username);
+    public FoodDiaryDTO generateDiet(int numberOfMeals, int totalCalories, WeightGoal weightGoal, int id) {
 
         if (numberOfMeals < 3 || numberOfMeals > 7) {
             throw new IllegalArgumentException("Numbers of meals should vary from 3 to 7");
         }
-        if (!getCurrentDiary(username).getListOfMeals().isEmpty()) {
+        if (!getCurrentDiary(id).getListOfMeals().isEmpty()) {
             throw new IllegalArgumentException("Meals for present day was already created");
         }
-        int totalCalories = user.getNutritionSettings().getDailyCaloricGoal();
 
         switch (weightGoal) {
             case LOSTHALFKGPERWEEK:
@@ -208,7 +200,7 @@ public class FoodDiaryService {
 
         List<String> namesOfMatchingMeals = mealService.findNamesOfMatchingMeals(perfectCaloricValue);
 
-        List<String> removedMeals = rejectMealsFromThreeDaysBack(user);
+        List<String> removedMeals = rejectMealsFromThreeDaysBack(id);
 
         namesOfMatchingMeals = discardMismatchedMeals(namesOfMatchingMeals, removedMeals);
 
@@ -216,9 +208,9 @@ public class FoodDiaryService {
             throw new RequiredMealsNotFoundException("");
         }
 
-        addMatchingMealsToDiary(username, namesOfMatchingMeals, numberOfMeals);
+        addMatchingMealsToDiary(id, namesOfMatchingMeals, numberOfMeals);
 
-        int deficit = totalCalories - getCurrentDiary(username).getTotalCalories();
+        int deficit = totalCalories - getCurrentDiary(id).getTotalCalories();
 
         List<String> fixDeficit = mealService.findNamesOfMatchingMeals(deficit);
 
@@ -226,9 +218,10 @@ public class FoodDiaryService {
             throw new RequiredMealsNotFoundException("");
         }
 
-        addMatchingMealsToDiary(username, namesOfMatchingMeals, 1);
+        addMatchingMealsToDiary(id, namesOfMatchingMeals, 1);
 
-        return getCurrentDiary(username);
+        return getCurrentDiary(id);
     }
+
 
 }

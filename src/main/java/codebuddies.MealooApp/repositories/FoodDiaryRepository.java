@@ -15,12 +15,9 @@ import java.util.Optional;
 @Repository
 public interface FoodDiaryRepository extends JpaRepository<FoodDiary, Long> {
 
-    Optional<List<FoodDiary>> findByDate(LocalDate date);
+    Page<FoodDiary> findByMealooUserId(long mealooUserId, Pageable pageable);
 
-    Page<FoodDiary> findByMealooUser(MealooUser mealooUser, Pageable pageable);
+    List<FoodDiary> findByMealooUserIdAndDateAfter(long mealooUserId, LocalDate after);
 
-
-    Optional<FoodDiary> findByMealooUserAndDate(MealooUser mealooUser, LocalDate date);
-
-    List<FoodDiary> findByMealooUserAndDateAfter(MealooUser mealooUser, LocalDate after);
+    Optional<FoodDiary> findByMealooUserIdAndDate(long mealooUserId, LocalDate date);
 }

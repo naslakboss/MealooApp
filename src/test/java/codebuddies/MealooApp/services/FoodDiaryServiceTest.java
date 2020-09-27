@@ -121,9 +121,9 @@ class FoodDiaryServiceTest {
         listOfMeals3.add(meal1);
         listOfMeals3.add(meal3);
 
-        foodDiary1 = new FoodDiaryDTO(1L, LocalDate.now(), listOfMeals1, new MealMacronutrients(100, 100, 100), 1000, 13.7);
-        foodDiary2 = new FoodDiaryDTO(2L, LocalDate.now(), listOfMeals2, new MealMacronutrients(90, 90, 90), 900, 60.0);
-        foodDiary3 = new FoodDiaryDTO(3L, LocalDate.now(), listOfMeals3, new MealMacronutrients(150, 150, 150), 150, 100.0);
+        foodDiary1 = new FoodDiaryDTO(LocalDate.now(), listOfMeals1, new MealMacronutrients(100, 100, 100), 1000, 13.7, user1);
+        foodDiary2 = new FoodDiaryDTO(LocalDate.now(), listOfMeals2, new MealMacronutrients(90, 90, 90), 900, 60.0, user2);
+        foodDiary3 = new FoodDiaryDTO(LocalDate.now(), listOfMeals3, new MealMacronutrients(150, 150, 150), 150, 100.0, user2);
 
         user1 = new MealooUserDTO(1L, "Admin", "pass", MealooUserRole.ADMIN, "admin@gmail.com"
                 , new NutritionSettings(3500)
@@ -151,11 +151,10 @@ class FoodDiaryServiceTest {
     void shouldReturnAllDiaries() {
         //given
         Pageable pageable = PageRequest.of(0, 3);
-        given(userService.getUserByUsername("Admin")).willReturn(user1);
-        given(diaryService.getAllDiaries("Admin", pageable)).willReturn(createTestPage(listOfDiaries, pageable));
+        given(diaryProvider.getAllDiaries(1, pageable)).willReturn(createTestPage(listOfDiaries, pageable));
 
         //when
-        Page<FoodDiaryDTO> result = diaryService.getAllDiaries("Admin", pageable);
+        Page<FoodDiaryDTO> result = diaryService.getAllDiaries(1, pageable);
 
         //then
         assertAll(
@@ -170,11 +169,10 @@ class FoodDiaryServiceTest {
     void shouldFindCurrentDiaryForUser() {
         //given
         LocalDate currentDate = LocalDate.now();
-        given(userService.getUserByUsername("Admin")).willReturn(user1);
-        given(diaryProvider.getDiaryByDate(user1, currentDate)).willReturn(foodDiary1);
+        given(diaryProvider.getDiaryByDate(1, currentDate)).willReturn(foodDiary1);
 
         //when
-        FoodDiaryDTO currentDiary = diaryService.getCurrentDiary("Admin");
+        FoodDiaryDTO currentDiary = diaryService.getCurrentDiary(1);
 
         //then
         assertThat(currentDiary, sameInstance(foodDiary1));
@@ -186,11 +184,10 @@ class FoodDiaryServiceTest {
         String sDate = "2020-08-20";
         LocalDate date = LocalDate.parse(sDate);
         foodDiary2.setDate(date);
-        given(userService.getUserByUsername("Admin")).willReturn(user1);
-        given(diaryProvider.getDiaryByDate(user1, date)).willReturn(foodDiary2);
+        given(diaryProvider.getDiaryByDate(1, date)).willReturn(foodDiary2);
 
         //when
-        FoodDiaryDTO diary = diaryService.getDiaryByDate("Admin", "2020-08-20");
+        FoodDiaryDTO diary = diaryService.getDiaryByDate(1, "2020-08-20");
 
         //then
         assertThat(diary, sameInstance(foodDiary2));
@@ -200,19 +197,22 @@ class FoodDiaryServiceTest {
     void shouldCreateNewDiary() {
         //given
         LocalDate currentDate = LocalDate.now();
-        given(userService.getUserByUsername("Admin")).willReturn(user1);
-        given(diaryProvider.createDiary(user1, currentDate))
-                .willReturn(new FoodDiaryDTO(5L, currentDate, Collections.emptyList()
-                        , new MealMacronutrients(0, 0, 0), 0, 0.0));
+        FoodDiaryDTO newDiary =
+                new FoodDiaryDTO(currentDate, Collections.emptyList()
+                    ,new MealMacronutrients(0,0,0),
+                0, 0, user1);
+                        newDiary.setId(1L);
+        given(diaryProvider.createDiary(currentDate,user1)).willReturn(newDiary);
+        given(userService.getUserById(1)).willReturn(user1);
 
         //when
-        FoodDiaryDTO newDiary = diaryService.createDiary("Admin");
+        FoodDiaryDTO diary = diaryService.createDiary(1);
 
         //then
         assertAll(
-                () -> assertThat(newDiary.getListOfMeals().size(), equalTo(0)),
-                () -> assertThat(newDiary.getTotalCalories(), equalTo(0)),
-                () -> assertThat(newDiary.getTotalCalories(), equalTo(0))
+                () -> assertThat(diary.getListOfMeals().size(), equalTo(0)),
+                () -> assertThat(diary.getTotalCalories(), equalTo(0)),
+                () -> assertThat(diary.getTotalCalories(), equalTo(0))
         );
 
     }
@@ -266,16 +266,14 @@ class FoodDiaryServiceTest {
     void shouldAddMeal() {
         //given
         LocalDate currentDate = LocalDate.now();
-
-        FoodDiaryDTO foodDiary4 = new FoodDiaryDTO(6L, LocalDate.now(), List.of(meal1, meal2, meal3)
-                , new MealMacronutrients(150, 150, 150), 150, 100.0);
-        given(userService.getUserByUsername("Admin")).willReturn(user1);
         given(mealService.getMealByName("Chicken and Strawberries")).willReturn(meal3);
-        given(diaryProvider.updateDiary(foodDiary1, user1)).willReturn(foodDiary4);
-        given(diaryProvider.getDiaryByDate(user1, currentDate)).willReturn(foodDiary1);
-
+        given(diaryProvider.getDiaryByDate(1, currentDate)).willReturn(foodDiary1);
+        FoodDiaryDTO foodDiary4 =
+                new FoodDiaryDTO(currentDate, List.of(meal1, meal2, meal3)
+                        , new MealMacronutrients(0, 0, 0), 0, 0, user1);
+        given(diaryProvider.updateDiary(foodDiary1)).willReturn(foodDiary4);
         //when
-        FoodDiaryDTO diary4 = diaryService.addMeal("Admin", "Chicken and Strawberries");
+        FoodDiaryDTO diary4 = diaryService.addMeal(1, "Chicken and Strawberries");
 
         //then
         assertAll(
@@ -293,15 +291,14 @@ class FoodDiaryServiceTest {
         listOfAll.add(meal1);
         listOfAll.add(meal2);
         listOfAll.add(meal3);
-        FoodDiaryDTO foodDiary4 = new FoodDiaryDTO(6L, LocalDate.now(), listOfAll
-                , new MealMacronutrients(150, 150, 150), 150, 100.0);
-        given(userService.getUserByUsername("Admin")).willReturn(user1);
+        FoodDiaryDTO foodDiary4 = new FoodDiaryDTO(LocalDate.now(), listOfAll
+                , new MealMacronutrients(150, 150, 150), 150, 100.0, user1);
         given(mealService.getMealByName("Chicken and Strawberries")).willReturn(meal3);
-        given(diaryProvider.updateDiary(foodDiary4, user1)).willReturn(foodDiary1);
-        given(diaryProvider.getDiaryByDate(user1, currentDate)).willReturn(foodDiary4);
+        given(diaryProvider.updateDiary(foodDiary4)).willReturn(foodDiary1);
+        given(diaryProvider.getDiaryByDate(1, currentDate)).willReturn(foodDiary4);
 
         //when
-        FoodDiaryDTO diary4 = diaryService.addMeal("Admin", "Chicken and Strawberries");
+        FoodDiaryDTO diary4 = diaryService.addMeal(1, "Chicken and Strawberries");
 
         //then
         assertAll(
@@ -315,10 +312,10 @@ class FoodDiaryServiceTest {
         //given
         LocalDate threeDaysBack = LocalDate.now().minusDays(3);
         ;
-        given(diaryProvider.rejectMealsFromThreeDaysBack(user1, threeDaysBack)).willReturn(List.of(foodDiary1, foodDiary3));
+        given(diaryProvider.rejectMealsFromThreeDaysBack(1, threeDaysBack)).willReturn(List.of(foodDiary1, foodDiary3));
 
         //when
-        List<String> listOfNames = diaryService.rejectMealsFromThreeDaysBack(user1);
+        List<String> listOfNames = diaryService.rejectMealsFromThreeDaysBack(1);
 
         //then
         assertAll(
@@ -332,11 +329,10 @@ class FoodDiaryServiceTest {
         //given + when
         int totalCalories = -5;
         int numberOfMeals = 5;
-        given(userService.getUserByUsername("Admin")).willReturn(user1);
 
         // then
         assertThrows(IllegalArgumentException.class, () ->
-                diaryService.generateDiet(totalCalories, numberOfMeals, user1.getUsername()));
+                diaryService.generateDiet(totalCalories, numberOfMeals, 1));
     }
 
     @Test
@@ -344,11 +340,10 @@ class FoodDiaryServiceTest {
         //given + when
         int totalCalories = 100001;
         int numberOfMeals = 5;
-        given(userService.getUserByUsername("Admin")).willReturn(user1);
 
         // then
         assertThrows(IllegalArgumentException.class, () ->
-                diaryService.generateDiet(totalCalories, numberOfMeals, user1.getUsername()));
+                diaryService.generateDiet(totalCalories, numberOfMeals, 1));
     }
 
     @Test
@@ -356,11 +351,10 @@ class FoodDiaryServiceTest {
         //given + when
         int totalCalories = 2500;
         int numberOfMeals = 2;
-        given(userService.getUserByUsername("Admin")).willReturn(user1);
 
         // then
         assertThrows(IllegalArgumentException.class, () ->
-                diaryService.generateDiet(totalCalories, numberOfMeals, user1.getUsername()));
+                diaryService.generateDiet(totalCalories, numberOfMeals, 1));
     }
 
     @Test
@@ -368,11 +362,10 @@ class FoodDiaryServiceTest {
         //given + when
         int totalCalories = 2500;
         int numberOfMeals = 10;
-        given(userService.getUserByUsername("Admin")).willReturn(user1);
 
         // then
         assertThrows(IllegalArgumentException.class, () ->
-                diaryService.generateDiet(totalCalories, numberOfMeals, user1.getUsername()));
+                diaryService.generateDiet(totalCalories, numberOfMeals, 1));
     }
 
     @Test
@@ -380,12 +373,11 @@ class FoodDiaryServiceTest {
         //given + when
         int totalCalories = 2500;
         int numberOfMeals = 5;
-        given(userService.getUserByUsername("Admin")).willReturn(user1);
-        given(diaryProvider.getDiaryByDate(user1, LocalDate.now())).willReturn(foodDiary1);
+        given(diaryProvider.getDiaryByDate(1, LocalDate.now())).willReturn(foodDiary1);
 
         // then
         assertThrows(IllegalArgumentException.class, () ->
-                diaryService.generateDiet(totalCalories, numberOfMeals, user1.getUsername()));
+                diaryService.generateDiet(totalCalories, numberOfMeals, 1));
     }
 
     @Test
@@ -393,14 +385,13 @@ class FoodDiaryServiceTest {
         //given + when
         int totalCalories = 2500;
         int numberOfMeals = 5;
-        given(userService.getUserByUsername("Admin")).willReturn(user1);
-        given(diaryProvider.getDiaryByDate(user1, LocalDate.now())).willReturn(foodDiary1);
+        given(diaryProvider.getDiaryByDate(1, LocalDate.now())).willReturn(foodDiary1);
         foodDiary1.setListOfMeals(Collections.emptyList());
         given(mealService.findNamesOfMatchingMeals(500)).willReturn(Collections.emptyList());
 
         // then
         assertThrows(RequiredMealsNotFoundException.class, () ->
-                diaryService.generateDiet(totalCalories, numberOfMeals, user1.getUsername()));
+                diaryService.generateDiet(totalCalories, numberOfMeals, 1));
     }
 
     @Test
@@ -422,6 +413,4 @@ class FoodDiaryServiceTest {
                 () -> assertThat(result, not(hasItem("Rice and Chicken")))
         );
     }
-
-
 }
