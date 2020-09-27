@@ -23,7 +23,6 @@ public class ProductDTO {
     private int caloriesPer100g;
 
     @Valid
-
     private Macronutrients macronutrients;
 
     @NotNull(message = "Product Type is mandatory")
