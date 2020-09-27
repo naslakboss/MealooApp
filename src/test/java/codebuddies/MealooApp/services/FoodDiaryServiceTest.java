@@ -120,6 +120,10 @@ class FoodDiaryServiceTest {
         listOfMeals3.add(meal1);
         listOfMeals3.add(meal3);
 
+        foodDiary1 = new FoodDiaryDTO(1L, LocalDate.now(), listOfMeals1, new MealMacronutrients(100, 100, 100), 1000, 13.7);
+        foodDiary2 = new FoodDiaryDTO(2L, LocalDate.now(), listOfMeals2, new MealMacronutrients(90, 90, 90), 900, 60.0);
+        foodDiary3 = new FoodDiaryDTO(3L, LocalDate.now(), listOfMeals3, new MealMacronutrients(150, 150, 150), 150, 100.0);
+
         user1 = new MealooUserDTO(1L, "Admin", "pass", MealooUserRole.ADMIN, "admin@gmail.com"
                 , new NutritionSettings(3500)
                 , new MealooUserDetails(180, 90, 22, Sex.MALE, PhysicalActivity.HIGH), List.of(foodDiary1, foodDiary2));
@@ -127,10 +131,6 @@ class FoodDiaryServiceTest {
         user2 = new MealooUserDTO(2L, "User", "secret", MealooUserRole.USER, "user@gmail.com"
                 , new NutritionSettings(2500)
                 , new MealooUserDetails(170, 80, 27, Sex.FEMALE, PhysicalActivity.LITTLE), List.of(foodDiary2, foodDiary3));
-
-        foodDiary1 = new FoodDiaryDTO(1L, LocalDate.now(), listOfMeals1, new MealMacronutrients(100, 100, 100), 1000, 13.7);
-        foodDiary2 = new FoodDiaryDTO(2L, LocalDate.now(), listOfMeals2, new MealMacronutrients(90, 90, 90), 900, 60.0);
-        foodDiary3 = new FoodDiaryDTO(3L, LocalDate.now(), listOfMeals3, new MealMacronutrients(150, 150, 150), 150, 100.0);
 
         listOfDiaries = new ArrayList<>();
         listOfDiaries.add(foodDiary1);

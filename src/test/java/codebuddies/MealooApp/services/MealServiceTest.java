@@ -139,7 +139,6 @@ class MealServiceTest {
     void shouldReturnProperMealIfExists() {
         //given
         given(mealProvider.getMealByName("RiceAndChicken")).willReturn(meal1);
-        given(mealProvider.existsByName("RiceAndChicken")).willReturn(true);
 
         //when
         MealDTO meal = mealService.getMealByName("RiceAndChicken");
@@ -149,30 +148,12 @@ class MealServiceTest {
     }
 
     @Test
-    void shouldThrowResourceNotFoundExceptionIfMealDoesNotExistDuringFinding() {
-        //given + when
-        given(mealProvider.existsByName("badName")).willReturn(false);
-
-        //then
-        assertThrows(ResourceNotFoundException.class, () ->
-                mealService.getMealByName("badName"));
-    }
-
-    @Test
     void shouldDeleteMealIfExists() {
-        //given
-        given(mealProvider.existsByName("goodName")).willReturn(true);
-
-        //when
+        //given + when
         mealService.deleteMealByName("goodName");
 
         //then
         verify(mealProvider, times(1)).deleteByName("goodName");
-    }
-
-    @Test
-    void shouldThrowAResourceNotFoundExceptionIfMealIsNotExistsDuringRemoval() {
-        assertThrows(ResourceNotFoundException.class, () -> mealService.deleteMealByName("Cola"));
     }
 
     @Test
@@ -221,8 +202,7 @@ class MealServiceTest {
     @Test
     void shouldCreateNewImageWhenNameOfMealIsCorrect() {
         //given
-        given(mealProvider.existsByName("RiceAndChicken")).willReturn(true);
-        given(mealProvider.getMealByName("RiceAndChicken")).willReturn(meal1);
+         given(mealProvider.getMealByName("RiceAndChicken")).willReturn(meal1);
 
         //when
         MealDTO meal = mealService.addImageToMeal("RiceAndChicken", "filePath");
@@ -231,20 +211,10 @@ class MealServiceTest {
         verify(imageService, times(1)).createNewImage(meal1, "filePath");
     }
 
-    @Test
-    void shouldThrowResourceNotFoundExceptionWhenMealDoesNotExistDuringAddingImage() {
-        //given + when
-        given(mealProvider.existsByName("RiceAndChicken")).willReturn(false);
-
-        //then
-        assertThrows(ResourceNotFoundException.class, () ->
-                mealService.addImageToMeal("RiceAndChicken", "filePath"));
-    }
 
     @Test
     void shouldDeleteImageFromMealIfMealDoesExist() {
         //given
-        given(mealProvider.existsByName("RiceAndChicken")).willReturn(true);
         ImageDTO image = new ImageDTO("fileUrl");
         given(imageService.getImageByFileUrl("fileUrl")).willReturn(image);
 

@@ -172,7 +172,6 @@ class ProductServiceTest {
     @Test
     void shouldDeleteProductWhenProductExists() {
         //given
-        when(productProvider.existsByName("Chicken")).thenReturn(true);
         doNothing().when(productProvider).deleteByName("Chicken");
 
         //when
@@ -182,12 +181,4 @@ class ProductServiceTest {
         verify(productProvider, times(1)).deleteByName("Chicken");
     }
 
-    @Test
-    void shouldThrowAnExceptionDuringRemovalWhenProductDoesNotExist(){
-        //given + when
-        when(productProvider.existsByName("BadName")).thenReturn(false);
-
-        //then
-        assertThrows(ResourceNotFoundException.class, () -> productService.deleteProductByName("BadName"));
-    }
 }

@@ -81,7 +81,6 @@ class MealooUserServiceTest {
     @Test
     void shouldFindUserWhenItDoesExist() {
         //given
-        given(userProvider.existsByUsername("client")).willReturn(true);
         given(userProvider.getUserByUsername("client")).willReturn(user2);
 
         //when
@@ -89,15 +88,6 @@ class MealooUserServiceTest {
 
         //then
         assertThat(user, equalTo(user2));
-    }
-
-    @Test
-    void shouldThrowAResourceNotFoundExceptionWhenUsernameDoesNotExist() {
-        //given + when
-        given(userProvider.existsByUsername("boss")).willReturn(false);
-
-        //then
-        assertThrows(ResourceNotFoundException.class, () -> userService.getUserByUsername("boss"));
     }
 
     @Test
@@ -157,31 +147,17 @@ class MealooUserServiceTest {
 
     @Test
     void shouldDeleteUserIfExists() {
-        //given
-        given(userService.existsByName("User")).willReturn(true);
-
-        //when
+        //given + when
         userService.deleteByUsername("User");
 
         //then
         verify(userProvider, times(1)).deleteUserByUsername("User");
     }
 
-    @Test
-    void shouldThrowResourceNotFoundExceptionWhenUserDoesNotExist() {
-        //given + when
-        given(userProvider.existsByUsername("Yeti")).willReturn(false);
-
-        //then
-        assertThrows(ResourceNotFoundException.class, () ->
-                userService.deleteByUsername("Yeti"));
-    }
-
 
     @Test
     void shouldCalculateBMIAndCaloricDemandAndAlsoReturnSomeInformation() {
         //given
-        given(userProvider.existsByUsername("Admin")).willReturn(true);
         given(userProvider.getUserByUsername("Admin")).willReturn(user1);
         Double bmi = user1.getMealooUserDetails().calculateBMI();
         int caloricDemand = user1.getMealooUserDetails().calculateCaloricDemand();
