@@ -4,7 +4,6 @@ import codebuddies.MealooApp.dto.FoodDiaryDTO;
 import codebuddies.MealooApp.dto.MealooUserDTO;
 import codebuddies.MealooApp.entities.user.FoodDiary;
 import codebuddies.MealooApp.entities.user.MealooUser;
-import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.FoodDiaryRepository;
 
 import org.modelmapper.ModelMapper;
@@ -14,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +44,7 @@ public class FoodDiaryProvider {
 
     public FoodDiaryDTO createDiary(MealooUserDTO userDTO, LocalDate currentDate) {
         MealooUser user = modelMapper.map(userDTO, MealooUser.class);
-        FoodDiary diary = new FoodDiary(new ArrayList<>(), currentDate, user);
+        FoodDiary diary = new FoodDiary(currentDate, user);
         diaryRepository.save(diary);
 
         return modelMapper.map(diary, FoodDiaryDTO.class);

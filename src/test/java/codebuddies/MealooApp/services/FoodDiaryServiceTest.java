@@ -27,6 +27,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -83,7 +84,7 @@ class FoodDiaryServiceTest {
     FoodDiaryService diaryService;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws NoSuchAlgorithmException {
 
         modelMapper = new ModelMapper();
 
@@ -327,62 +328,63 @@ class FoodDiaryServiceTest {
     }
 
     @Test
-    void shouldThrowRunTimeExceptionIfAmountOfCaloriesIsLessThanZero() {
+    void shouldThrowIllegalArgumentExceptionIfAmountOfCaloriesIsLessThanZero() {
         //given + when
         int totalCalories = -5;
         int numberOfMeals = 5;
         given(userService.getUserByUsername("Admin")).willReturn(user1);
 
         // then
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(IllegalArgumentException.class, () ->
                 diaryService.generateDiet(totalCalories, numberOfMeals, user1.getUsername()));
     }
 
     @Test
-    void shouldThrowRunTimeExceptionIfAmountOfCaloriesIsGreaterThanTenThousands() {
+    void shouldThrowIllegalArgumentExceptionIfAmountOfCaloriesIsGreaterThanTenThousands() {
         //given + when
         int totalCalories = 100001;
         int numberOfMeals = 5;
         given(userService.getUserByUsername("Admin")).willReturn(user1);
 
         // then
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(IllegalArgumentException.class, () ->
                 diaryService.generateDiet(totalCalories, numberOfMeals, user1.getUsername()));
     }
 
     @Test
-    void shouldThrowRunTimeExceptionIfNumberOfMealsIsLessThanThree() {
+    void shouldThrowIllegalArgumentExceptionIfNumberOfMealsIsLessThanThree() {
         //given + when
         int totalCalories = 2500;
         int numberOfMeals = 2;
         given(userService.getUserByUsername("Admin")).willReturn(user1);
 
         // then
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(IllegalArgumentException.class, () ->
                 diaryService.generateDiet(totalCalories, numberOfMeals, user1.getUsername()));
     }
 
     @Test
-    void shouldThrowRunTimeExceptionIfNumberOfMealsIsGreaterThan7() {
+    void shouldThrowIllegalArgumentExceptionIfNumberOfMealsIsGreaterThan7() {
         //given + when
         int totalCalories = 2500;
         int numberOfMeals = 10;
         given(userService.getUserByUsername("Admin")).willReturn(user1);
 
         // then
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(IllegalArgumentException.class, () ->
                 diaryService.generateDiet(totalCalories, numberOfMeals, user1.getUsername()));
     }
 
     @Test
-    void shouldThrowRunTimeExceptionIfAnyMealsExistInCurrentDiary() {
+    void shouldThrowIllegalArgumentExceptionIfAnyMealsExistInCurrentDiary() {
         //given + when
         int totalCalories = 2500;
         int numberOfMeals = 5;
         given(userService.getUserByUsername("Admin")).willReturn(user1);
+        given(diaryProvider.getDiaryByDate(user1, LocalDate.now())).willReturn(foodDiary1);
 
         // then
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(IllegalArgumentException.class, () ->
                 diaryService.generateDiet(totalCalories, numberOfMeals, user1.getUsername()));
     }
 

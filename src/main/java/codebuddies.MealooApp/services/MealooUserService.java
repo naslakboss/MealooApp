@@ -54,7 +54,7 @@ public class MealooUserService {
         userProvider.deleteUserByUsername(username);
     }
 
-    public Map calculateBMIAndCaloricDemand(String username) {
+    public Map<String, Double> calculateBMIAndCaloricDemand(String username) {
         MealooUserDTO user = getUserByUsername(username);
         Map<String, Double> result = new LinkedHashMap<>();
         double userBMI = user.getMealooUserDetails()

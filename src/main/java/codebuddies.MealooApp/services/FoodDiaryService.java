@@ -12,13 +12,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.security.SecureRandom.getInstanceStrong;
+
 @Service
 public class FoodDiaryService {
 
+    private Random rand = getInstanceStrong();
 
     private FoodDiaryProvider diaryProvider;
 
@@ -26,7 +30,7 @@ public class FoodDiaryService {
 
     private MealService mealService;
 
-    public FoodDiaryService(FoodDiaryProvider diaryProvider, MealooUserService userService, MealService mealService) {
+    public FoodDiaryService(FoodDiaryProvider diaryProvider, MealooUserService userService, MealService mealService) throws NoSuchAlgorithmException {
         this.diaryProvider = diaryProvider;
         this.userService = userService;
         this.mealService = mealService;
@@ -121,28 +125,25 @@ public class FoodDiaryService {
 
     public void addMatchingMealsToDiary(String username, List<String> namesOfMatchingMeals, int numberOfMeals) {
 
-        Random random = new Random();
-
         for (int i = 0; i < numberOfMeals; i++) {
-            int randomIndex = random.nextInt(namesOfMatchingMeals.size());
+            int randomIndex = rand.nextInt(namesOfMatchingMeals.size());
             addMeal(username, namesOfMatchingMeals.get(randomIndex));
             namesOfMatchingMeals.remove(randomIndex);
         }
     }
 
-
     public FoodDiaryDTO generateDiet(int totalCalories, int numberOfMeals, String username) {
         MealooUserDTO user = userService.getUserByUsername(username);
 
         if (totalCalories < 0 || totalCalories > 10000) {
-            throw new RuntimeException("Total calories should be higher than 0 and less than 10000," +
+            throw new IllegalArgumentException("Total calories should be higher than 0 and less than 10000," +
                     " This app is not created for hulks");
         }
         if (numberOfMeals < 3 || numberOfMeals > 7) {
-            throw new RuntimeException("Numbers of meals should vary from 3 to 7");
+            throw new IllegalArgumentException("Numbers of meals should vary from 3 to 7");
         }
-        if (getCurrentDiary(username).getListOfMeals().size() != 0) {
-            throw new RuntimeException("Meals for present day was already created");
+        if (!getCurrentDiary(username).getListOfMeals().isEmpty()){
+            throw new IllegalArgumentException("Meals for present day was already created");
         }
 
         int perfectCaloricValue = totalCalories / numberOfMeals;
@@ -176,10 +177,10 @@ public class FoodDiaryService {
         MealooUserDTO user = userService.getUserByUsername(username);
 
         if (numberOfMeals < 3 || numberOfMeals > 7) {
-            throw new RuntimeException("Numbers of meals should vary from 3 to 7");
+            throw new IllegalArgumentException("Numbers of meals should vary from 3 to 7");
         }
-        if (getCurrentDiary(username).getListOfMeals().size() != 0) {
-            throw new RuntimeException("Meals for present day was already created");
+        if (!getCurrentDiary(username).getListOfMeals().isEmpty()) {
+            throw new IllegalArgumentException("Meals for present day was already created");
         }
         int totalCalories = user.getNutritionSettings().getDailyCaloricGoal();
 
@@ -199,7 +200,7 @@ public class FoodDiaryService {
                 totalCalories += 500;
                 break;
             default:
-                System.out.println("No weight, or wrong goal has been chosen." +
+                System.err.println("No weight, or wrong goal has been chosen." +
                         " Calculator will be assigned to weight maintenance");
         }
 

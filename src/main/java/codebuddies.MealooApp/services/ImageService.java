@@ -60,6 +60,9 @@ public class ImageService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result.get("url").toString();
+        if (result != null) {
+            return result.get("url").toString();
+        }
+        else throw new RuntimeException("Image could not be uploaded");
     }
 }

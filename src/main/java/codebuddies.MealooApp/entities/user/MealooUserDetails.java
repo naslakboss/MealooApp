@@ -19,16 +19,14 @@ public class MealooUserDetails {
     private PhysicalActivity physicalActivity;
 
     public double calculateBMI(){
-        return weight * 10000/ (height * height);
+        return (double) weight * 10000/ (height * height);
     }
 
     public int calculateCaloricDemand(){
         if(sex == Sex.MALE){
-           int maleDemand = (66 + (14 * weight) + (5 * height) - (6 * age)) * (physicalActivity.getMultiplier()/10);
-           return maleDemand;
+            return (66 + (14 * weight) + (5 * height) - (6 * age)) * (physicalActivity.getMultiplier()/10);
         }
-        int femaleDemand  = (655 + (10 * weight) + (2 * height) - (5 * age)) * (physicalActivity.getMultiplier()/10);
-        return femaleDemand;
+        return (655 + (10 * weight) + (2 * height) - (5 * age)) * (physicalActivity.getMultiplier()/10);
 
     }
 

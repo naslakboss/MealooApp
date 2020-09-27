@@ -10,13 +10,10 @@ public class ProductQuantityValidator implements ConstraintValidator<ProductQuan
 
     @Override
     public boolean isValid(ProductDTO productDTO, ConstraintValidatorContext context) {
-        if(productDTO.getMacronutrients().getProteinsPer100g() + productDTO.getMacronutrients().getCarbohydratesPer100g() > 100
-                || productDTO.getMacronutrients().getProteinsPer100g() + productDTO.getMacronutrients().getFatsPer100g() > 100
-                || productDTO.getMacronutrients().getCarbohydratesPer100g() + productDTO.getMacronutrients().getFatsPer100g() > 100
-                || productDTO.getMacronutrients().getProteinsPer100g() + productDTO.getMacronutrients().getCarbohydratesPer100g()
-                + productDTO.getMacronutrients().getFatsPer100g() > 100){
-            return false;
-        }
-        else return true;
+        return productDTO.getMacronutrients().getProteinsPer100g() + productDTO.getMacronutrients().getCarbohydratesPer100g() <= 100
+                && productDTO.getMacronutrients().getProteinsPer100g() + productDTO.getMacronutrients().getFatsPer100g() <= 100
+                && productDTO.getMacronutrients().getCarbohydratesPer100g() + productDTO.getMacronutrients().getFatsPer100g() <= 100
+                && productDTO.getMacronutrients().getProteinsPer100g() + productDTO.getMacronutrients().getCarbohydratesPer100g()
+                + productDTO.getMacronutrients().getFatsPer100g() <= 100;
     }
 }

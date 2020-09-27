@@ -1,8 +1,7 @@
-package codebuddies.MealooApp.config.security;
+package codebuddies.MealooApp.config;
 
 import codebuddies.MealooApp.repositories.MealooUserRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,8 +14,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    MealooUserRepository mealooUserRepository;
+
+    private MealooUserRepository mealooUserRepository;
+
+    public SecurityConfig(MealooUserRepository mealooUserRepository) {
+        this.mealooUserRepository = mealooUserRepository;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -35,11 +38,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http.authorizeRequests()
-//                .anyRequest().authenticated()
-//                .and().formLogin().defaultSuccessUrl("/meals", true)
-//                .permitAll()
-//                .and().logout().logoutSuccessUrl("/login");
+        http.authorizeRequests()
+                .anyRequest().authenticated()
+                .and().formLogin().defaultSuccessUrl("/meals", true)
+                .permitAll()
+                .and().logout().logoutSuccessUrl("/login");
         http.csrf().disable()
                 .authorizeRequests().anyRequest().permitAll();
     }

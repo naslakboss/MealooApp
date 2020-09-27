@@ -6,13 +6,14 @@ import codebuddies.MealooApp.services.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/products")
-//@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
+@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
 public class ProductController {
 
     ProductService productService;
@@ -42,7 +43,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{name}")
-    public ResponseEntity deleteProduct(@PathVariable String name) {
+    public ResponseEntity<String> deleteProduct(@PathVariable String name) {
         productService.deleteProductByName(name);
         return ResponseEntity.ok("Product " + name + " was successfully deleted from Repository");
     }

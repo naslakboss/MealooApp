@@ -19,7 +19,7 @@ public class FoodDiary {
     @ManyToMany
     private List<Meal> listOfMeals;
 
-    public LocalDate date;
+    private LocalDate date;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JsonIgnore
@@ -34,7 +34,7 @@ public class FoodDiary {
     public FoodDiary() {
     }
 
-    public FoodDiary (List<Meal> listOfMeals, LocalDate date, MealooUser mealooUser) {
+    public FoodDiary (LocalDate date, MealooUser mealooUser) {
         this.listOfMeals = new ArrayList<>();
         this.date = date;
         this.mealooUser = mealooUser;
