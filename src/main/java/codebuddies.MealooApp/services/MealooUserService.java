@@ -1,6 +1,6 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.datamappers.MealooUserProvider;
+import codebuddies.MealooApp.datamappers.MealooUserMapper;
 import codebuddies.MealooApp.dto.MealooUserDTO;
 import codebuddies.MealooApp.entities.user.MealooUserDetails;
 import codebuddies.MealooApp.entities.user.Sex;
@@ -17,10 +17,10 @@ import java.util.*;
 @Service
 public class MealooUserService {
 
-    private MealooUserProvider userProvider;
+    private MealooUserMapper userProvider;
 
 
-    public MealooUserService(MealooUserProvider userProvider) {
+    public MealooUserService(MealooUserMapper userProvider) {
         this.userProvider = userProvider;
     }
 

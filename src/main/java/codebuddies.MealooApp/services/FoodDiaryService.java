@@ -1,6 +1,6 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.datamappers.FoodDiaryProvider;
+import codebuddies.MealooApp.datamappers.FoodDiaryMapper;
 import codebuddies.MealooApp.dto.FoodDiaryDTO;
 import codebuddies.MealooApp.dto.MealDTO;
 import codebuddies.MealooApp.dto.MealooUserDTO;
@@ -24,13 +24,13 @@ public class FoodDiaryService {
 
     private Random rand = getInstanceStrong();
 
-    private FoodDiaryProvider diaryProvider;
+    private FoodDiaryMapper diaryProvider;
 
     private MealooUserService userService;
 
     private MealService mealService;
 
-    public FoodDiaryService(FoodDiaryProvider diaryProvider, MealooUserService userService, MealService mealService) throws NoSuchAlgorithmException {
+    public FoodDiaryService(FoodDiaryMapper diaryProvider, MealooUserService userService, MealService mealService) throws NoSuchAlgorithmException {
         this.diaryProvider = diaryProvider;
         this.userService = userService;
         this.mealService = mealService;

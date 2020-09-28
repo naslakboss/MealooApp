@@ -11,13 +11,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class IngredientProvider {
+public class IngredientMapper {
 
     ModelMapper modelMapper = new ModelMapper();
 
     IngredientRepository ingredientRepository;
 
-    public IngredientProvider(IngredientRepository ingredientRepository) {
+    public IngredientMapper(IngredientRepository ingredientRepository) {
         this.ingredientRepository = ingredientRepository;
     }
 

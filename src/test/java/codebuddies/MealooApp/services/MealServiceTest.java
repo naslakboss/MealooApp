@@ -1,7 +1,7 @@
 package codebuddies.MealooApp.services;
 
 
-import codebuddies.MealooApp.datamappers.MealProvider;
+import codebuddies.MealooApp.datamappers.MealMapper;
 import codebuddies.MealooApp.dto.ImageDTO;
 import codebuddies.MealooApp.dto.IngredientForMealDTO;
 import codebuddies.MealooApp.dto.MealDTO;
@@ -54,7 +54,7 @@ class MealServiceTest {
     IngredientService ingredientService;
 
     @Mock
-    MealProvider mealProvider;
+    MealMapper mealMapper;
 
     Product productEntity1;
     Product productEntity2;
@@ -128,7 +128,7 @@ class MealServiceTest {
         meal3 = mapper.map(mealEntity1, MealDTO.class);
         meals = List.of(meal1, meal2, meal3);
 
-        mealService = new MealService(mealProvider, imageService, ingredientService);
+        mealService = new MealService(mealMapper, imageService, ingredientService);
 
     }
 
@@ -141,7 +141,7 @@ class MealServiceTest {
     void shouldReturnMealList() {
         //given
         Pageable pageable = PageRequest.of(0, 3);
-        when(mealProvider.getAllMeals(pageable)).thenReturn(createTestPage(pageable));
+        when(mealMapper.getAllMeals(pageable)).thenReturn(createTestPage(pageable));
 
         //when
         Page<MealDTO> listOfMeals = mealService.getAllMeals(pageable);
@@ -156,7 +156,7 @@ class MealServiceTest {
     @Test
     void shouldReturnProperMealIfExists() {
         //given
-        given(mealProvider.getMealByName("RiceAndChicken")).willReturn(meal1);
+        given(mealMapper.getMealByName("RiceAndChicken")).willReturn(meal1);
 
         //when
         MealDTO meal = mealService.getMealByName("RiceAndChicken");
@@ -171,13 +171,13 @@ class MealServiceTest {
         mealService.deleteMealByName("goodName");
 
         //then
-        verify(mealProvider, times(1)).deleteByName("goodName");
+        verify(mealMapper, times(1)).deleteByName("goodName");
     }
 
     @Test
     void shouldThrowEntityAlreadyFoundExceptionDuringCreatingMealIfMealOfGivenNameExists() {
         //given + when
-        given(mealProvider.existsByName("RiceAndChicken")).willReturn(true);
+        given(mealMapper.existsByName("RiceAndChicken")).willReturn(true);
 
         //then
         assertThrows(EntityAlreadyFoundException.class, () ->
@@ -187,8 +187,8 @@ class MealServiceTest {
     @Test
     void shouldCreateMealWithProperIngredientsIfMealDidNotExistBefore() {
         //given
-        given(mealProvider.existsByName("RiceAndChicken")).willReturn(false);
-        given(mealProvider.createMeal(meal1)).willReturn(meal1);
+        given(mealMapper.existsByName("RiceAndChicken")).willReturn(false);
+        given(mealMapper.createMeal(meal1)).willReturn(meal1);
 
         //when
         MealDTO createdMeal = mealService.createMeal(meal1);
@@ -205,7 +205,7 @@ class MealServiceTest {
     @Test
     void shouldUpdateMeal() {
         //given
-        given(mealProvider.updateMeal(meal2)).willReturn(meal2);
+        given(mealMapper.updateMeal(meal2)).willReturn(meal2);
 
         //when
         MealDTO updatedMeal = mealService.updateMealByName(meal2, "RiceAndChicken");
@@ -220,7 +220,7 @@ class MealServiceTest {
     @Test
     void shouldCreateNewImageWhenNameOfMealIsCorrect() {
         //given
-         given(mealProvider.getMealByName("RiceAndChicken")).willReturn(meal1);
+         given(mealMapper.getMealByName("RiceAndChicken")).willReturn(meal1);
 
         //when
         MealDTO meal = mealService.addImageToMeal("RiceAndChicken", "filePath");
@@ -326,7 +326,7 @@ class MealServiceTest {
         imagesList.add(image);
         meal1.setImages(imagesList);
 
-        given(mealProvider.getMealByName("RiceAndChicken")).willReturn(meal1);
+        given(mealMapper.getMealByName("RiceAndChicken")).willReturn(meal1);
         //when
 
         mealService.deleteImageFromMeal("RiceAndChicken", "fileUrl");
@@ -338,7 +338,7 @@ class MealServiceTest {
     void shouldReturnNamesOfMatchingMeals() {
         //given
         int perfectCaloricValue = 500;
-        given(mealProvider.findNamesOfMatchingMeals(perfectCaloricValue - 100, perfectCaloricValue + 100))
+        given(mealMapper.findNamesOfMatchingMeals(perfectCaloricValue - 100, perfectCaloricValue + 100))
                 .willReturn(meals);
 
         //when

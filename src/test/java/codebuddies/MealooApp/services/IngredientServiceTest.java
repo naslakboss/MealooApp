@@ -1,6 +1,6 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.datamappers.IngredientProvider;
+import codebuddies.MealooApp.datamappers.IngredientMapper;
 import codebuddies.MealooApp.dto.IngredientForMealDTO;
 import codebuddies.MealooApp.dto.MealDTO;
 import codebuddies.MealooApp.dto.ProductForIngredientDTO;
@@ -33,7 +33,7 @@ import static org.mockito.Mockito.verify;
 class IngredientServiceTest {
 
     @Mock
-    IngredientProvider ingredientProvider;
+    IngredientMapper ingredientMapper;
 
     @Mock
     ProductService productService;
@@ -66,20 +66,20 @@ class IngredientServiceTest {
         meal = new MealDTO("HealthyProduct", ingredientList, 2.2, MealDifficulty.EASY
                 , new MealMacronutrients(2, 40, 1), 192, "Recipe", Collections.emptyList());
 
-        ingredientService = new IngredientService(ingredientProvider, productService);
+        ingredientService = new IngredientService(ingredientMapper, productService);
     }
 
     @Test
     void shouldCreateIngredient() {
         //given
-        given(ingredientProvider.createIngredient(product1, 200)).willReturn(ingredient1);
+        given(ingredientMapper.createIngredient(product1, 200)).willReturn(ingredient1);
 
         //when
         IngredientForMealDTO result = ingredientService.createIngredient(product1, 200);
 
         //then
         assertAll(
-                () -> verify(ingredientProvider, times(1))
+                () -> verify(ingredientMapper, times(1))
                         .createIngredient(product1, 200),
                 () -> assertThat(result.getProduct().getName(), equalTo(product1.getName())),
                 () -> assertThat(result.getAmount(), equalTo(200))

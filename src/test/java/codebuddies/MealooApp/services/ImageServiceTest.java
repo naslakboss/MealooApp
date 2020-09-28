@@ -1,6 +1,6 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.datamappers.ImageProvider;
+import codebuddies.MealooApp.datamappers.ImageMapper;
 import codebuddies.MealooApp.dto.ImageDTO;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 
@@ -24,7 +24,7 @@ import static org.mockito.BDDMockito.*;
 class ImageServiceTest {
 
     @Mock
-    ImageProvider imageProvider;
+    ImageMapper imageMapper;
     @Mock
     Cloudinary cloudinary;
 
@@ -39,14 +39,14 @@ class ImageServiceTest {
                 "api_key", "apiKey",
                 "api_secret", "apiSecret"));
         image = new ImageDTO("fileUrl");
-        imageService = new ImageService(imageProvider);
+        imageService = new ImageService(imageMapper);
     }
 
     @Test
     void shouldReturnImageByUrlIfExists() {
         //given
-        given(imageProvider.existsByFileUrl("fileUrl")).willReturn(true);
-        given(imageProvider.getImageByFileUrl("fileUrl")).willReturn(image);
+        given(imageMapper.existsByFileUrl("fileUrl")).willReturn(true);
+        given(imageMapper.getImageByFileUrl("fileUrl")).willReturn(image);
 
         //when
         ImageDTO result = imageService.getImageByFileUrl("fileUrl");
@@ -58,7 +58,7 @@ class ImageServiceTest {
     @Test
     void shouldThrowResourceNotFoundExceptionIfImageDoesNotExist() {
         //given + when
-        given(imageProvider.existsByFileUrl("fileUrl")).willReturn(false);
+        given(imageMapper.existsByFileUrl("fileUrl")).willReturn(false);
 
         //then
         assertThrows(ResourceNotFoundException.class, () ->

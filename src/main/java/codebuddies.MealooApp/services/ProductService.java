@@ -1,6 +1,6 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.datamappers.ProductProvider;
+import codebuddies.MealooApp.datamappers.ProductMapper;
 import codebuddies.MealooApp.dto.ProductDTO;
 import codebuddies.MealooApp.dto.ProductForIngredientDTO;
 import codebuddies.MealooApp.entities.product.Macronutrients;
@@ -15,26 +15,26 @@ import javax.transaction.Transactional;
 @Service
 public class ProductService {
 
-    ProductProvider productProvider;
+    ProductMapper productMapper;
 
-    public ProductService(ProductProvider productProvider) {
-        this.productProvider = productProvider;
+    public ProductService(ProductMapper productMapper) {
+        this.productMapper = productMapper;
     }
 
     public Page<ProductDTO> getAllProducts(Pageable pageable) {
-        return productProvider.getAllProducts(pageable);
+        return productMapper.getAllProducts(pageable);
     }
 
     public boolean existsByName(String name) {
-        return productProvider.existsByName(name);
+        return productMapper.existsByName(name);
     }
 
     public ProductDTO getProductByName(String name) {
-        return productProvider.getProductByName(name);
+        return productMapper.getProductByName(name);
     }
 
     public ProductForIngredientDTO getProductForIngredientByName(String name) {
-        return productProvider.getProductForIngredientByName(name);
+        return productMapper.getProductForIngredientByName(name);
     }
 
     public ProductDTO createProduct(ProductDTO product) {
@@ -42,7 +42,7 @@ public class ProductService {
             throw new EntityAlreadyFoundException(product.getName());
         }
         calculateCaloriesPer100g(product);
-        return productProvider.createProduct(product);
+        return productMapper.createProduct(product);
     }
 
     public void calculateCaloriesPer100g(ProductDTO product) {
@@ -58,12 +58,12 @@ public class ProductService {
 
     public ProductDTO updateProductByName(ProductDTO product, String name) {
         product.setName(name);
-        return productProvider.updateProduct(product);
+        return productMapper.updateProduct(product);
     }
 
     @Transactional
     public void deleteProductByName(String name) {
-        productProvider.deleteByName(name);
+        productMapper.deleteByName(name);
     }
 
 }

@@ -17,13 +17,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class MealProvider {
+public class MealMapper {
 
     ModelMapper modelMapper = new ModelMapper();
 
     MealRepository mealRepository;
 
-    public MealProvider(MealRepository mealRepository) {
+    public MealMapper(MealRepository mealRepository) {
         this.mealRepository = mealRepository;
     }
 

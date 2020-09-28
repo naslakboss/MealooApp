@@ -1,6 +1,6 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.datamappers.MealProvider;
+import codebuddies.MealooApp.datamappers.MealMapper;
 import codebuddies.MealooApp.dto.*;
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
@@ -21,26 +21,26 @@ public class MealService {
 
     private IngredientService ingredientService;
 
-    private MealProvider mealProvider;
+    private MealMapper mealMapper;
 
     @Autowired
-    public MealService(MealProvider mealProvider, ImageService imageService, IngredientService ingredientService) {
-        this.mealProvider = mealProvider;
+    public MealService(MealMapper mealMapper, ImageService imageService, IngredientService ingredientService) {
+        this.mealMapper = mealMapper;
         this.imageService = imageService;
         this.ingredientService = ingredientService;
     }
 
 
     public Page<MealDTO> getAllMeals(Pageable pageable) {
-        return mealProvider.getAllMeals(pageable);
+        return mealMapper.getAllMeals(pageable);
     }
 
     public boolean existsByName(String name) {
-        return mealProvider.existsByName(name);
+        return mealMapper.existsByName(name);
     }
 
     public MealDTO getMealByName(String name) {
-        return mealProvider.getMealByName(name);
+        return mealMapper.getMealByName(name);
     }
 
     public MealDTO createMeal(MealDTO meal) {
@@ -49,7 +49,7 @@ public class MealService {
         }
         ingredientService.createIngredients(meal);
         calculateData(meal);
-        return mealProvider.createMeal(meal);
+        return mealMapper.createMeal(meal);
     }
 
     protected int calculateProteins(List<IngredientForMealDTO> ingredients) {
@@ -111,12 +111,12 @@ public class MealService {
         meal.setName(name);
         ingredientService.createIngredients(meal);
         calculateData(meal);
-        return mealProvider.updateMeal(meal);
+        return mealMapper.updateMeal(meal);
     }
 
     @Transactional
     public void deleteMealByName(String name) {
-        mealProvider.deleteByName(name);
+        mealMapper.deleteByName(name);
     }
 
     public MealDTO addImageToMeal(String name, String filePath) {
@@ -134,7 +134,7 @@ public class MealService {
     public List<String> findNamesOfMatchingMeals(int perfectCaloricValue) {
         int lowerBorder = perfectCaloricValue - 100;
         int upperBorder = perfectCaloricValue + 100;
-        return mealProvider.findNamesOfMatchingMeals(lowerBorder, upperBorder).stream()
+        return mealMapper.findNamesOfMatchingMeals(lowerBorder, upperBorder).stream()
                 .map(MealDTO::getName).collect(Collectors.toList());
     }
 

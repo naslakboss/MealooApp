@@ -1,6 +1,6 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.datamappers.IngredientProvider;
+import codebuddies.MealooApp.datamappers.IngredientMapper;
 import codebuddies.MealooApp.dto.IngredientForMealDTO;
 import codebuddies.MealooApp.dto.MealDTO;
 import codebuddies.MealooApp.dto.ProductForIngredientDTO;
@@ -14,17 +14,17 @@ import java.util.stream.Collectors;
 @Service
 public class IngredientService {
 
-    IngredientProvider ingredientProvider;
+    IngredientMapper ingredientMapper;
 
     ProductService productService;
 
-    public IngredientService(IngredientProvider ingredientProvider, ProductService productService) {
-        this.ingredientProvider = ingredientProvider;
+    public IngredientService(IngredientMapper ingredientMapper, ProductService productService) {
+        this.ingredientMapper = ingredientMapper;
         this.productService = productService;
     }
 
     public IngredientForMealDTO createIngredient(ProductForIngredientDTO product, Integer productAmount) {
-        return ingredientProvider.createIngredient(product, productAmount);
+        return ingredientMapper.createIngredient(product, productAmount);
     }
 
     public void createIngredients(MealDTO meal) {

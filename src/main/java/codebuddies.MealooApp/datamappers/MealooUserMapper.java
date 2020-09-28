@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class MealooUserProvider {
+public class MealooUserMapper {
 
     private ModelMapper modelMapper = new ModelMapper();
 
     MealooUserRepository userRepository;
 
-    public MealooUserProvider(MealooUserRepository userRepository) {
+    public MealooUserMapper(MealooUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

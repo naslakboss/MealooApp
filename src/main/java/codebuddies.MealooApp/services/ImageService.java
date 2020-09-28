@@ -1,6 +1,6 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.datamappers.ImageProvider;
+import codebuddies.MealooApp.datamappers.ImageMapper;
 import codebuddies.MealooApp.dto.ImageDTO;
 import codebuddies.MealooApp.dto.MealDTO;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
@@ -27,26 +27,26 @@ public class ImageService {
 
     Cloudinary cloudinary = new Cloudinary(ObjectUtils.emptyMap());
 
-    private ImageProvider imageProvider;
+    private ImageMapper imageMapper;
 
-    public ImageService(ImageProvider imageProvider) {
-        this.imageProvider = imageProvider;
+    public ImageService(ImageMapper imageMapper) {
+        this.imageMapper = imageMapper;
     }
 
     private boolean existsByFileUrl(String fileUrl) {
-        return imageProvider.existsByFileUrl(fileUrl);
+        return imageMapper.existsByFileUrl(fileUrl);
     }
 
     public ImageDTO getImageByFileUrl(String fileUrl) {
         if (!existsByFileUrl(fileUrl)) {
             throw new ResourceNotFoundException(fileUrl);
         }
-        return imageProvider.getImageByFileUrl(fileUrl);
+        return imageMapper.getImageByFileUrl(fileUrl);
     }
 
     public void createNewImage(MealDTO mealDTO, String filePath) {
         String imageUrl = uploadFile(filePath);
-        imageProvider.createNewImage(filePath, imageUrl, mealDTO);
+        imageMapper.createNewImage(filePath, imageUrl, mealDTO);
     }
 
     public String uploadFile(String filePath) {

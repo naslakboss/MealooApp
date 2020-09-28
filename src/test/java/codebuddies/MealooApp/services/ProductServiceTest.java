@@ -1,6 +1,6 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.datamappers.ProductProvider;
+import codebuddies.MealooApp.datamappers.ProductMapper;
 import codebuddies.MealooApp.dto.ProductDTO;
 import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.product.ProductType;
@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
 class ProductServiceTest {
 
     @Mock
-    ProductProvider productProvider;
+    ProductMapper productMapper;
 
     ProductDTO product1;
     ProductDTO product2;
@@ -52,7 +52,7 @@ class ProductServiceTest {
 
         products = List.of(product1, product2, product3);
 
-        productService = new ProductService(productProvider);
+        productService = new ProductService(productMapper);
     }
 
     Page<ProductDTO> createTestPage(Pageable pageable){
@@ -64,7 +64,7 @@ class ProductServiceTest {
     void findAllShouldReturnListOfProduct() {
         //given
         Pageable pageable = PageRequest.of(0, 3);
-        when(productProvider.getAllProducts(pageable)).thenReturn(createTestPage(pageable));
+        when(productMapper.getAllProducts(pageable)).thenReturn(createTestPage(pageable));
 
         //when
         Page<ProductDTO> products = productService.getAllProducts(pageable);
@@ -83,7 +83,7 @@ class ProductServiceTest {
     void findByNameShouldReturnProductIfNameIsCorrect(){
         //given
         ProductType grains = ProductType.GRAINS;
-        when(productProvider.getProductByName("Potato")).thenReturn(product1);
+        when(productMapper.getProductByName("Potato")).thenReturn(product1);
 
         //when
         ProductDTO potato = productService.getProductByName("Potato");
@@ -99,7 +99,7 @@ class ProductServiceTest {
     @Test
     void findByNameShouldThrowsAnResourceNotFoundExceptionProductIsNotExists(){
         //given + when
-        when(productProvider.getProductByName("BadName")).thenThrow(ResourceNotFoundException.class);
+        when(productMapper.getProductByName("BadName")).thenThrow(ResourceNotFoundException.class);
 
         //then
         assertThrows(ResourceNotFoundException.class, () -> productService.getProductByName("BadName"));
@@ -108,7 +108,7 @@ class ProductServiceTest {
     @Test
     void saveProductTestOK() {
         //given
-        when(productProvider.createProduct(product3)).thenReturn(product3);
+        when(productMapper.createProduct(product3)).thenReturn(product3);
 
         //when
         ProductDTO product = productService.createProduct(product3);
@@ -124,7 +124,7 @@ class ProductServiceTest {
     @Test
     void shouldReturnTrueIfProductExists(){
         //given + when
-        when(productProvider.existsByName(anyString())).thenReturn(true);
+        when(productMapper.existsByName(anyString())).thenReturn(true);
 
         //then
         assertTrue(productService.existsByName("Lettuce"));
@@ -133,7 +133,7 @@ class ProductServiceTest {
     @Test
     void shouldReturnFalseIfProductNotExists(){
         //given + when
-        when(productProvider.existsByName(anyString())).thenReturn(false);
+        when(productMapper.existsByName(anyString())).thenReturn(false);
 
         //then
         assertFalse(productService.existsByName("Hamburger"));
@@ -144,7 +144,7 @@ class ProductServiceTest {
     @Test
     void shouldThrowAnExceptionWhenProductToUpdateDoesNotExist() {
         //given + when
-        when(productProvider.getProductByName(anyString())).thenThrow(ResourceNotFoundException.class);
+        when(productMapper.getProductByName(anyString())).thenThrow(ResourceNotFoundException.class);
 
         //then
         assertThrows(ResourceNotFoundException.class, () -> productService.getProductByName("FrenchFries"));
@@ -154,7 +154,7 @@ class ProductServiceTest {
     void shouldUpdateProductDataWhenProductExistsAndNewDataFormatIsCorrect() {
         //given
         ProductDTO newData = new ProductDTO("ChickenTenderloin", 18, 90, new Macronutrients(17, 1, 2), ProductType.MEAT);
-        when(productProvider.updateProduct(newData)).thenReturn(newData);
+        when(productMapper.updateProduct(newData)).thenReturn(newData);
 
         //when
         ProductDTO productAfterUpdate = productService.updateProductByName(newData, "Chicken");
@@ -172,13 +172,13 @@ class ProductServiceTest {
     @Test
     void shouldDeleteProductWhenProductExists() {
         //given
-        doNothing().when(productProvider).deleteByName("Chicken");
+        doNothing().when(productMapper).deleteByName("Chicken");
 
         //when
         productService.deleteProductByName("Chicken");
 
         //then
-        verify(productProvider, times(1)).deleteByName("Chicken");
+        verify(productMapper, times(1)).deleteByName("Chicken");
     }
 
 }

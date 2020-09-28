@@ -13,13 +13,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProductProvider {
+public class ProductMapper {
 
     ModelMapper modelMapper = new ModelMapper();
 
     ProductRepository productRepository;
 
-    public ProductProvider(ProductRepository productRepository) {
+    public ProductMapper(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 

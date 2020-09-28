@@ -1,6 +1,6 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.datamappers.FoodDiaryProvider;
+import codebuddies.MealooApp.datamappers.FoodDiaryMapper;
 import codebuddies.MealooApp.dto.FoodDiaryDTO;
 import codebuddies.MealooApp.dto.IngredientForMealDTO;
 import codebuddies.MealooApp.dto.MealDTO;
@@ -44,7 +44,7 @@ class FoodDiaryServiceTest {
     ModelMapper modelMapper;
 
     @Mock
-    FoodDiaryProvider diaryProvider;
+    FoodDiaryMapper diaryProvider;
 
     @Mock
     MealooUserService userService;

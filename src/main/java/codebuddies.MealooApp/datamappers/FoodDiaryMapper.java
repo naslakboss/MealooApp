@@ -19,13 +19,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class FoodDiaryProvider {
+public class FoodDiaryMapper {
 
     private ModelMapper modelMapper = new ModelMapper();
 
     private FoodDiaryRepository diaryRepository;
 
-    public FoodDiaryProvider(FoodDiaryRepository diaryRepository) {
+    public FoodDiaryMapper(FoodDiaryRepository diaryRepository) {
         this.diaryRepository = diaryRepository;
     }
 
