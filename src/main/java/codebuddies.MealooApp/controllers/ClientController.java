@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/client")
 public class ClientController {
 
-    private FoodDiaryService diaryService;
+    private final FoodDiaryService diaryService;
 
     public ClientController(FoodDiaryService diaryService) {
         this.diaryService = diaryService;

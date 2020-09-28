@@ -1,7 +1,6 @@
 package codebuddies.MealooApp.dto;
 
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
-import codebuddies.MealooApp.entities.user.MealooUser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDate;

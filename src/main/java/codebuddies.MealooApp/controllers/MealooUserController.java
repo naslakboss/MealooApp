@@ -15,7 +15,7 @@ import java.util.Map;
 public class MealooUserController {
 
 
-    private MealooUserService userService;
+    private final MealooUserService userService;
 
     public MealooUserController(MealooUserService userService) {
         this.userService = userService;

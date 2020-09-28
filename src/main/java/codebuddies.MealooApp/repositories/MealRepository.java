@@ -12,8 +12,6 @@ import java.util.Optional;
 @Repository
 public interface MealRepository extends JpaRepository<Meal, String> {
 
-    Meal save(Meal meal);
-
     boolean existsByName(String name);
 
     Optional<Meal> findByName(String name);

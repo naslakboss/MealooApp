@@ -22,13 +22,13 @@ import static java.security.SecureRandom.getInstanceStrong;
 @Service
 public class FoodDiaryService {
 
-    private Random rand = getInstanceStrong();
+    private final Random rand = getInstanceStrong();
 
-    private FoodDiaryMapper diaryProvider;
+    private final FoodDiaryMapper diaryProvider;
 
-    private MealooUserService userService;
+    private final MealooUserService userService;
 
-    private MealService mealService;
+    private final MealService mealService;
 
     public FoodDiaryService(FoodDiaryMapper diaryProvider, MealooUserService userService, MealService mealService) throws NoSuchAlgorithmException {
         this.diaryProvider = diaryProvider;
@@ -192,10 +192,10 @@ public class FoodDiaryService {
 
     public int calculateTotalCaloriesAccordingToWeightGoal(WeightGoal weightGoal, int totalCalories){
         switch (weightGoal) {
-            case LOSTHALFKGPERWEEK:
+            case LOSEHALFKGPERWEEK:
                 totalCalories -= 500;
                 break;
-            case LOSTQUARTERKGPERWEEK:
+            case LOSEQUARTERKGPERWEEK:
                 totalCalories -= 250;
                 break;
             case MAINTAIN:

@@ -27,7 +27,7 @@ public class ImageService {
 
     Cloudinary cloudinary = new Cloudinary(ObjectUtils.emptyMap());
 
-    private ImageMapper imageMapper;
+    private final ImageMapper imageMapper;
 
     public ImageService(ImageMapper imageMapper) {
         this.imageMapper = imageMapper;

@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 @Service
 public class MealService {
 
-    private ImageService imageService;
+    private final ImageService imageService;
 
-    private IngredientService ingredientService;
+    private final IngredientService ingredientService;
 
-    private MealMapper mealMapper;
+    private final MealMapper mealMapper;
 
     @Autowired
     public MealService(MealMapper mealMapper, ImageService imageService, IngredientService ingredientService) {
@@ -54,27 +54,27 @@ public class MealService {
 
     protected int calculateProteins(List<IngredientForMealDTO> ingredients) {
         int totalProteins = 0;
-        for (int i = 0; i < ingredients.size(); i++) {
-            totalProteins += ingredients.get(i).getProduct().getMacronutrients().getProteinsPer100g()
-                    * ingredients.get(i).getAmount() / 100;
+        for (IngredientForMealDTO ingredient : ingredients) {
+            totalProteins += ingredient.getProduct().getMacronutrients().getProteinsPer100g()
+                    * ingredient.getAmount() / 100;
         }
         return totalProteins;
     }
 
     protected int calculateCarbohydrates(List<IngredientForMealDTO> ingredients) {
         int totalCarbohydrates = 0;
-        for (int i = 0; i < ingredients.size(); i++) {
-            totalCarbohydrates += ingredients.get(i).getProduct().getMacronutrients().getCarbohydratesPer100g()
-                    * ingredients.get(i).getAmount() / 100;
+        for (IngredientForMealDTO ingredient : ingredients) {
+            totalCarbohydrates += ingredient.getProduct().getMacronutrients().getCarbohydratesPer100g()
+                    * ingredient.getAmount() / 100;
         }
         return totalCarbohydrates;
     }
 
     protected int calculateFats(List<IngredientForMealDTO> ingredients) {
         int totalFats = 0;
-        for (int i = 0; i < ingredients.size(); i++) {
-            totalFats += ingredients.get(i).getProduct().getMacronutrients().getFatsPer100g()
-                    * ingredients.get(i).getAmount() / 100;
+        for (IngredientForMealDTO ingredient : ingredients) {
+            totalFats += ingredient.getProduct().getMacronutrients().getFatsPer100g()
+                    * ingredient.getAmount() / 100;
         }
         return totalFats;
     }
@@ -88,8 +88,8 @@ public class MealService {
     public void calculatePrice(MealDTO meal) {
         List<IngredientForMealDTO> ingredients = meal.getIngredients();
         double totalPrice = 0;
-        for (int i = 0; i < ingredients.size(); i++) {
-            totalPrice += (ingredients.get(i).getProduct().getPrice() * ingredients.get(i).getAmount() / 1000);
+        for (IngredientForMealDTO ingredient : ingredients) {
+            totalPrice += (ingredient.getProduct().getPrice() * ingredient.getAmount() / 1000);
         }
         meal.setPrice(totalPrice);
     }

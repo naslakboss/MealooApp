@@ -17,7 +17,7 @@ import java.util.*;
 @Service
 public class MealooUserService {
 
-    private MealooUserMapper userProvider;
+    private final MealooUserMapper userProvider;
 
 
     public MealooUserService(MealooUserMapper userProvider) {

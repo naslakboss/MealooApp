@@ -12,7 +12,7 @@ import static org.springframework.security.core.userdetails.User.*;
 
 public class MealooUserDetailsService implements UserDetailsService {
 
-    private MealooUserRepository mealooUserRepository;
+    private final MealooUserRepository mealooUserRepository;
 
     public MealooUserDetailsService(MealooUserRepository mealooUserRepository) {
         this.mealooUserRepository = mealooUserRepository;

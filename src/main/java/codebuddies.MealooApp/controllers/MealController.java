@@ -13,7 +13,7 @@ import javax.validation.Valid;
 @RequestMapping("/meals")
 public class MealController {
 
-    private MealService mealService;
+    private final MealService mealService;
 
     public MealController(MealService mealService) {
         this.mealService = mealService;

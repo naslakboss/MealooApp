@@ -85,9 +85,9 @@ public class MealooUserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MealooUserDetails that = (MealooUserDetails) o;
-        return height == that.height &&
-                weight == that.weight &&
-                age == that.age &&
+        return Objects.equals(height, that.height) &&
+                Objects.equals(weight, that.weight) &&
+                Objects.equals(age, that.age) &&
                 sex == that.sex &&
                 physicalActivity == that.physicalActivity;
     }

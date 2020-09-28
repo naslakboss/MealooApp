@@ -3,9 +3,6 @@ package codebuddies.MealooApp.entities.product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,17 +13,13 @@ public class Product {
     @Id
     private String name;
 
-    @NotNull(message = "Product price is mandatory")
-    @Min(value = 0)
     private double price;
 
     private int caloriesPer100g;
 
     @Embedded
-    @Valid
     private Macronutrients macronutrients;
 
-    @NotNull(message = "Product Type is mandatory")
     private ProductType productType;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)

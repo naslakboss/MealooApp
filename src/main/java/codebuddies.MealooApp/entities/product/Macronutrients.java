@@ -10,19 +10,10 @@ import java.util.Objects;
 @Embeddable
 public class Macronutrients {
 
-    @NotNull
-    @Min(value = 0, message = "Amount of Proteins could not be less than 0")
-    @Max(value = 100, message = "Amount of Proteins in 100g of product could not be higher that 100g!")
     private int proteinsPer100g;
 
-    @NotNull
-    @Min(value = 0, message = "Amount of Carbohydrates could not be less than 0")
-    @Max(value = 100, message = "Amount of Carbohydrates in 100g of product could not be higher that 100g!")
     private int carbohydratesPer100g;
 
-    @NotNull
-    @Min(value = 0, message = "Amount of Fats could not be less than 0")
-    @Max(value = 100, message = "Amount of Fats in 100g of product could not be higher that 100g!")
     private int fatsPer100g;
 
     public Macronutrients() {
@@ -56,15 +47,6 @@ public class Macronutrients {
 
     public void setFatsPer100g(int fatPer100g) {
         this.fatsPer100g = fatPer100g;
-    }
-
-    @Override
-    public String toString() {
-        return "Macronutrients{" +
-                "proteinsPer100g=" + proteinsPer100g +
-                ", carbohydratesPer100g=" + carbohydratesPer100g +
-                ", fatsPer100g=" + fatsPer100g +
-                '}';
     }
 
     @Override

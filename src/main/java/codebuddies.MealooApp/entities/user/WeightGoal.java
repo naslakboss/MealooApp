@@ -1,8 +1,8 @@
 package codebuddies.MealooApp.entities.user;
 
 public enum WeightGoal {
-    LOSTHALFKGPERWEEK,
-    LOSTQUARTERKGPERWEEK,
+    LOSEHALFKGPERWEEK,
+    LOSEQUARTERKGPERWEEK,
     MAINTAIN,
     GAINQUARTERKGPERWEEK,
     GAINHALFKGPERWEEK

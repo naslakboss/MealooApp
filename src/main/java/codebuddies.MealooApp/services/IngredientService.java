@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 @Service
 public class IngredientService {
 
-    IngredientMapper ingredientMapper;
+    private final IngredientMapper ingredientMapper;
 
-    ProductService productService;
+    private final ProductService productService;
 
     public IngredientService(IngredientMapper ingredientMapper, ProductService productService) {
         this.ingredientMapper = ingredientMapper;

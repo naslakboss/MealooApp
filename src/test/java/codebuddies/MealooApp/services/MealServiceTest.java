@@ -223,7 +223,7 @@ class MealServiceTest {
          given(mealMapper.getMealByName("RiceAndChicken")).willReturn(meal1);
 
         //when
-        MealDTO meal = mealService.addImageToMeal("RiceAndChicken", "filePath");
+        mealService.addImageToMeal("RiceAndChicken", "filePath");
 
         //then
         verify(imageService, times(1)).createNewImage(meal1, "filePath");

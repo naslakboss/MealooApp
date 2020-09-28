@@ -119,7 +119,7 @@ class MealooUserServiceTest {
         given(userProvider.existsByUsername("Admin")).willReturn(true);
         given(userProvider.getUserByUsername("Admin")).willReturn(user1);
 
-        MealooUserDTO user3 = new MealooUserDTO(3L, "Menager", "secretPIN", MealooUserRole.MODERATOR, "manager@gmail.com"
+        MealooUserDTO user3 = new MealooUserDTO(3L, "Manager", "secretPIN", MealooUserRole.MODERATOR, "manager@gmail.com"
                 , new NutritionSettings(3000)
                 , new MealooUserDetails(178, 85, 30, Sex.FEMALE, PhysicalActivity.NONE), Collections.emptyList());
         given(userProvider.updateUser(user3)).willReturn(user3);
@@ -162,11 +162,7 @@ class MealooUserServiceTest {
         double bmi = userService.calculateBMI(user1);
 
         //then
-        assertAll(
-                () -> assertThat(bmi, greaterThan(15.0)),
-                () -> assertThat(bmi, lessThan(33.0))
-        );
-
+        assertThat(bmi, equalTo(expectedResult));
     }
 
     @Test

@@ -143,8 +143,7 @@ class FoodDiaryServiceTest {
     }
 
     Page<FoodDiaryDTO> createTestPage(List<FoodDiaryDTO> listOfDiaries, Pageable pageable) {
-        List<FoodDiaryDTO> diaries = listOfDiaries;
-        return new PageImpl<>(diaries, pageable, diaries.size());
+        return new PageImpl<>(listOfDiaries, pageable, listOfDiaries.size());
     }
 
     @Test
@@ -298,7 +297,7 @@ class FoodDiaryServiceTest {
         given(diaryProvider.getDiaryByDate(1, currentDate)).willReturn(foodDiary4);
 
         //when
-        FoodDiaryDTO diary4 = diaryService.addMeal(1, "Chicken and Strawberries");
+        FoodDiaryDTO diary4 = diaryService.deleteMeal(1, "Chicken and Strawberries");
 
         //then
         assertAll(
@@ -311,7 +310,6 @@ class FoodDiaryServiceTest {
     void shouldReturnNamesOfMealsUsedThreeDaysBack() {
         //given
         LocalDate threeDaysBack = LocalDate.now().minusDays(3);
-        ;
         given(diaryProvider.rejectMealsFromThreeDaysBack(1, threeDaysBack)).willReturn(List.of(foodDiary1, foodDiary3));
 
         //when
@@ -393,6 +391,72 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    void shouldSubtract500CaloriesIfHalfKgLossIsSelected(){
+        //given
+        int totalCalories = 1000;
+
+        //when
+        int result = diaryService.calculateTotalCaloriesAccordingToWeightGoal
+                (WeightGoal.LOSEHALFKGPERWEEK, totalCalories);
+
+        //then
+        assertThat(result, equalTo(totalCalories - 500));
+    }
+
+    @Test
+    void shouldSubtract250CaloriesIfQuarterKgLossIsSelected(){
+        //given
+        int totalCalories = 1000;
+
+        //when
+        int result = diaryService.calculateTotalCaloriesAccordingToWeightGoal
+                (WeightGoal.LOSEQUARTERKGPERWEEK, totalCalories);
+
+        //then
+        assertThat(result, equalTo(totalCalories - 250));
+    }
+
+    @Test
+    void shouldLeftInitialCaloriesIfMaintainIsSelected(){
+        //given
+        int totalCalories = 1000;
+
+        //when
+        int result = diaryService.calculateTotalCaloriesAccordingToWeightGoal
+                (WeightGoal.MAINTAIN, totalCalories);
+
+        //then
+        assertThat(result, equalTo(totalCalories));
+    }
+
+    @Test
+    void shouldAdd250CaloriesIfQuarterKgGainIsSelected(){
+        //given
+        int totalCalories = 1000;
+
+        //when
+        int result = diaryService.calculateTotalCaloriesAccordingToWeightGoal
+                (WeightGoal.GAINQUARTERKGPERWEEK, totalCalories);
+
+        //then
+        assertThat(result, equalTo(totalCalories + 250));
+    }
+
+    @Test
+    void shouldAdd500CaloriesIfHalfKgGainIsSelected(){
+        //given
+        int totalCalories = 1000;
+
+        //when
+        int result = diaryService.calculateTotalCaloriesAccordingToWeightGoal
+                (WeightGoal.GAINHALFKGPERWEEK, totalCalories);
+
+        //then
+        assertThat(result, equalTo(totalCalories + 500));
+    }
+
+
+    @Test
     void shouldDiscardMismatchedMeals() {
         //given
         List<String> matchingMeals = new ArrayList<>();
@@ -400,7 +464,6 @@ class FoodDiaryServiceTest {
         matchingMeals.add("Scrambled Eggs");
         matchingMeals.add("Rice and Strawberry");
         matchingMeals.add("Hamburger");
-        List<String> rejectedMeals = List.of("Rice and Chicken", "Rice and Strawberry");
         given(mealService.findNamesOfMatchingMeals(500)).willReturn(matchingMeals);
         given(diaryProvider.rejectMealsFromThreeDaysBack(1, LocalDate.now().minusDays(3))).willReturn(Collections.singletonList(foodDiary1));
         //when

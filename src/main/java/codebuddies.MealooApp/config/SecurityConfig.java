@@ -14,8 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-
-    private MealooUserRepository mealooUserRepository;
+    private final MealooUserRepository mealooUserRepository;
 
     public SecurityConfig(MealooUserRepository mealooUserRepository) {
         this.mealooUserRepository = mealooUserRepository;

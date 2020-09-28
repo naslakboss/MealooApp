@@ -6,6 +6,7 @@ import codebuddies.MealooApp.dto.ProductForIngredientDTO;
 import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import javax.transaction.Transactional;
 @Service
 public class ProductService {
 
-    ProductMapper productMapper;
+    private final ProductMapper productMapper;
 
     public ProductService(ProductMapper productMapper) {
         this.productMapper = productMapper;
@@ -57,6 +58,9 @@ public class ProductService {
     }
 
     public ProductDTO updateProductByName(ProductDTO product, String name) {
+        if(!existsByName(name)){
+            throw new ResourceNotFoundException(name);
+        }
         product.setName(name);
         return productMapper.updateProduct(product);
     }
