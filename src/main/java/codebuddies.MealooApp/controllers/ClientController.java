@@ -18,7 +18,7 @@ public class ClientController {
         this.diaryService = diaryService;
     }
 
-    @GetMapping("/{id}/diaries")
+    @GetMapping( path = "/{id}/diaries")
     public ResponseEntity<Page<FoodDiaryDTO>> getAllDiaries(@PathVariable int id, Pageable pageable) {
         return ResponseEntity.ok(diaryService.getAllDiaries(id, pageable));
     }
