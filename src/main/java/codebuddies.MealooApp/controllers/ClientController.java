@@ -3,16 +3,13 @@ package codebuddies.MealooApp.controllers;
 import codebuddies.MealooApp.dto.FoodDiaryDTO;
 import codebuddies.MealooApp.entities.user.WeightGoal;
 import codebuddies.MealooApp.services.FoodDiaryService;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/client")
-//@PreAuthorize("#username == authentication.principal.username or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
 public class ClientController {
 
     private FoodDiaryService diaryService;

@@ -2,11 +2,9 @@ package codebuddies.MealooApp.controllers;
 
 import codebuddies.MealooApp.dto.MealDTO;
 import codebuddies.MealooApp.services.MealService;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -41,7 +39,6 @@ public class MealController {
         return ResponseEntity.ok(mealService.addImageToMeal(name, filePath));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
     @DeleteMapping("/{name}/image")
     public ResponseEntity<String> deleteImage(@PathVariable String name, @RequestParam("fileUrl") String fileUrl) {
         mealService.deleteImageFromMeal(name, fileUrl);
@@ -53,7 +50,6 @@ public class MealController {
         return ResponseEntity.ok(mealService.updateMealByName(meal, name));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
     @DeleteMapping("/{name}")
     public ResponseEntity<String> deleteMeal(@PathVariable String name) {
         mealService.deleteMealByName(name);
