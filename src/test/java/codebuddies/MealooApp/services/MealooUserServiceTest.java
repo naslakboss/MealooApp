@@ -22,7 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -142,7 +142,7 @@ class MealooUserServiceTest {
 
         //then
         assertThrows(ResourceNotFoundException.class, () ->
-                userService.updateUserByUsername(any(MealooUserDTO.class), "Jasiek"));
+                userService.updateUserByUsername(any(), "Jasiek"));
     }
 
     @Test
@@ -154,16 +154,43 @@ class MealooUserServiceTest {
         verify(userProvider, times(1)).deleteUserByUsername("User");
     }
 
+    @Test
+    void shouldCalculateProperBMI(){
+        //given + when
+        MealooUserDetails userDetails = user1.getMealooUserDetails();
+        double expectedResult = (double) userDetails.getWeight() * 10000 / Math.pow(userDetails.getHeight(),2);
+        double bmi = userService.calculateBMI(user1);
+
+        //then
+        assertAll(
+                () -> assertThat(bmi, greaterThan(15.0)),
+                () -> assertThat(bmi, lessThan(33.0))
+        );
+
+    }
 
     @Test
-    void shouldCalculateBMIAndCaloricDemandAndAlsoReturnSomeInformation() {
+    void shouldCalculateProperCaloricDemandForManIfSexEqualsToMale(){
+        //given + when
+        MealooUserDetails details = user1.getMealooUserDetails();
+        int expectedResult = (66 + (14 * details.getWeight()) + (5 * details.getHeight())
+                - (6 * details.getAge())) * (details.getPhysicalActivity().getMultiplier()/10);
+        int caloricDemand = userService.calculateCaloricDemand(user1);
+
+        //then
+        assertThat(caloricDemand, equalTo(expectedResult));
+    }
+
+
+    @Test
+    void shouldReturnBMIAndCaloricDemandAndAlsoReturnSomeInformation() {
         //given
         given(userProvider.getUserByUsername("Admin")).willReturn(user1);
-        Double bmi = user1.getMealooUserDetails().calculateBMI();
-        int caloricDemand = user1.getMealooUserDetails().calculateCaloricDemand();
+        Double bmi = userService.calculateBMI(user1);
+        int caloricDemand = userService.calculateCaloricDemand(user1);
 
         //when
-        Map result = userService.calculateBMIAndCaloricDemand("Admin");
+        Map<String, Double> result = userService.giveBMIAndCaloricDemandInformation("Admin");
 
         //then
         assertAll(

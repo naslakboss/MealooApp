@@ -56,7 +56,7 @@ public class MealooUserController {
 
     @GetMapping("/{username}/calculate")
     public ResponseEntity<Map<String, Double>> calculateBMI(@PathVariable String username) {
-        return ResponseEntity.ok(userService.calculateBMIAndCaloricDemand(username));
+        return ResponseEntity.ok(userService.giveBMIAndCaloricDemandInformation(username));
     }
 
 

@@ -2,6 +2,8 @@ package codebuddies.MealooApp.services;
 
 import codebuddies.MealooApp.dataproviders.MealooUserProvider;
 import codebuddies.MealooApp.dto.MealooUserDTO;
+import codebuddies.MealooApp.entities.user.MealooUserDetails;
+import codebuddies.MealooApp.entities.user.Sex;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 
@@ -58,21 +60,34 @@ public class MealooUserService {
         userProvider.deleteUserByUsername(username);
     }
 
-    public Map<String, Double> calculateBMIAndCaloricDemand(String username) {
+    public double calculateBMI(MealooUserDTO mealooUserDTO){
+        MealooUserDetails userDetails = mealooUserDTO.getMealooUserDetails();
+        return (double) userDetails.getWeight() * 10000 / Math.pow(userDetails.getHeight(),2);
+    }
+
+    public int calculateCaloricDemand(MealooUserDTO mealooUserDTO){
+        MealooUserDetails userDetails = mealooUserDTO.getMealooUserDetails();
+        if(userDetails.getSex() == Sex.MALE){
+            return (66 + (14 * userDetails.getWeight()) + (5 * userDetails.getHeight())
+                    - (6 * userDetails.getAge())) * (userDetails.getPhysicalActivity().getMultiplier()/10);
+        }
+        return (655 + (10 * userDetails.getWeight()) + (2 * userDetails.getHeight())
+                - (5 * userDetails.getAge())) * (userDetails.getPhysicalActivity().getMultiplier()/10);
+    }
+    public Map<String, Double> giveBMIAndCaloricDemandInformation(String username) {
         MealooUserDTO user = getUserByUsername(username);
         Map<String, Double> result = new LinkedHashMap<>();
-        double userBMI = user.getMealooUserDetails()
-                .calculateBMI();
 
+        double userBMI = calculateBMI(user);
         result.put("Your BMI is : ", userBMI);
-
-        double caloricDemand = user.getMealooUserDetails().calculateCaloricDemand();
-
         result.put("Correct BMI for untrained people is from ", 18.5);
         result.put("to ", 25.0);
+
+        double caloricDemand = calculateCaloricDemand(user);
         result.put("Your caloric demand is :", caloricDemand);
         result.put("To gain about 0.5kg per week, eat about", caloricDemand + 500);
         result.put("To lose about 0.5kg per week, eat about", caloricDemand - 500);
+
         return result;
     }
 

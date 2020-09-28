@@ -48,6 +48,7 @@ public class MealService {
             throw new EntityAlreadyFoundException(meal.getName());
         }
         ingredientService.createIngredients(meal);
+
         return mealProvider.createMeal(meal);
     }
 

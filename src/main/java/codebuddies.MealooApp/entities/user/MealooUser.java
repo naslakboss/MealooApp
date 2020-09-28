@@ -44,15 +44,6 @@ public class MealooUser {
     public MealooUser() {
     }
 
-    public MealooUser(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.mealooUserRole = MealooUserRole.USER;
-        this.nutritionSettings = new NutritionSettings(0);
-        this.mealooUserDetails = new MealooUserDetails(0,0,0, Sex.MALE, PhysicalActivity.LITTLE);
-    }
-
     public MealooUser(Long id, String username, String password, String email,
                       NutritionSettings nutritionSettings,
                       MealooUserDetails mealooUserDetails) {
