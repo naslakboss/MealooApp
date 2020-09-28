@@ -1,6 +1,6 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.dataproviders.FoodDiaryProvider;
+import codebuddies.MealooApp.datamappers.FoodDiaryProvider;
 import codebuddies.MealooApp.dto.FoodDiaryDTO;
 import codebuddies.MealooApp.dto.IngredientForMealDTO;
 import codebuddies.MealooApp.dto.MealDTO;
@@ -373,7 +373,6 @@ class FoodDiaryServiceTest {
         //given + when
         int totalCalories = 2500;
         int numberOfMeals = 5;
-        given(diaryProvider.getDiaryByDate(1, LocalDate.now())).willReturn(foodDiary1);
 
         // then
         assertThrows(IllegalArgumentException.class, () ->
@@ -387,11 +386,10 @@ class FoodDiaryServiceTest {
         int numberOfMeals = 5;
         given(diaryProvider.getDiaryByDate(1, LocalDate.now())).willReturn(foodDiary1);
         foodDiary1.setListOfMeals(Collections.emptyList());
-        given(mealService.findNamesOfMatchingMeals(500)).willReturn(Collections.emptyList());
 
         // then
         assertThrows(RequiredMealsNotFoundException.class, () ->
-                diaryService.generateDiet(totalCalories, numberOfMeals, 1));
+                diaryService.generateDiet(numberOfMeals, totalCalories, 1));
     }
 
     @Test
@@ -403,9 +401,10 @@ class FoodDiaryServiceTest {
         matchingMeals.add("Rice and Strawberry");
         matchingMeals.add("Hamburger");
         List<String> rejectedMeals = List.of("Rice and Chicken", "Rice and Strawberry");
-
+        given(mealService.findNamesOfMatchingMeals(500)).willReturn(matchingMeals);
+        given(diaryProvider.rejectMealsFromThreeDaysBack(1, LocalDate.now().minusDays(3))).willReturn(Collections.singletonList(foodDiary1));
         //when
-        List<String> result = diaryService.discardMismatchedMeals(matchingMeals, rejectedMeals);
+        List<String> result = diaryService.discardMismatchedMeals(500, 1);
 
         //then
         assertAll(

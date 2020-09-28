@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
-@PreAuthorize("#username == authentication.principal.username or hasRole('ROLE_ADMIN')")
+//@PreAuthorize("#username == authentication.principal.username or hasRole('ROLE_ADMIN')")
 public class MealooUserController {
 
 

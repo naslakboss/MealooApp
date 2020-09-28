@@ -1,4 +1,4 @@
-package codebuddies.MealooApp.dataproviders;
+package codebuddies.MealooApp.datamappers;
 
 import codebuddies.MealooApp.dto.ImageDTO;
 import codebuddies.MealooApp.dto.MealDTO;

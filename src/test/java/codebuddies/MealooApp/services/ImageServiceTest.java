@@ -1,6 +1,6 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.dataproviders.ImageProvider;
+import codebuddies.MealooApp.datamappers.ImageProvider;
 import codebuddies.MealooApp.dto.ImageDTO;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 

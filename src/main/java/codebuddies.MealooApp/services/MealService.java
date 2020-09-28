@@ -1,8 +1,8 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.dataproviders.MealProvider;
-import codebuddies.MealooApp.dto.ImageDTO;
-import codebuddies.MealooApp.dto.MealDTO;
+import codebuddies.MealooApp.datamappers.MealProvider;
+import codebuddies.MealooApp.dto.*;
+import codebuddies.MealooApp.entities.meal.MealMacronutrients;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,12 +48,69 @@ public class MealService {
             throw new EntityAlreadyFoundException(meal.getName());
         }
         ingredientService.createIngredients(meal);
-
+        calculateData(meal);
         return mealProvider.createMeal(meal);
     }
 
+    protected int calculateProteins(List<IngredientForMealDTO> ingredients) {
+        int totalProteins = 0;
+        for (int i = 0; i < ingredients.size(); i++) {
+            totalProteins += ingredients.get(i).getProduct().getMacronutrients().getProteinsPer100g()
+                    * ingredients.get(i).getAmount() / 100;
+        }
+        return totalProteins;
+    }
+
+    protected int calculateCarbohydrates(List<IngredientForMealDTO> ingredients) {
+        int totalCarbohydrates = 0;
+        for (int i = 0; i < ingredients.size(); i++) {
+            totalCarbohydrates += ingredients.get(i).getProduct().getMacronutrients().getCarbohydratesPer100g()
+                    * ingredients.get(i).getAmount() / 100;
+        }
+        return totalCarbohydrates;
+    }
+
+    protected int calculateFats(List<IngredientForMealDTO> ingredients) {
+        int totalFats = 0;
+        for (int i = 0; i < ingredients.size(); i++) {
+            totalFats += ingredients.get(i).getProduct().getMacronutrients().getFatsPer100g()
+                    * ingredients.get(i).getAmount() / 100;
+        }
+        return totalFats;
+    }
+    void calculateMealMacronutrients(MealDTO meal) {
+        List<IngredientForMealDTO> ingredients = meal.getIngredients();
+        meal.setMealMacronutrients(new MealMacronutrients
+                (calculateProteins(ingredients), calculateCarbohydrates(ingredients), calculateFats(ingredients)));
+
+    }
+
+    public void calculatePrice(MealDTO meal) {
+        List<IngredientForMealDTO> ingredients = meal.getIngredients();
+        double totalPrice = 0;
+        for (int i = 0; i < ingredients.size(); i++) {
+            totalPrice += (ingredients.get(i).getProduct().getPrice() * ingredients.get(i).getAmount() / 1000);
+        }
+        meal.setPrice(totalPrice);
+    }
+
+    void calculateTotalCalories(MealDTO meal) {
+        List<IngredientForMealDTO> ingredients = meal.getIngredients();
+        int totalCalories = (calculateCarbohydrates(ingredients) * 4) + (calculateProteins(ingredients) * 4) + (calculateFats(ingredients) * 9);
+        meal.setTotalCalories(totalCalories);
+    }
+
+    public void calculateData(MealDTO meal){
+        calculateMealMacronutrients(meal);
+        calculatePrice(meal);
+        calculateTotalCalories(meal);
+    }
+
+
     public MealDTO updateMealByName(MealDTO meal, String name) {
         meal.setName(name);
+        ingredientService.createIngredients(meal);
+        calculateData(meal);
         return mealProvider.updateMeal(meal);
     }
 

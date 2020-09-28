@@ -1,5 +1,8 @@
 package codebuddies.MealooApp.dto;
 
+import codebuddies.MealooApp.entities.product.Macronutrients;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class ProductForIngredientDTO {
 
     String name;
@@ -8,13 +11,17 @@ public class ProductForIngredientDTO {
 
     int caloriesPer100g;
 
+    @JsonIgnore
+    Macronutrients macronutrients;
+
     public ProductForIngredientDTO() {
     }
 
-    public ProductForIngredientDTO(String name, double price, int caloriesPer100g) {
+    public ProductForIngredientDTO(String name, double price, int caloriesPer100g, Macronutrients macronutrients) {
         this.name = name;
         this.price = price;
         this.caloriesPer100g = caloriesPer100g;
+        this.macronutrients = macronutrients;
 
     }
 
@@ -42,5 +49,11 @@ public class ProductForIngredientDTO {
         this.caloriesPer100g = caloriesPer100g;
     }
 
+    public Macronutrients getMacronutrients() {
+        return macronutrients;
+    }
 
+    public void setMacronutrients(Macronutrients macronutrients) {
+        this.macronutrients = macronutrients;
+    }
 }

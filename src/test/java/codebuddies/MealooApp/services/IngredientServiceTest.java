@@ -1,12 +1,13 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.dataproviders.IngredientProvider;
+import codebuddies.MealooApp.datamappers.IngredientProvider;
 import codebuddies.MealooApp.dto.IngredientForMealDTO;
 import codebuddies.MealooApp.dto.MealDTO;
 import codebuddies.MealooApp.dto.ProductForIngredientDTO;
 import codebuddies.MealooApp.entities.meal.MealDifficulty;
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
 
+import codebuddies.MealooApp.entities.product.Macronutrients;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,8 +53,8 @@ class IngredientServiceTest {
     @BeforeEach
     void setUp() {
 
-        product1 = new ProductForIngredientDTO("Carrot", 5.0, 41);
-        product2 = new ProductForIngredientDTO("Apple", 6.0, 56);
+        product1 = new ProductForIngredientDTO("Carrot", 5.0, 41, new Macronutrients(1,12,0));
+        product2 = new ProductForIngredientDTO("Apple", 6.0, 56, new Macronutrients(1, 16, 1));
 
         ingredient1 = new IngredientForMealDTO(product1, 200);
         ingredient2 = new IngredientForMealDTO(product2, 300);

@@ -1,4 +1,4 @@
-package codebuddies.MealooApp.dataproviders;
+package codebuddies.MealooApp.datamappers;
 
 import codebuddies.MealooApp.dto.MealooUserDTO;
 import codebuddies.MealooApp.entities.user.MealooUser;

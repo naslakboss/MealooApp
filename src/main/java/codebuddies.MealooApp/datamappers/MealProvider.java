@@ -1,4 +1,4 @@
-package codebuddies.MealooApp.dataproviders;
+package codebuddies.MealooApp.datamappers;
 
 import codebuddies.MealooApp.dto.MealDTO;
 import codebuddies.MealooApp.entities.meal.Meal;
@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,10 +48,10 @@ public class MealProvider {
                 .map(ingredient -> modelMapper.map(ingredient, Ingredient.class))
                 .collect(Collectors.toList());
 
-        Meal newMeal = mealRepository.save(
-                new Meal(meal.getName(), ingredients, meal.getMealDifficulty(), meal.getRecipe()));
+        Meal createdMeal = new Meal(meal.getName(), ingredients, meal.getPrice(), meal.getMealDifficulty(),
+                meal.getRecipe(), meal.getMealMacronutrients(), meal.getTotalCalories(), new ArrayList<>(), new ArrayList<>());
 
-        return modelMapper.map(newMeal, MealDTO.class);
+        return modelMapper.map(createdMeal, MealDTO.class);
     }
 
     public MealDTO updateMeal(MealDTO updatedMeal) {

@@ -1,6 +1,6 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.dataproviders.ProductProvider;
+import codebuddies.MealooApp.datamappers.ProductProvider;
 import codebuddies.MealooApp.dto.ProductDTO;
 import codebuddies.MealooApp.dto.ProductForIngredientDTO;
 import codebuddies.MealooApp.entities.product.Macronutrients;

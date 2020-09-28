@@ -1,4 +1,4 @@
-package codebuddies.MealooApp.dataproviders;
+package codebuddies.MealooApp.datamappers;
 
 import codebuddies.MealooApp.dto.ProductDTO;
 import codebuddies.MealooApp.dto.ProductForIngredientDTO;

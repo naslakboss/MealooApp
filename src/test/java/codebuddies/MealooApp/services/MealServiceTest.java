@@ -1,11 +1,14 @@
 package codebuddies.MealooApp.services;
 
 
-import codebuddies.MealooApp.dataproviders.MealProvider;
+import codebuddies.MealooApp.datamappers.MealProvider;
 import codebuddies.MealooApp.dto.ImageDTO;
+import codebuddies.MealooApp.dto.IngredientForMealDTO;
 import codebuddies.MealooApp.dto.MealDTO;
+import codebuddies.MealooApp.dto.ProductForIngredientDTO;
 import codebuddies.MealooApp.entities.meal.Meal;
 import codebuddies.MealooApp.entities.meal.MealDifficulty;
+import codebuddies.MealooApp.entities.meal.MealMacronutrients;
 import codebuddies.MealooApp.entities.product.Ingredient;
 import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.product.Product;
@@ -53,13 +56,21 @@ class MealServiceTest {
     @Mock
     MealProvider mealProvider;
 
-    Product product1;
-    Product product2;
-    Product product3;
+    Product productEntity1;
+    Product productEntity2;
+    Product productEntity3;
 
-    Ingredient ingredient1;
-    Ingredient ingredient2;
-    Ingredient ingredient3;
+    ProductForIngredientDTO product1;
+    ProductForIngredientDTO product2;
+    ProductForIngredientDTO product3;
+
+    Ingredient ingredientEntity1;
+    Ingredient ingredientEntity2;
+    Ingredient ingredientEntity3;
+
+    IngredientForMealDTO ingredient1;
+    IngredientForMealDTO ingredient2;
+    IngredientForMealDTO ingredient3;
 
     List<Ingredient> listOfIngredients1;
     List<Ingredient> listOfIngredients2;
@@ -82,30 +93,39 @@ class MealServiceTest {
 
         mapper = new ModelMapper();
 
-        product1 = new Product("Rice", 5
+        productEntity1 = new Product("Rice", 5
                 , new Macronutrients(7, 79, 1), 357, ProductType.GRAINS);
-        product2 = new Product("Chicken", 12
+        productEntity2 = new Product("Chicken", 12
                 , new Macronutrients(22, 1, 4), 121, ProductType.MEAT);
-        product3 = new Product("Strawberry", 8
+        productEntity3 = new Product("Strawberry", 8
                 , new Macronutrients(1, 8, 0), 32, ProductType.GRAINS);
 
-        ingredient1 = new Ingredient(100, product1);
-        ingredient2 = new Ingredient(200, product2);
-        ingredient3 = new Ingredient(500, product3);
+        product1 = mapper.map(productEntity1, ProductForIngredientDTO.class);
+        product2 = mapper.map(productEntity2, ProductForIngredientDTO.class);
+        product3 = mapper.map(productEntity3, ProductForIngredientDTO.class);
 
-        listOfIngredients1 = Arrays.asList(ingredient1, ingredient2);
-        listOfIngredients2 = Arrays.asList(ingredient1, ingredient3);
-        listOfIngredients3 = Arrays.asList(ingredient2, ingredient3);
+        ingredientEntity1 = new Ingredient(100, productEntity1);
+        ingredientEntity2 = new Ingredient(200, productEntity2);
+        ingredientEntity3 = new Ingredient(500, productEntity3);
 
-        mealEntity1 = new Meal("RiceAndChicken", listOfIngredients1, MealDifficulty.MEDIUM);
+        ingredient1 = mapper.map(ingredientEntity1, IngredientForMealDTO.class);
+        ingredient2 = mapper.map(ingredientEntity2, IngredientForMealDTO.class);
+        ingredient3 = mapper.map(ingredientEntity3, IngredientForMealDTO.class);
+
+        listOfIngredients1 = Arrays.asList(ingredientEntity1, ingredientEntity2);
+        listOfIngredients2 = Arrays.asList(ingredientEntity1, ingredientEntity3);
+        listOfIngredients3 = Arrays.asList(ingredientEntity2, ingredientEntity3);
+
+        mealEntity1 = new Meal("RiceAndChicken", listOfIngredients1, 2.9, MealDifficulty.MEDIUM, "Example recipe",
+                new MealMacronutrients(50, 60, 70), 609, new ArrayList<>(), new ArrayList<>());
         meal1 = mapper.map(mealEntity1, MealDTO.class);
 
-        mealEntity2 = new Meal("RiceAndStrawberry", listOfIngredients2, MealDifficulty.EASY);
-        meal2 = mapper.map(mealEntity2, MealDTO.class);
-
-        mealEntity3 = new Meal("ChickenAndStrawberry", listOfIngredients3, MealDifficulty.INSANE);
-        meal3 = mapper.map(mealEntity3, MealDTO.class);
-
+        mealEntity2 = new Meal("RiceAndStrawberry", listOfIngredients2, 15, MealDifficulty.EASY, "Example recipe2",
+                new MealMacronutrients(40, 30, 25), 200, new ArrayList<>(), new ArrayList<>());
+        meal2 = mapper.map(mealEntity1, MealDTO.class);
+        mealEntity3 = new Meal("ChickenAndStrawberry", listOfIngredients3, 30, MealDifficulty.INSANE, "Example recipe3",
+                new MealMacronutrients(30, 31, 32), 700, new ArrayList<>(), new ArrayList<>());
+        meal3 = mapper.map(mealEntity1, MealDTO.class);
         meals = List.of(meal1, meal2, meal3);
 
         mealService = new MealService(mealProvider, imageService, ingredientService);
@@ -129,7 +149,7 @@ class MealServiceTest {
         //then
         assertAll(
                 () -> assertThat(listOfMeals.getSize(), equalTo(3)),
-                () -> assertThat(listOfMeals.getContent().get(2).getName(), equalTo("ChickenAndStrawberry"))
+                () -> assertThat(listOfMeals.getContent().get(2).getName(), equalTo("RiceAndChicken"))
         );
     }
 
@@ -178,7 +198,7 @@ class MealServiceTest {
                 () -> verify(ingredientService, times(1)).createIngredients(meal1),
                 () -> assertThat(createdMeal.getName(), equalTo("RiceAndChicken")),
                 () -> assertThat(createdMeal.getIngredients().get(0).getProduct().getName(), equalTo("Rice")),
-                () -> assertThat(createdMeal.getIngredients().get(1).getAmount(), equalTo(ingredient2.getAmount()))
+                () -> assertThat(createdMeal.getIngredients().get(1).getAmount(), equalTo(ingredientEntity2.getAmount()))
         );
     }
 
@@ -209,6 +229,92 @@ class MealServiceTest {
         verify(imageService, times(1)).createNewImage(meal1, "filePath");
     }
 
+    @Test
+    void shouldCalculateProteinsCorrectly() {
+        //given
+        int totalProteinsExpectation = ingredient1.getProduct()
+                .getMacronutrients().getProteinsPer100g() * ingredient1.getAmount() / 100 +
+                ingredient2.getProduct().getMacronutrients().getProteinsPer100g() * ingredient2.getAmount() / 100;
+        //when
+        int result = mealService.calculateProteins(List.of(ingredient1, ingredient2));
+
+        //then
+        assertThat(result, equalTo(totalProteinsExpectation));
+    }
+
+    @Test
+    void shouldCalculateCarbohydratesCorrectly() {
+        //given
+        int totalCarbohydratesExpectation = ingredient1.getProduct()
+                .getMacronutrients().getCarbohydratesPer100g() * ingredient1.getAmount() / 100 +
+                ingredient2.getProduct().getMacronutrients().getCarbohydratesPer100g() * ingredient2.getAmount() / 100;
+        //when
+        int result = mealService.calculateCarbohydrates(List.of(ingredient1, ingredient2));
+
+        //then
+        assertThat(result, equalTo(totalCarbohydratesExpectation));
+    }
+
+    @Test
+    void shouldCalculateFatsCorrectly() {
+        //given
+        int totalFatsExpectation = ingredient1.getProduct()
+                .getMacronutrients().getFatsPer100g() * ingredient1.getAmount() / 100 +
+                ingredient2.getProduct().getMacronutrients().getFatsPer100g() * ingredient2.getAmount() / 100;
+
+        //when
+        int result = mealService.calculateFats(List.of(ingredient1, ingredient2));
+
+        //then
+        assertThat(result, equalTo(totalFatsExpectation));
+    }
+
+    @Test
+    void shouldSetProperMealMacronutrients(){
+        //given
+        meal1.setMealMacronutrients(new MealMacronutrients(0, 0,0));
+
+        //when
+        mealService.calculateMealMacronutrients(meal1);
+
+        //then
+        assertAll(
+                () -> assertThat(meal1.getMealMacronutrients().getTotalProteins()
+                        , equalTo(mealService.calculateProteins(meal1.getIngredients()))),
+                () -> assertThat(meal1.getMealMacronutrients().getTotalCarbohydrates()
+                        , equalTo(mealService.calculateCarbohydrates(meal1.getIngredients()))),
+                () -> assertThat(meal1.getMealMacronutrients().getTotalFats()
+                        , equalTo(mealService.calculateFats(meal1.getIngredients())))
+        );
+    }
+
+    @Test
+    void shouldCalculatePriceProperly(){
+        //given
+        double oldPrice = meal1.getPrice();
+        meal1.setPrice(0);
+
+        //when
+        mealService.calculatePrice(meal1);
+
+        //then
+        assertThat(meal1.getPrice(), not(equalTo(0)));
+        assertThat(meal1.getPrice(), equalTo(oldPrice));
+    }
+
+    @Test
+    void shouldCalculateTotalCaloriesProperly(){
+        //given
+        int oldTotalCalories = meal1.getTotalCalories();
+        meal1.setTotalCalories(0);
+
+        //when
+        mealService.calculateTotalCalories(meal1);
+
+        //then
+        assertThat(meal1.getTotalCalories(), not(equalTo(0)));
+        assertThat(meal1.getTotalCalories(), (equalTo(oldTotalCalories)));
+    }
 
     @Test
     void shouldDeleteImageFromMealIfMealDoesExist() {

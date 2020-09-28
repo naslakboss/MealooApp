@@ -52,15 +52,15 @@ public class ClientController {
     }
 
     @GetMapping("/{id}/generate-customized-diary")
-    public ResponseEntity<FoodDiaryDTO> generateListOfMealsAutomatically(@PathVariable int id
-                    , @RequestParam("totalCalories") int totalCalories, @RequestParam("numberOfMeals") int numberOfMeals){
-        return ResponseEntity.ok(diaryService.generateDiet(totalCalories, numberOfMeals, id));
+    public ResponseEntity<FoodDiaryDTO> generateListOfMealsAutomatically(@PathVariable int id,
+                    @RequestParam("numberOfMeals") int numberOfMeals, @RequestParam("totalCalories") int totalCalories) {
+        return ResponseEntity.ok(diaryService.generateDiet(numberOfMeals, totalCalories, id));
     }
 
     @GetMapping("/{id}/generate-diary")
     public ResponseEntity<FoodDiaryDTO> generateListOfMealsAccordingToWeightGoal(
                     @PathVariable int id, @RequestParam("numberOfMeals") int numberOfMeals
                     , @RequestParam int totalCalories, @RequestParam("weightGoal") WeightGoal weightGoal){
-        return ResponseEntity.ok(diaryService.generateDiet(numberOfMeals, numberOfMeals, weightGoal, id));
+        return ResponseEntity.ok(diaryService.generateDiet(numberOfMeals, totalCalories, weightGoal, id));
     }
 }

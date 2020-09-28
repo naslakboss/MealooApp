@@ -2,13 +2,12 @@ package codebuddies.MealooApp.entities.meal;
 
 import codebuddies.MealooApp.entities.image.Image;
 import codebuddies.MealooApp.entities.product.Ingredient;
-import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.entities.user.FoodDiary;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Meal {
@@ -21,7 +20,6 @@ public class Meal {
 
     private double price;
 
-    @NotNull
     private MealDifficulty mealDifficulty;
 
     private String recipe;
@@ -41,21 +39,18 @@ public class Meal {
     public Meal() {
     }
 
-    public Meal(String name, List<Ingredient> ingredients, MealDifficulty mealDifficulty) {
+    public Meal(String name, List<Ingredient> ingredients, double price,
+                MealDifficulty mealDifficulty, String recipe,
+                MealMacronutrients mealMacronutrients, int totalCalories, List<FoodDiary> foodDiaries, List<Image> images) {
         this.name = name;
         this.ingredients = ingredients;
-        this.price = calculatePrice();
+        this.price = price;
         this.mealDifficulty = mealDifficulty;
-        mealMacronutrients = calculateMealMacronutrients();
-        totalCalories = calculateCalories();
-    }
-
-    public Meal(String name, List<Ingredient> ingredients, MealDifficulty mealDifficulty, String recipe) {
-        this(name, ingredients, mealDifficulty);
         this.recipe = recipe;
-        this.price = calculatePrice();
-        mealMacronutrients = calculateMealMacronutrients();
-        totalCalories = calculateCalories();
+        this.mealMacronutrients = mealMacronutrients;
+        this.totalCalories = totalCalories;
+        this.foodDiaries = foodDiaries;
+        this.images = images;
     }
 
     public String getName() {
@@ -128,57 +123,6 @@ public class Meal {
 
     public void setImages(List<Image> images) {
         this.images = images;
-    }
-
-    public double calculatePrice() {
-        double totalPrice = 0;
-        for (int i = 0; i < ingredients.size(); i++) {
-            totalPrice += (ingredients.get(i).getProduct().getPrice() * ingredients.get(i).getAmount() / 1000);
-        }
-        return totalPrice;
-    }
-
-    protected int calculateCarbohydrates() {
-        int totalCarbohydrates = 0;
-        for (int i = 0; i < ingredients.size(); i++) {
-            totalCarbohydrates += ingredients.get(i).getProduct().getMacronutrients().getCarbohydratesPer100g()
-                    * ingredients.get(i).getAmount() / 100;
-        }
-        return totalCarbohydrates;
-    }
-
-    protected int calculateProteins() {
-        int totalProteins = 0;
-        Product p = ingredients.get(0).getProduct();
-        for (int i = 0; i < ingredients.size(); i++) {
-            totalProteins += ingredients.get(i).getProduct().getMacronutrients().getProteinsPer100g()
-                    * ingredients.get(i).getAmount() / 100;
-        }
-        return totalProteins;
-    }
-
-    protected int calculateFats() {
-        int totalFats = 0;
-        for (int i = 0; i < ingredients.size(); i++) {
-            totalFats += ingredients.get(i).getProduct().getMacronutrients().getFatsPer100g()
-                    * ingredients.get(i).getAmount() / 100;
-        }
-        return totalFats;
-    }
-
-    protected MealMacronutrients calculateMealMacronutrients() {
-        return new MealMacronutrients(calculateProteins(), calculateCarbohydrates(), calculateFats());
-    }
-
-    protected int calculateCalories() {
-        return (calculateCarbohydrates() * 4) + (calculateProteins() * 4) + (calculateFats() * 9);
-
-    }
-
-    public void recalculateData() {
-        setPrice(calculatePrice());
-        setMealMacronutrients(calculateMealMacronutrients());
-        setTotalCalories(calculateCalories());
     }
 
     @Override

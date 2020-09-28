@@ -1,11 +1,10 @@
-package codebuddies.MealooApp.dataproviders;
+package codebuddies.MealooApp.datamappers;
 
 import codebuddies.MealooApp.dto.FoodDiaryDTO;
 import codebuddies.MealooApp.dto.MealDTO;
 import codebuddies.MealooApp.dto.MealooUserDTO;
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
 import codebuddies.MealooApp.entities.user.FoodDiary;
-import codebuddies.MealooApp.entities.user.MealooUser;
 import codebuddies.MealooApp.repositories.FoodDiaryRepository;
 
 import org.modelmapper.ModelMapper;

@@ -1,6 +1,6 @@
 package codebuddies.MealooApp.services;
 
-import codebuddies.MealooApp.dataproviders.MealooUserProvider;
+import codebuddies.MealooApp.datamappers.MealooUserProvider;
 import codebuddies.MealooApp.dto.MealooUserDTO;
 import codebuddies.MealooApp.entities.user.*;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
