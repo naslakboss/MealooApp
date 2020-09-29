@@ -2,6 +2,7 @@ package codebuddies.MealooApp.datamappers;
 
 import codebuddies.MealooApp.dto.MealooUserDTO;
 import codebuddies.MealooApp.entities.user.MealooUser;
+import codebuddies.MealooApp.entities.user.MealooUserRole;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.MealooUserRepository;
 
@@ -48,6 +49,7 @@ public class MealooUserMapper {
 
     public MealooUserDTO createUser(MealooUserDTO user) {
         MealooUser newUser = modelMapper.map(user, MealooUser.class);
+        newUser.setMealooUserRole(MealooUserRole.USER);
         userRepository.save(newUser);
 
         return modelMapper.map(newUser, MealooUserDTO.class);

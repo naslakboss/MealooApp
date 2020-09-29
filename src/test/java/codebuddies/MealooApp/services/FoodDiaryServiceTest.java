@@ -12,6 +12,7 @@ import codebuddies.MealooApp.entities.product.Macronutrients;
 import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.entities.product.ProductType;
 import codebuddies.MealooApp.entities.user.*;
+import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 import codebuddies.MealooApp.exceptions.RequiredMealsNotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -213,7 +214,36 @@ class FoodDiaryServiceTest {
                 () -> assertThat(diary.getTotalCalories(), equalTo(0)),
                 () -> assertThat(diary.getTotalCalories(), equalTo(0))
         );
+    }
 
+    @Test
+    void shouldReturnTrueIfDiaryExists(){
+        //given + when
+        LocalDate currentDate = LocalDate.now();
+        given(diaryProvider.existsByDate(1, currentDate)).willReturn(true);
+
+        //then
+        assertTrue(diaryService.existsByDate(1, currentDate));
+    }
+
+    @Test
+    void shouldReturnFalseIfDiaryExists(){
+        //given + when
+        LocalDate currentDate = LocalDate.now();
+        given(diaryProvider.existsByDate(1, currentDate)).willReturn(false);
+
+        //then
+        assertFalse(diaryService.existsByDate(1, currentDate));
+    }
+
+    @Test
+    void shouldThrowEntityAlreadyFoundExceptionWhenCreatingMoreThanOneDiaryInOneDay(){
+        //given + when
+        given(diaryService.existsByDate(1, LocalDate.now())).willReturn(true);
+
+        //then
+        assertThrows(EntityAlreadyFoundException.class, () ->
+                diaryService.createDiary(1));
     }
 
     @Test

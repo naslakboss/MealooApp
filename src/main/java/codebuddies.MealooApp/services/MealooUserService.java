@@ -17,47 +17,51 @@ import java.util.*;
 @Service
 public class MealooUserService {
 
-    private final MealooUserMapper userProvider;
+    private final MealooUserMapper userMapper;
 
 
-    public MealooUserService(MealooUserMapper userProvider) {
-        this.userProvider = userProvider;
+    public MealooUserService(MealooUserMapper userMapper) {
+        this.userMapper = userMapper;
     }
 
     public Page<MealooUserDTO> getAllUsers(Pageable pageable) {
-        return userProvider.getAllUsers(pageable);
+        return userMapper.getAllUsers(pageable);
     }
 
     public boolean existsByName(String username) {
-        return userProvider.existsByUsername(username);
+        return userMapper.existsByUsername(username);
     }
 
     public MealooUserDTO getUserById(int id){
-        return userProvider.getUserById(id);
+        return userMapper.getUserById(id);
     }
 
     public MealooUserDTO getUserByUsername(String username) {
-        return userProvider.getUserByUsername(username);
+        return userMapper.getUserByUsername(username);
     }
 
     public MealooUserDTO createUser(MealooUserDTO user) {
         if (existsByName(user.getUsername())) {
             throw new EntityAlreadyFoundException(user.getUsername());
         }
-        return userProvider.createUser(user);
+        return userMapper.createUser(user);
     }
 
     public MealooUserDTO updateUserByUsername(MealooUserDTO user, String username) {
         if (!existsByName(username)) {
             throw new ResourceNotFoundException(username);
         }
-        user.setId(getUserByUsername(username).getId());
-        return userProvider.updateUser(user);
+
+        MealooUserDTO oldData = getUserByUsername(username);
+        user.setId(oldData.getId());
+        user.setFoodDiaries(oldData.getFoodDiaries());
+
+        return userMapper.updateUser(user);
     }
 
     @Transactional
     public void deleteByUsername(String username) {
-        userProvider.deleteUserByUsername(username);
+        userMapper.deleteUserByUsername(username);
     }
 
     public double calculateBMI(MealooUserDTO mealooUserDTO){

@@ -19,4 +19,6 @@ public interface FoodDiaryRepository extends JpaRepository<FoodDiary, Long> {
     List<FoodDiary> findByMealooUserIdAndDateAfter(long mealooUserId, LocalDate after);
 
     Optional<FoodDiary> findByMealooUserIdAndDate(long mealooUserId, LocalDate date);
+
+    boolean existsByMealooUserIdAndDate(long mealooUserId, LocalDate date);
 }

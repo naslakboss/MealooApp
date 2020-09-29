@@ -35,6 +35,10 @@ public class FoodDiaryMapper {
                 .map(diary -> modelMapper.map(diary, FoodDiaryDTO.class));
     }
 
+    public boolean existsByDate(int id, LocalDate date){
+        return diaryRepository.existsByMealooUserIdAndDate(id, date);
+    }
+
     public FoodDiaryDTO getDiaryByDate(int id, LocalDate date) {
         FoodDiary diary = diaryRepository.findByMealooUserIdAndDate(id, date).orElseThrow(() ->
                 new RuntimeException("Diary of date : " + date + " for user with ID : " + id +" does not exist"));

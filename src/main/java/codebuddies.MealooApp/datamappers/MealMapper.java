@@ -51,7 +51,10 @@ public class MealMapper {
         Meal createdMeal = new Meal(meal.getName(), ingredients, meal.getPrice(), meal.getMealDifficulty(),
                 meal.getRecipe(), meal.getMealMacronutrients(), meal.getTotalCalories(), new ArrayList<>(), new ArrayList<>());
 
+        mealRepository.save(createdMeal);
+
         return modelMapper.map(createdMeal, MealDTO.class);
+
     }
 
     public MealDTO updateMeal(MealDTO updatedMeal) {

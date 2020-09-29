@@ -6,6 +6,7 @@ import codebuddies.MealooApp.dto.MealDTO;
 import codebuddies.MealooApp.dto.MealooUserDTO;
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
 import codebuddies.MealooApp.entities.user.WeightGoal;
+import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 import codebuddies.MealooApp.exceptions.RequiredMealsNotFoundException;
 
 import org.springframework.data.domain.Page;
@@ -24,36 +25,43 @@ public class FoodDiaryService {
 
     private final Random rand = getInstanceStrong();
 
-    private final FoodDiaryMapper diaryProvider;
+    private final FoodDiaryMapper diaryMapper;
 
     private final MealooUserService userService;
 
     private final MealService mealService;
 
-    public FoodDiaryService(FoodDiaryMapper diaryProvider, MealooUserService userService, MealService mealService) throws NoSuchAlgorithmException {
-        this.diaryProvider = diaryProvider;
+    public FoodDiaryService(FoodDiaryMapper diaryMapper, MealooUserService userService, MealService mealService) throws NoSuchAlgorithmException {
+        this.diaryMapper = diaryMapper;
         this.userService = userService;
         this.mealService = mealService;
     }
 
     public Page<FoodDiaryDTO> getAllDiaries(int id, Pageable pageable) {
-        return diaryProvider.getAllDiaries(id, pageable);
+        return diaryMapper.getAllDiaries(id, pageable);
+    }
+
+    public boolean existsByDate(int id, LocalDate date){
+        return diaryMapper.existsByDate(id, date);
     }
 
     public FoodDiaryDTO getCurrentDiary(int id) {
         LocalDate currentDate = LocalDate.now();
-        return diaryProvider.getDiaryByDate(id, currentDate);
+        return diaryMapper.getDiaryByDate(id, currentDate);
     }
 
     public FoodDiaryDTO getDiaryByDate(int id, String textDate) {
         LocalDate date = LocalDate.parse(textDate);
-        return diaryProvider.getDiaryByDate(id, date);
+        return diaryMapper.getDiaryByDate(id, date);
     }
 
     public FoodDiaryDTO createDiary(int id) {
         LocalDate currentDate = LocalDate.now();
+        if(existsByDate(id, currentDate)){
+            throw new EntityAlreadyFoundException("Diary for user with ID :" + id);
+        }
         MealooUserDTO user = userService.getUserById(id);
-        return diaryProvider.createDiary(currentDate, user);
+        return diaryMapper.createDiary(currentDate, user);
     }
 
     int recalculateProteins(List<MealDTO> meals){
@@ -103,7 +111,7 @@ public class FoodDiaryService {
         MealDTO meal = mealService.getMealByName(mealName);
         diary.addMeal(meal);
         recalculateData(diary);
-        return diaryProvider.updateDiary(diary);
+        return diaryMapper.updateDiary(diary);
     }
 
     public FoodDiaryDTO deleteMeal(int id, String mealName) {
@@ -111,7 +119,7 @@ public class FoodDiaryService {
         MealDTO meal = mealService.getMealByName(mealName);
         diary.deleteMeal(meal);
         recalculateData(diary);
-        return diaryProvider.updateDiary(diary);
+        return diaryMapper.updateDiary(diary);
     }
 
     public void addMatchingMealsToDiary(int id, List<String> namesOfMatchingMeals, int numberOfMeals) {
@@ -143,7 +151,7 @@ public class FoodDiaryService {
 
     List<String> rejectMealsFromThreeDaysBack(int id) {
         LocalDate threeDaysBack = LocalDate.now().minusDays(3);
-        return diaryProvider.rejectMealsFromThreeDaysBack(id, threeDaysBack).stream()
+        return diaryMapper.rejectMealsFromThreeDaysBack(id, threeDaysBack).stream()
                 .flatMap(diary -> diary.getListOfMeals().stream())
                 .map(MealDTO::getName).collect(Collectors.toList());
     }
@@ -237,7 +245,7 @@ public class FoodDiaryService {
             throw new RequiredMealsNotFoundException("");
         }
 
-        addMatchingMealsToDiary(id, namesOfMatchingMeals, 1);
+        addMatchingMealsToDiary(id, namesOfMatchingMeals, 2);
 
         return getCurrentDiary(id);
     }
