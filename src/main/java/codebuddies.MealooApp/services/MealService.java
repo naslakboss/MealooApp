@@ -23,7 +23,6 @@ public class MealService {
 
     private final MealMapper mealMapper;
 
-    @Autowired
     public MealService(MealMapper mealMapper, ImageService imageService, IngredientService ingredientService) {
         this.mealMapper = mealMapper;
         this.imageService = imageService;
