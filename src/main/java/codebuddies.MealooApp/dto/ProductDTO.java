@@ -28,6 +28,9 @@ public class ProductDTO {
     @NotNull(message = "Product Type is mandatory")
     private ProductType productType;
 
+    public ProductDTO() {
+    }
+
     public ProductDTO(String name, double price, int caloriesPer100g, Macronutrients macronutrients, ProductType productType) {
         this.name = name;
         this.price = price;
