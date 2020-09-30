@@ -5,6 +5,7 @@ import codebuddies.MealooApp.services.MealooUserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
+@PreAuthorize("#username == authentication.principal.username or hasRole('ROLE_ADMIN')")
 public class MealooUserController {
 
 
@@ -44,6 +46,7 @@ public class MealooUserController {
     }
 
     @DeleteMapping("/{username}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> deleteUser(@PathVariable String username) {
         userService.deleteByUsername(username);
         return ResponseEntity.ok("User " + username + " was successfully deleted from database");
