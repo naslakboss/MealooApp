@@ -12,7 +12,6 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/products")
-@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
 public class ProductController {
 
     private final ProductService productService;
@@ -32,19 +31,16 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
     public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO product) {
         return ResponseEntity.ok(productService.createProduct(product));
     }
 
     @PutMapping("/{name}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
     public ResponseEntity<ProductDTO> updateProduct(@Valid @RequestBody ProductDTO product, @PathVariable String name) {
         return ResponseEntity.ok(productService.updateProductByName(product, name));
     }
 
     @DeleteMapping("/{name}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
     public ResponseEntity<String> deleteProduct(@PathVariable String name) {
         productService.deleteProductByName(name);
         return ResponseEntity.ok("Product " + name + " was successfully deleted from Repository");

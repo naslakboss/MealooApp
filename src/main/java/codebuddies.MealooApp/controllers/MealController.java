@@ -41,7 +41,6 @@ public class MealController {
     }
 
     @DeleteMapping("/{name}/image")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
     public ResponseEntity<String> deleteImage(@PathVariable String name, @RequestParam("fileUrl") String fileUrl) {
         mealService.deleteImageFromMeal(name, fileUrl);
         return ResponseEntity.ok("Image was successfully deleted from the meal");
@@ -53,7 +52,6 @@ public class MealController {
     }
 
     @DeleteMapping("/{name}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
     public ResponseEntity<String> deleteMeal(@PathVariable String name) {
         mealService.deleteMealByName(name);
         return ResponseEntity.ok("Meal " + name + " was successfully deleted from Repository");

@@ -13,7 +13,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
-@PreAuthorize("#username == authentication.principal.username or hasRole('ROLE_ADMIN')")
 public class MealooUserController {
 
 
@@ -46,7 +45,6 @@ public class MealooUserController {
     }
 
     @DeleteMapping("/{username}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> deleteUser(@PathVariable String username) {
         userService.deleteByUsername(username);
         return ResponseEntity.ok("User " + username + " was successfully deleted from database");
