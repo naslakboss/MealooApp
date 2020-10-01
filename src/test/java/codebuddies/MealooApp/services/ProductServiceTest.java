@@ -100,14 +100,6 @@ class ProductServiceTest {
     }
 
     @Test
-    void findByNameShouldThrowsAnResourceNotFoundExceptionProductIsNotExists(){
-        //given + when
-        given(productMapper.existsByName("BadName")).willReturn(false);
-
-        //then
-        assertThrows(ResourceNotFoundException.class, () -> productService.getProductByName("BadName"));
-    }
-    @Test
     void shouldThrowEntityAlreadyFoundIfProductOfGivenNameAlreadyExist(){
         //given + when
         given(productMapper.existsByName("Potato")).willReturn(true);
@@ -165,6 +157,7 @@ class ProductServiceTest {
     @Test
     void shouldUpdateProductDataWhenProductExistsAndNewDataFormatIsCorrect() {
         //given
+        given(productMapper.existsByName("Chicken")).willReturn(true);
         ProductDTO newData = new ProductDTO("ChickenTenderloin", 18, 90, new Macronutrients(17, 1, 2), ProductType.MEAT);
         given(productMapper.updateProduct(newData)).willReturn(newData);
 
@@ -180,6 +173,15 @@ class ProductServiceTest {
                 () -> assertThat(productAfterUpdate.getMacronutrients().getFatsPer100g(), equalTo(2)),
                 () -> assertThat(productAfterUpdate.getProductType(), equalTo(ProductType.MEAT))
         );
+    }
+
+    @Test
+    void shouldThrowResourceNotFoundExceptionDuringUpdatingIfProductDoesNotExist(){
+        //given + when
+        given(productMapper.existsByName("Shrimp")).willReturn(false);
+        //then
+        assertThrows(ResourceNotFoundException.class, () ->
+                productService.updateProductByName(product3, "Shrimp"));
     }
     @Test
     void shouldDeleteProductWhenProductExists() {
