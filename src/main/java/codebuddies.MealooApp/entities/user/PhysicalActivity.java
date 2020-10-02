@@ -7,7 +7,7 @@ public enum PhysicalActivity {
     HIGH(17),
     HUGE(20);
 
-    private final int multiplier;
+    private int multiplier;
 
     PhysicalActivity(int multiplier) {
         this.multiplier = multiplier;
