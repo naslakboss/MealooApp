@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>codebuddies</groupId>
-	<artifactId>MealooAp</artifactId>
+	<artifactId>mealooapp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>MealooApp</name>
 	<description>Desc</description>
