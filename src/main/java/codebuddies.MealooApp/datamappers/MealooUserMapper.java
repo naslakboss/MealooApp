@@ -3,6 +3,7 @@ package codebuddies.MealooApp.datamappers;
 import codebuddies.MealooApp.dto.MealooUserDTO;
 import codebuddies.MealooApp.entities.user.MealooUser;
 import codebuddies.MealooApp.entities.user.MealooUserRole;
+import codebuddies.MealooApp.entities.user.Role;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import codebuddies.MealooApp.repositories.MealooUserRepository;
 
@@ -11,6 +12,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 
 @Service
@@ -33,10 +36,8 @@ public class MealooUserMapper {
     }
 
     public MealooUserDTO getUserByUsername(String username) {
-        if(!existsByUsername(username)){
-            throw new ResourceNotFoundException(username);
-        }
-        MealooUser user = userRepository.findByUsername(username);
+        MealooUser user = userRepository.findByUsername(username).orElseThrow(() ->
+                 new ResourceNotFoundException(username));
 
         return modelMapper.map(user, MealooUserDTO.class);
     }
@@ -49,7 +50,7 @@ public class MealooUserMapper {
 
     public MealooUserDTO createUser(MealooUserDTO user) {
         MealooUser newUser = modelMapper.map(user, MealooUser.class);
-        newUser.setMealooUserRole(MealooUserRole.USER);
+        newUser.setRoles(Collections.singleton(new Role(MealooUserRole.ROLE_USER)));
         userRepository.save(newUser);
 
         return modelMapper.map(newUser, MealooUserDTO.class);

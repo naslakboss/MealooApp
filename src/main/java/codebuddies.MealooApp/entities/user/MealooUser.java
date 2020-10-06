@@ -6,8 +6,10 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class MealooUser {
@@ -21,14 +23,19 @@ public class MealooUser {
     private String username;
 
     @NotBlank
-    @Length(min = 6, max = 30)
+    @Length(min = 6, max = 60)
     private String password;
 
 
-    private MealooUserRole mealooUserRole;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable( name = "mealoo_user_roles",
+                joinColumns = @JoinColumn(name = "mealoo_user_id"),
+                inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
+    @NotBlank
     @Email
-    @Column(name = "email", nullable = false, unique = true)
+    @Column
     private String email;
 
     @Embedded
@@ -44,6 +51,17 @@ public class MealooUser {
     public MealooUser() {
     }
 
+    public MealooUser(String username, String password, String email,
+                     NutritionSettings nutritionSettings,
+                     MealooUserDetails mealooUserDetails) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.nutritionSettings = nutritionSettings;
+        this.mealooUserDetails = mealooUserDetails;
+    }
+
+
     public MealooUser(Long id, String username, String password, String email,
                       NutritionSettings nutritionSettings,
                       MealooUserDetails mealooUserDetails) {
@@ -51,7 +69,6 @@ public class MealooUser {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.mealooUserRole = MealooUserRole.USER;
         this.nutritionSettings = nutritionSettings;
         this.mealooUserDetails = mealooUserDetails;
     }
@@ -116,12 +133,13 @@ public class MealooUser {
         this.mealooUserDetails = mealooUserDetails;
     }
 
-    public MealooUserRole getMealooUserRole() {
-        return mealooUserRole;
+
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setMealooUserRole(MealooUserRole mealooUserRole) {
-        this.mealooUserRole = mealooUserRole;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     @Override
@@ -132,7 +150,7 @@ public class MealooUser {
         return Objects.equals(id, that.id) &&
                 Objects.equals(username, that.username) &&
                 Objects.equals(password, that.password) &&
-                mealooUserRole == that.mealooUserRole &&
+                Objects.equals(roles, that.roles) &&
                 Objects.equals(email, that.email) &&
                 Objects.equals(nutritionSettings, that.nutritionSettings) &&
                 Objects.equals(foodDiaries, that.foodDiaries) &&
@@ -141,6 +159,6 @@ public class MealooUser {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, mealooUserRole, email, nutritionSettings, foodDiaries, mealooUserDetails);
+        return Objects.hash(id, username, password, roles, email, nutritionSettings, foodDiaries, mealooUserDetails);
     }
 }

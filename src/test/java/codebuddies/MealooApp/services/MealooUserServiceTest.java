@@ -43,11 +43,11 @@ class MealooUserServiceTest {
 
     @BeforeEach
     void setUp() {
-        user1 = new MealooUserDTO(1L, "Admin", "pass", MealooUserRole.ADMIN, "admin@gmail.com"
+        user1 = new MealooUserDTO(1L, "Admin", "pass", MealooUserRole.ROLE_ADMIN, "admin@gmail.com"
                 , new NutritionSettings(3500)
                 , new MealooUserDetails(180, 90, 22, Sex.MALE, PhysicalActivity.HIGH), Collections.emptyList());
 
-        user2 = new MealooUserDTO(2L, "User", "secret", MealooUserRole.USER, "user@gmail.com"
+        user2 = new MealooUserDTO(2L, "User", "secret", MealooUserRole.ROLE_USER, "user@gmail.com"
                 , new NutritionSettings(2500)
                 , new MealooUserDetails(170, 80, 27, Sex.FEMALE, PhysicalActivity.LITTLE), Collections.emptyList());
 
@@ -119,7 +119,7 @@ class MealooUserServiceTest {
         given(userProvider.existsByUsername("Admin")).willReturn(true);
         given(userProvider.getUserByUsername("Admin")).willReturn(user1);
 
-        MealooUserDTO user3 = new MealooUserDTO(3L, "Manager", "secretPIN", MealooUserRole.MODERATOR, "manager@gmail.com"
+        MealooUserDTO user3 = new MealooUserDTO(3L, "Manager", "secretPIN", MealooUserRole.ROLE_MODERATOR, "manager@gmail.com"
                 , new NutritionSettings(3000)
                 , new MealooUserDetails(178, 85, 30, Sex.FEMALE, PhysicalActivity.NONE), Collections.emptyList());
         given(userProvider.updateUser(user3)).willReturn(user3);

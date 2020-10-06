@@ -6,7 +6,7 @@ import java.util.Objects;
 @Embeddable
 public class MealooUserDetails {
     /**
-     * This data will be used to calculate BMI for given USER
+     * This data will be used to calculate BMI for given ROLE_USER
      */
     private Integer height;
 

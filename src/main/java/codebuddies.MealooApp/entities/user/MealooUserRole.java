@@ -1,7 +1,7 @@
 package codebuddies.MealooApp.entities.user;
 
 public enum MealooUserRole {
-    USER,
-    MODERATOR,
-    ADMIN
+    ROLE_USER,
+    ROLE_MODERATOR,
+    ROLE_ADMIN
 }
