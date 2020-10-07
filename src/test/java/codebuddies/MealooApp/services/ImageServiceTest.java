@@ -7,6 +7,7 @@ import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -43,6 +44,7 @@ class ImageServiceTest {
     }
 
     @Test
+    @DisplayName("Check if url is returned when exists")
     void shouldReturnImageByUrlIfExists() {
         //given
         given(imageMapper.existsByFileUrl("fileUrl")).willReturn(true);
@@ -56,6 +58,7 @@ class ImageServiceTest {
     }
 
     @Test
+    @DisplayName("Check if exception is thrown when image does not exist")
     void shouldThrowResourceNotFoundExceptionIfImageDoesNotExist() {
         //given + when
         given(imageMapper.existsByFileUrl("fileUrl")).willReturn(false);

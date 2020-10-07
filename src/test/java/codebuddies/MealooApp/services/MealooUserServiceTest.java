@@ -7,6 +7,7 @@ import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -68,6 +69,7 @@ class MealooUserServiceTest {
     }
 
     @Test
+    @DisplayName("Check if all users are returned")
     void shouldReturnListOfUsers() {
         //given
         Pageable pageable = PageRequest.of(0, 2);
@@ -85,6 +87,7 @@ class MealooUserServiceTest {
     }
 
     @Test
+    @DisplayName("Check if user is returned if exists")
     void shouldFindUserWhenItDoesExist() {
         //given
         given(userProvider.getUserByUsername("client")).willReturn(user2);
@@ -97,6 +100,7 @@ class MealooUserServiceTest {
     }
 
     @Test
+    @DisplayName("Check if all user is created")
     void shouldCreateUserWhenNameIsNotUsed() {
         //given
         given(userProvider.existsByUsername(user1.getUsername())).willReturn(false);
@@ -111,6 +115,7 @@ class MealooUserServiceTest {
     }
 
     @Test
+    @DisplayName("Check if exception is thrown when trying to create user with existed in database name")
     void shouldThrowEntityNotFoundExceptionWhenUserAlreadyExist() {
         //given + when
         given(userProvider.existsByUsername(user2.getUsername())).willReturn(true);
@@ -121,6 +126,7 @@ class MealooUserServiceTest {
     }
 
     @Test
+    @DisplayName("Check if user is updated")
     void shouldUpdateUserDataIfExist() {
         //given
         given(userProvider.existsByUsername("Admin")).willReturn(true);
@@ -142,6 +148,7 @@ class MealooUserServiceTest {
     }
 
     @Test
+    @DisplayName("Check if exception is thrown when trying update nonexistent user")
     void shouldThrowResourceNotFoundExceptionIfUserUserDoesNotExist() {
         //given + then
         given(userProvider.existsByUsername("Jasiek")).willReturn(false);
@@ -152,6 +159,7 @@ class MealooUserServiceTest {
     }
 
     @Test
+    @DisplayName("Check if all user is deleted when had existed before")
     void shouldDeleteUserIfExists() {
         //given + when
         userService.deleteByUsername("User");
@@ -161,6 +169,7 @@ class MealooUserServiceTest {
     }
 
     @Test
+    @DisplayName("Check if all bmi index is calculated")
     void shouldCalculateProperBMI(){
         //given + when
         MealooUserDetails userDetails = user1.getMealooUserDetails();
@@ -172,6 +181,7 @@ class MealooUserServiceTest {
     }
 
     @Test
+    @DisplayName("Check if caloric demand for male is calculated")
     void shouldCalculateProperCaloricDemandForManIfSexEqualsToMale(){
         //given + when
         MealooUserDetails details = user1.getMealooUserDetails();
@@ -185,6 +195,7 @@ class MealooUserServiceTest {
 
 
     @Test
+    @DisplayName("Check if caloric demand for female is calculated")
     void shouldReturnBMIAndCaloricDemandAndAlsoReturnSomeInformation() {
         //given
         given(userProvider.getUserByUsername("Admin")).willReturn(user1);

@@ -9,6 +9,7 @@ import codebuddies.MealooApp.entities.meal.MealMacronutrients;
 
 import codebuddies.MealooApp.entities.product.Macronutrients;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -70,6 +71,7 @@ class IngredientServiceTest {
     }
 
     @Test
+    @DisplayName("Check if ingredient is created")
     void shouldCreateIngredient() {
         //given
         given(ingredientMapper.createIngredient(product1, 200)).willReturn(ingredient1);
@@ -87,6 +89,7 @@ class IngredientServiceTest {
     }
 
     @Test
+    @DisplayName("Check if ingredients are created")
     void shouldCreateIngredients() {
         //given
         given(productService.getProductForIngredientByName("Carrot")).willReturn(product1);
@@ -100,6 +103,7 @@ class IngredientServiceTest {
     }
 
     @Test
+    @DisplayName("Check if exception is thrown when trying to create less than 0 ingredient")
     void shouldThrowIllegalArgumentExceptionIfIngredientAmountIsLessThanZero() {
         //given + when
         meal.getIngredients().get(0).setAmount(-200);
