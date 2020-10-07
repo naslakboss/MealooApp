@@ -215,7 +215,7 @@ public class FoodDiaryService {
                 totalCalories += 500;
                 break;
             default:
-                System.err.println("No weight, or wrong goal has been chosen." +
+                System.out.println("No weight, or wrong goal has been chosen." +
                         " Calculator will be assigned to weight maintenance");
         }
         return totalCalories;

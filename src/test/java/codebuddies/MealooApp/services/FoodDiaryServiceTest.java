@@ -126,11 +126,11 @@ class FoodDiaryServiceTest {
         foodDiary2 = new FoodDiaryDTO(LocalDate.now(), listOfMeals2, new MealMacronutrients(90, 90, 90), 900, 60.0, user2);
         foodDiary3 = new FoodDiaryDTO(LocalDate.now(), listOfMeals3, new MealMacronutrients(150, 150, 150), 150, 100.0, user2);
 
-        user1 = new MealooUserDTO(1L, "Admin", "pass", MealooUserRole.ROLE_ADMIN, "admin@gmail.com"
+        user1 = new MealooUserDTO(1L, "Admin", "pass", Collections.singletonList(new Role(MealooUserRole.ROLE_ADMIN)), "admin@gmail.com"
                 , new NutritionSettings(3500)
                 , new MealooUserDetails(180, 90, 22, Sex.MALE, PhysicalActivity.HIGH), List.of(foodDiary1, foodDiary2));
 
-        user2 = new MealooUserDTO(2L, "User", "secret", MealooUserRole.ROLE_USER, "user@gmail.com"
+        user2 = new MealooUserDTO(2L, "User", "secret", Collections.singletonList(new Role(MealooUserRole.ROLE_USER)), "user@gmail.com"
                 , new NutritionSettings(2500)
                 , new MealooUserDetails(170, 80, 27, Sex.FEMALE, PhysicalActivity.LITTLE), List.of(foodDiary2, foodDiary3));
 

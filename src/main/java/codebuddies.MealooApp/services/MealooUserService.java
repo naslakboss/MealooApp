@@ -9,6 +9,7 @@ import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,9 +20,12 @@ public class MealooUserService {
 
     private final MealooUserMapper userMapper;
 
+    private final PasswordEncoder passwordEncoder;
 
-    public MealooUserService(MealooUserMapper userMapper) {
+
+    public MealooUserService(MealooUserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Page<MealooUserDTO> getAllUsers(Pageable pageable) {
@@ -44,6 +48,7 @@ public class MealooUserService {
         if (existsByName(user.getUsername())) {
             throw new EntityAlreadyFoundException(user.getUsername());
         }
+        passwordEncoder.encode(user.getPassword());
         return userMapper.createUser(user);
     }
 

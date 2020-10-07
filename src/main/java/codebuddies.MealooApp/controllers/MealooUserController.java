@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Map;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/users")
+@PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN') or authentication.principal.username == #username")
 public class MealooUserController {
 
 
@@ -33,6 +35,7 @@ public class MealooUserController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<MealooUserDTO> createUser(@Valid @RequestBody MealooUserDTO user) {
         return ResponseEntity.ok(userService.createUser(user));
     }

@@ -48,7 +48,7 @@ public class FoodDiaryMapper {
 
     public FoodDiaryDTO createDiary( LocalDate currentDate, MealooUserDTO user) {
         FoodDiaryDTO foodDiaryDTO =
-                new FoodDiaryDTO(currentDate, new ArrayList<MealDTO>(),
+                new FoodDiaryDTO(currentDate, new ArrayList<>(),
                         new MealMacronutrients(0,0,0), 0, 0.0, user);
         FoodDiary diary = modelMapper.map(foodDiaryDTO, FoodDiary.class);
         diaryRepository.save(diary);

@@ -1,11 +1,11 @@
 package codebuddies.MealooApp.services;
 
 import codebuddies.MealooApp.datamappers.MealMapper;
-import codebuddies.MealooApp.dto.*;
+import codebuddies.MealooApp.dto.IngredientForMealDTO;
+import codebuddies.MealooApp.dto.MealDTO;
 import codebuddies.MealooApp.entities.meal.MealMacronutrients;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -124,10 +124,12 @@ public class MealService {
         return meal;
     }
 
+    @Transactional
     public void deleteImageFromMeal(String name, String fileUrl) {
-        MealDTO meal = getMealByName(name);
-        ImageDTO image = imageService.getImageByFileUrl(fileUrl);
-        meal.getImages().remove(image);
+        if(!existsByName(name)){
+            throw new ResourceNotFoundException(name);
+        }
+        imageService.deleteImageByFileUrl(fileUrl);
     }
 
     public List<String> findNamesOfMatchingMeals(int perfectCaloricValue) {

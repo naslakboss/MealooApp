@@ -13,4 +13,6 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     Optional<Image> findByFileUrl(String fileUrl);
 
     boolean existsByFileUrl(String fileUrl);
+
+    void deleteImageByFileUrl(String fileUrl);
 }

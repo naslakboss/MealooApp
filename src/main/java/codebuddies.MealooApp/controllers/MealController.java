@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/meals")
 public class MealController {
@@ -41,6 +41,7 @@ public class MealController {
     }
 
     @DeleteMapping("/{name}/image")
+    @PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> deleteImage(@PathVariable String name, @RequestParam("fileUrl") String fileUrl) {
         mealService.deleteImageFromMeal(name, fileUrl);
         return ResponseEntity.ok("Image was successfully deleted from the meal");
@@ -52,6 +53,7 @@ public class MealController {
     }
 
     @DeleteMapping("/{name}")
+    @PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> deleteMeal(@PathVariable String name) {
         mealService.deleteMealByName(name);
         return ResponseEntity.ok("Meal " + name + " was successfully deleted from Repository");

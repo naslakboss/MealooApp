@@ -2,7 +2,10 @@ package codebuddies.MealooApp.controllers;
 
 import codebuddies.MealooApp.security.request.LoginRequest;
 import codebuddies.MealooApp.security.request.SignupRequest;
+import codebuddies.MealooApp.security.response.JwtResponse;
+import codebuddies.MealooApp.security.response.MessageResponse;
 import codebuddies.MealooApp.services.AuthService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,19 +16,19 @@ import javax.validation.Valid;
 @RequestMapping("/home")
 public class AuthController {
 
-    private AuthService authService;
+    private final AuthService authService;
 
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
+    public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
          return ResponseEntity.ok(authService.authenticateUser(loginRequest));
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<?> registerUserS(@Valid @RequestBody SignupRequest signUpRequest){
+    public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest){
         return ResponseEntity.ok(authService.registerUser(signUpRequest));
     }
 

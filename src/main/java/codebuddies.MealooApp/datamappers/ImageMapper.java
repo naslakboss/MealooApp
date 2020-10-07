@@ -38,4 +38,8 @@ public class ImageMapper {
 
         return modelMapper.map(image, ImageDTO.class);
     }
+
+    public void deleteImageByFileUrl(String fileUrl) {
+         imageRepository.deleteImageByFileUrl(fileUrl);
+    }
 }

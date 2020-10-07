@@ -3,14 +3,18 @@ package codebuddies.MealooApp.controllers;
 import codebuddies.MealooApp.dto.FoodDiaryDTO;
 import codebuddies.MealooApp.entities.user.WeightGoal;
 import codebuddies.MealooApp.services.FoodDiaryService;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/client")
+@PreAuthorize("hasRole('ROLE_ADMIN') or authentication.principal.id == #id")
 public class ClientController {
 
     private final FoodDiaryService diaryService;
@@ -20,7 +24,8 @@ public class ClientController {
 
 
     @GetMapping(path = "/{id}/diaries")
-    public ResponseEntity<Page<FoodDiaryDTO>> getAllDiaries(@PathVariable int id, Pageable pageable, Authentication authentication) {
+    @PostAuthorize("hasRole('ROLE_ADMIN') or authentication.principal.id == #id")
+    public ResponseEntity<Page<FoodDiaryDTO>> getAllDiaries(@PathVariable int id, Pageable pageable) {
         return ResponseEntity.ok(diaryService.getAllDiaries(id, pageable));
     }
 

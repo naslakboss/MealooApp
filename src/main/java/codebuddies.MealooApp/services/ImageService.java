@@ -65,4 +65,11 @@ public class ImageService {
         }
         else throw new RuntimeException("Image could not be uploaded");
     }
+
+    public void deleteImageByFileUrl(String fileUrl) {
+        if(!existsByFileUrl(fileUrl)){
+            throw new ResourceNotFoundException(fileUrl);
+        }
+            imageMapper.deleteImageByFileUrl(fileUrl);
+    }
 }

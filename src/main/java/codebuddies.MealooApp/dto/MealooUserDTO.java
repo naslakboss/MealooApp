@@ -1,8 +1,8 @@
 package codebuddies.MealooApp.dto;
 
 import codebuddies.MealooApp.entities.user.MealooUserDetails;
-import codebuddies.MealooApp.entities.user.MealooUserRole;
 import codebuddies.MealooApp.entities.user.NutritionSettings;
+import codebuddies.MealooApp.entities.user.Role;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class MealooUserDTO {
 
     private String password;
 
-    private MealooUserRole role;
+    private List<Role> roles;
 
     private String email;
 
@@ -27,12 +27,12 @@ public class MealooUserDTO {
     public MealooUserDTO() {
     }
 
-    public MealooUserDTO(Long id, String username, String password, MealooUserRole role, String email,
+    public MealooUserDTO(Long id, String username, String password, List<Role> roles, String email,
                          NutritionSettings nutritionSettings, MealooUserDetails mealooUserDetails, List<FoodDiaryDTO> foodDiaries) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.role = role;
+        this.roles = roles;
         this.email = email;
         this.nutritionSettings = nutritionSettings;
         this.mealooUserDetails = mealooUserDetails;
@@ -63,12 +63,12 @@ public class MealooUserDTO {
         this.password = password;
     }
 
-    public MealooUserRole getRole() {
-        return role;
+    public List<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(MealooUserRole role) {
-        this.role = role;
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
     public String getEmail() {

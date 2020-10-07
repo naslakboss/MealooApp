@@ -15,6 +15,7 @@ import codebuddies.MealooApp.entities.product.Product;
 import codebuddies.MealooApp.entities.product.ProductType;
 import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 
+import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -319,19 +320,20 @@ class MealServiceTest {
     @Test
     void shouldDeleteImageFromMealIfMealDoesExist() {
         //given
-        ImageDTO image = new ImageDTO("fileUrl");
-        given(imageService.getImageByFileUrl("fileUrl")).willReturn(image);
-
-        List<ImageDTO> imagesList = new ArrayList<>();
-        imagesList.add(image);
-        meal1.setImages(imagesList);
-
-        given(mealMapper.getMealByName("RiceAndChicken")).willReturn(meal1);
+        given(mealService.existsByName("photoed Meal")).willReturn(true);
         //when
-
-        mealService.deleteImageFromMeal("RiceAndChicken", "fileUrl");
+        mealService.deleteImageFromMeal("photoed Meal", "fileUrl");
         //then
-        assertThat(meal1.getImages(), Matchers.not(contains(image)));
+        verify(imageService, times(1)).deleteImageByFileUrl("fileUrl");
+    }
+
+    @Test
+    void shouldThrowResourceNotFoundExceptionWhenMealDoesNotExist(){
+        //given + when
+        given(mealService.existsByName("name")).willReturn(false);
+        //then
+        assertThrows(ResourceNotFoundException.class, () ->
+                mealService.deleteImageFromMeal("name", "fileUrl"));
     }
 
     @Test

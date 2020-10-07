@@ -13,10 +13,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.*;
@@ -34,6 +37,8 @@ class MealooUserServiceTest {
     @Mock
     MealooUserMapper userProvider;
 
+    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     MealooUserDTO user1;
     MealooUserDTO user2;
 
@@ -41,19 +46,20 @@ class MealooUserServiceTest {
 
     MealooUserService userService;
 
+
     @BeforeEach
     void setUp() {
-        user1 = new MealooUserDTO(1L, "Admin", "pass", MealooUserRole.ROLE_ADMIN, "admin@gmail.com"
+        user1 = new MealooUserDTO(1L, "Admin", "pass", Collections.singletonList(new Role(MealooUserRole.ROLE_ADMIN)), "admin@gmail.com"
                 , new NutritionSettings(3500)
                 , new MealooUserDetails(180, 90, 22, Sex.MALE, PhysicalActivity.HIGH), Collections.emptyList());
 
-        user2 = new MealooUserDTO(2L, "User", "secret", MealooUserRole.ROLE_USER, "user@gmail.com"
+        user2 = new MealooUserDTO(2L, "User", "secret", Collections.singletonList(new Role(MealooUserRole.ROLE_ADMIN)), "user@gmail.com"
                 , new NutritionSettings(2500)
                 , new MealooUserDetails(170, 80, 27, Sex.FEMALE, PhysicalActivity.LITTLE), Collections.emptyList());
 
         listOfUsers = List.of(user1, user2);
 
-        userService = new MealooUserService(userProvider);
+        userService = new MealooUserService(userProvider, passwordEncoder);
     }
 
     Page<MealooUserDTO> createTestPage(Pageable pageable) {
@@ -95,6 +101,7 @@ class MealooUserServiceTest {
         //given
         given(userProvider.existsByUsername(user1.getUsername())).willReturn(false);
         given(userProvider.createUser(user1)).willReturn(user1);
+        user1.setPassword("password");
 
         //when
         MealooUserDTO result = userService.createUser(user1);
@@ -118,8 +125,7 @@ class MealooUserServiceTest {
         //given
         given(userProvider.existsByUsername("Admin")).willReturn(true);
         given(userProvider.getUserByUsername("Admin")).willReturn(user1);
-
-        MealooUserDTO user3 = new MealooUserDTO(3L, "Manager", "secretPIN", MealooUserRole.ROLE_MODERATOR, "manager@gmail.com"
+        MealooUserDTO user3 = new MealooUserDTO(3L, "Manager", "secretPIN", Collections.singletonList(new Role(MealooUserRole.ROLE_MODERATOR)), "manager@gmail.com"
                 , new NutritionSettings(3000)
                 , new MealooUserDetails(178, 85, 30, Sex.FEMALE, PhysicalActivity.NONE), Collections.emptyList());
         given(userProvider.updateUser(user3)).willReturn(user3);
