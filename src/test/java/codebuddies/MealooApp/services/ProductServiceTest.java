@@ -8,6 +8,7 @@ import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -64,6 +65,7 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("Check if all products are returned")
     void findAllShouldReturnListOfProduct() {
         //given
         Pageable pageable = PageRequest.of(0, 3);
@@ -83,6 +85,7 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("Check if single product is returned searching by name")
     void findByNameShouldReturnProductIfNameIsCorrect(){
         //given
         ProductType grains = ProductType.GRAINS;
@@ -100,6 +103,7 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("Throw exception when created product with existed in database name")
     void shouldThrowEntityAlreadyFoundIfProductOfGivenNameAlreadyExist(){
         //given + when
         given(productMapper.existsByName("Potato")).willReturn(true);
@@ -110,6 +114,7 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("Check if create product")
     void shouldCreateProduct() {
         //given
         given(productMapper.createProduct(product3)).willReturn(product3);
@@ -126,6 +131,7 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("Check if return true when product exists")
     void shouldReturnTrueIfProductExists(){
         //given + when
         given(productMapper.existsByName(anyString())).willReturn(true);
@@ -135,6 +141,7 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("Check if return false when product does not exist")
     void shouldReturnFalseIfProductNotExists(){
         //given + when
         given(productMapper.existsByName(anyString())).willReturn(false);
@@ -146,6 +153,7 @@ class ProductServiceTest {
 
 
     @Test
+    @DisplayName("Check if exception is thrown when try to update nonexistent product")
     void shouldThrowAnExceptionWhenProductToUpdateDoesNotExist() {
         //given + when
         given(productMapper.existsByName("Potato")).willReturn(false);
@@ -155,6 +163,7 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("Check if product is updated when passing correct data")
     void shouldUpdateProductDataWhenProductExistsAndNewDataFormatIsCorrect() {
         //given
         given(productMapper.existsByName("Chicken")).willReturn(true);
@@ -176,6 +185,7 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("Check if exception is thrown when try to update nonexistent product")
     void shouldThrowResourceNotFoundExceptionDuringUpdatingIfProductDoesNotExist(){
         //given + when
         given(productMapper.existsByName("Shrimp")).willReturn(false);
@@ -184,6 +194,7 @@ class ProductServiceTest {
                 productService.updateProductByName(product3, "Shrimp"));
     }
     @Test
+    @DisplayName("Check if all products is deleted ")
     void shouldDeleteProductWhenProductExists() {
         //given
         doNothing().when(productMapper).deleteByName("Chicken");
