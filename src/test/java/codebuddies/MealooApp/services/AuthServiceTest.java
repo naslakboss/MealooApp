@@ -7,35 +7,29 @@ import codebuddies.MealooApp.repositories.RoleRepository;
 import codebuddies.MealooApp.security.jwt.JwtUtils;
 import codebuddies.MealooApp.security.request.LoginRequest;
 import codebuddies.MealooApp.security.request.SignupRequest;
-import codebuddies.MealooApp.security.response.JwtResponse;
 import codebuddies.MealooApp.security.response.MessageResponse;
 import codebuddies.MealooApp.security.services.UserDetailsImpl;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -113,8 +107,10 @@ class AuthServiceTest {
         SimpleGrantedAuthority admin = new SimpleGrantedAuthority("ADMIN");
         UserDetails userDetails =
                 new UserDetailsImpl(1L, "John", "Smith", "pass", List.of(user, admin));
+
         //when
         List<String> result = authService.createNamesOfRoles(userDetails);
+
         //then
         assertAll(
                 () -> assertThat(result.size(), equalTo(2)),
@@ -147,8 +143,10 @@ class AuthServiceTest {
     void shouldCreateNewUserAccountWithClearDataAndInformationFromSignUpRequest() {
         //given
         given(passwordEncoder.encode(signupRequest.getPassword())).willReturn("encodedPass");
+
         //when
         MealooUser createdUser = authService.createNewUserAccount(signupRequest);
+
         //then
         assertAll(
                 () -> assertThat(createdUser.getUsername(), equalTo(signupRequest.getUsername())),
@@ -166,8 +164,10 @@ class AuthServiceTest {
         given(roleRepository.findByName(MealooUserRole.ROLE_USER)).willReturn(java.util.Optional.of(userRole));
         MealooUser user = new MealooUser(signupRequest.getUsername(), signupRequest.getPassword(),
                 signupRequest.getEmail(), new NutritionSettings(0), new MealooUserDetails(0,0,0, Sex.MALE, PhysicalActivity.NONE));
+
         //when
         authService.assignUserRole(user);
+
         //then
         assertThat(user.getRoles(), hasItems(userRole));
     }
@@ -180,8 +180,10 @@ class AuthServiceTest {
         given(passwordEncoder.encode(signupRequest.getPassword())).willReturn("encodedPass");
         Role userRole = new Role(MealooUserRole.ROLE_USER);
         given(roleRepository.findByName(MealooUserRole.ROLE_USER)).willReturn(java.util.Optional.of(userRole));
+
         //when
         MessageResponse result = authService.registerUser(signupRequest);
+
         //then
         assertAll(
                 () -> verify(userRepository, times(1)).save(any()),
