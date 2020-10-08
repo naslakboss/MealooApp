@@ -19,7 +19,7 @@ It also serves as a food diary where users can create their own meals.
  
 ### Features
 
- * User registration
+ * User registration and login
  * Three roles and access restrictions : User, Moderator and Admin
  * Adding products with details : Proteins, Carbohydrates and Fats per 100g, Product Type and price per kg 
  * Adding meals based on products and amount with details : image, recipe and difficulty 
@@ -30,17 +30,22 @@ It also serves as a food diary where users can create their own meals.
  * Generate choosen numbers of meals and total calories for whole day
  * Program calculate total calories and price for whole meal and day automatically
   (The program ensures that meals from 3 days back will not appear) <br>
+ * JWT security and limited acces only for user resources with user role
   To-do list:
  * Addition rejection meal types and macronutrients preferences
- * Addition JWT and Oauth2 system to registration, login and security
  * Addition validation for products proportions 
 
 ## Setup
+Go to : 
+- > https://mealoodietapp.herokuapp.com/swagger-ui.html#/
+- > authController : /home/sign-in
+- > There are three account with corresponding roles : mealoouser, mealoomoderator and mealooadmin with password : password123
+- > choose account, pass data, then execute, and copy recieved token
+- > insert token preceded by 'Bearer ' in green padlock authorization field
+- > Now you have access to some methods according to roles, if you want to have full access log as a mealooadmin
 
- In order to add data to database application requires HTTP client -> Postman <br>
- Due to the development of the application, security is disabled.
 
-## Technologies 
+## Technologies and Tools
 
  Java 11 <br>
  Spring Boot 2 <br>
@@ -51,6 +56,9 @@ It also serves as a food diary where users can create their own meals.
  Cloudinary API <br>
  REST <br>
  Heroku <br>
+ SonarQube <br>
+ Swagger <br>
+ 
  
 ## Contributors
 
