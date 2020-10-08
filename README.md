@@ -30,7 +30,7 @@ It also serves as a food diary where users can create their own meals.
  * Generate choosen numbers of meals and total calories for whole day
  * Program calculate total calories and price for whole meal and day automatically
   (The program ensures that meals from 3 days back will not appear) <br>
- * JWT security and limited acces only for user resources with user role
+ * JWT security and limited acces only for user resources with user role <br>
   To-do list:
  * Addition rejection meal types and macronutrients preferences
  * Addition validation for products proportions 
