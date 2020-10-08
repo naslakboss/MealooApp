@@ -2,6 +2,7 @@ package codebuddies.MealooApp.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -17,15 +18,14 @@ public class SwaggerConfig {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("codebuddies.MealooApp"))
-                .paths(PathSelectors.any())
-                .build()
+                .select().apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.any()).build()
                 .apiInfo(apiDetails());
     }
 
     private ApiInfo apiDetails(){
         return new ApiInfoBuilder().title("Mealoo App").version("1.0").build();
     }
+
 
 }

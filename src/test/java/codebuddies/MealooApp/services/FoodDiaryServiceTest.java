@@ -16,6 +16,7 @@ import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 import codebuddies.MealooApp.exceptions.RequiredMealsNotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -148,6 +149,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if all diaries for given user are returned")
     void shouldReturnAllDiaries() {
         //given
         Pageable pageable = PageRequest.of(0, 3);
@@ -166,6 +168,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if current diary for given user is returned")
     void shouldFindCurrentDiaryForUser() {
         //given
         LocalDate currentDate = LocalDate.now();
@@ -179,6 +182,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if diary of chosen date for given user is returned")
     void shouldFindDiaryForUserByDate() {
         //given
         String sDate = "2020-08-20";
@@ -194,6 +198,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if new diary for current date is created")
     void shouldCreateNewDiary() {
         //given
         LocalDate currentDate = LocalDate.now();
@@ -217,6 +222,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if true when diary exists")
     void shouldReturnTrueIfDiaryExists(){
         //given + when
         LocalDate currentDate = LocalDate.now();
@@ -227,6 +233,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if true when diary does not exist")
     void shouldReturnFalseIfDiaryExists(){
         //given + when
         LocalDate currentDate = LocalDate.now();
@@ -237,6 +244,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if exception is thrown when trying to create more than one diary per day")
     void shouldThrowEntityAlreadyFoundExceptionWhenCreatingMoreThanOneDiaryInOneDay(){
         //given + when
         given(diaryService.existsByDate(1, LocalDate.now())).willReturn(true);
@@ -247,6 +255,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if macronutrients are recalculated")
     void shouldRecalculateMacronutrientsAccordingToMeals() {
         //given
         int totalProteinsBefore = foodDiary1.getMealMacronutrients().getTotalProteins();
@@ -266,6 +275,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if price is recalculated")
     void shouldRecalculatePriceAccordingToMeals() {
         //given
         double totalPriceBefore = foodDiary1.getTotalPrice();
@@ -279,6 +289,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if total calories are recalculated")
     void shouldRecalculateTotalCaloriesAccordingToMeals() {
         //given
         double totalPriceBefore = foodDiary1.getTotalCalories();
@@ -292,6 +303,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if meal is added to diary")
     void shouldAddMeal() {
         //given
         LocalDate currentDate = LocalDate.now();
@@ -313,6 +325,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if meal is deleted from diary")
     void shouldDeleteMeal() {
         //given
         LocalDate currentDate = LocalDate.now();
@@ -337,6 +350,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if names of meals from three days before are rejected for algorithm")
     void shouldReturnNamesOfMealsUsedThreeDaysBack() {
         //given
         LocalDate threeDaysBack = LocalDate.now().minusDays(3);
@@ -353,6 +367,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if exception is thrown when amount of calories for generator is less than 0")
     void shouldThrowIllegalArgumentExceptionIfAmountOfCaloriesIsLessThanZero() {
         //given + when
         int totalCalories = -5;
@@ -364,6 +379,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if exception is thrown when amount of calories for generator is greater than 10000")
     void shouldThrowIllegalArgumentExceptionIfAmountOfCaloriesIsGreaterThanTenThousands() {
         //given + when
         int totalCalories = 100001;
@@ -375,6 +391,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if exception is thrown when number of meals for generator is less than 3")
     void shouldThrowIllegalArgumentExceptionIfNumberOfMealsIsLessThanThree() {
         //given + when
         int totalCalories = 2500;
@@ -386,6 +403,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if exception is thrown when number of meals for generator is greater than 3")
     void shouldThrowIllegalArgumentExceptionIfNumberOfMealsIsGreaterThan7() {
         //given + when
         int totalCalories = 2500;
@@ -397,6 +415,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if exception is thrown when trying to generate by algorithm for non-empty diary")
     void shouldThrowIllegalArgumentExceptionIfAnyMealsExistInCurrentDiary() {
         //given + when
         int totalCalories = 2500;
@@ -408,6 +427,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if exception is thrown when meals for generator is less than necessary")
     void shouldThrowRequiredMealsNotFoundExceptionIfListOfMealsForGeneratorIsTooSmall() {
         //given + when
         int totalCalories = 2500;
@@ -421,6 +441,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if 500 calories is subtracted when lose 0,5kg was chosen")
     void shouldSubtract500CaloriesIfHalfKgLossIsSelected(){
         //given
         int totalCalories = 1000;
@@ -434,6 +455,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if 250 calories is subtracted when lose 0,25kg was chosen")
     void shouldSubtract250CaloriesIfQuarterKgLossIsSelected(){
         //given
         int totalCalories = 1000;
@@ -447,6 +469,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if calories is the same when wieght maintenance was chosen")
     void shouldLeftInitialCaloriesIfMaintainIsSelected(){
         //given
         int totalCalories = 1000;
@@ -460,6 +483,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if 250 calories is added when gain 0,25kg was chosen")
     void shouldAdd250CaloriesIfQuarterKgGainIsSelected(){
         //given
         int totalCalories = 1000;
@@ -473,6 +497,7 @@ class FoodDiaryServiceTest {
     }
 
     @Test
+    @DisplayName("Check if 500 calories is added when gain 0,5kg was chosen")
     void shouldAdd500CaloriesIfHalfKgGainIsSelected(){
         //given
         int totalCalories = 1000;
@@ -487,6 +512,7 @@ class FoodDiaryServiceTest {
 
 
     @Test
+    @DisplayName("Check if mismatched meals are discarded for further algorithm operations")
     void shouldDiscardMismatchedMeals() {
         //given
         List<String> matchingMeals = new ArrayList<>();

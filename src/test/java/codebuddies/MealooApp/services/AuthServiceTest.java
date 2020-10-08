@@ -11,6 +11,7 @@ import codebuddies.MealooApp.security.response.MessageResponse;
 import codebuddies.MealooApp.security.services.UserDetailsImpl;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -77,9 +78,10 @@ class AuthServiceTest {
 
 
     @Test
+    @DisplayName("Check if authentication was created")
     void shouldCreateUsernamePasswordAuthenticationToken() {
         //given + when
-        Authentication result = authService.createUsernamePasswordAuthenticationToken(loginRequest);
+        authService.createUsernamePasswordAuthenticationToken(loginRequest);
 
         //then
         verify(authenticationManager, times(1)).authenticate(any());
@@ -87,6 +89,7 @@ class AuthServiceTest {
 
 
     @Test
+    @DisplayName("Check if jwt token was generated")
     void shouldGenerateJwtToken() {
         //given
         given(jwtUtils.generateJwtToken(any())).willReturn("HardCodedToken");
@@ -101,6 +104,7 @@ class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("Check if names of roles was created from authorities")
     void shouldCreateNamesOfRoles() {
         //given
         SimpleGrantedAuthority user = new SimpleGrantedAuthority("USER");
@@ -120,6 +124,7 @@ class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("Check if exception is thrown when trying to create user with existed in database name")
     void shouldThrowEntityAlreadyFoundExceptionDuringCreatingUserAccountOfExistedName() {
         //given + when
         given(userRepository.existsByUsername("Jack")).willReturn(true);
@@ -130,6 +135,7 @@ class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("Check if exception is thrown when trying to create user with existed in database e-mail")
     void shouldThrowEntityAlreadyFoundExceptionDuringCreatingUserAccountOfExistedEmail() {
         //given + when
         given(userRepository.existsByEmail("jack@mail.com")).willReturn(true);
@@ -140,6 +146,7 @@ class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("Check if new account with correct data is created")
     void shouldCreateNewUserAccountWithClearDataAndInformationFromSignUpRequest() {
         //given
         given(passwordEncoder.encode(signupRequest.getPassword())).willReturn("encodedPass");
@@ -158,6 +165,7 @@ class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("Check if user role is assigned for new user")
     void shouldAssignUserRoleToNewlyCreatedAccount() {
         //given
         Role userRole = new Role(MealooUserRole.ROLE_USER);
@@ -173,6 +181,7 @@ class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("Check if user is created and message with success information is returned")
     void shouldCreateUserAndReturnMessageIfDataIsCorrect(){
         //given
         given(userRepository.existsByUsername("Jack")).willReturn(false);

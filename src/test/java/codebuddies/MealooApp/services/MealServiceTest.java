@@ -18,6 +18,7 @@ import codebuddies.MealooApp.exceptions.EntityAlreadyFoundException;
 import codebuddies.MealooApp.exceptions.ResourceNotFoundException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -139,6 +140,7 @@ class MealServiceTest {
     }
 
     @Test
+    @DisplayName("Check if all meals are returned")
     void shouldReturnMealList() {
         //given
         Pageable pageable = PageRequest.of(0, 3);
@@ -155,6 +157,7 @@ class MealServiceTest {
     }
 
     @Test
+    @DisplayName("Check if meal is returned searching by name")
     void shouldReturnProperMealIfExists() {
         //given
         given(mealMapper.getMealByName("RiceAndChicken")).willReturn(meal1);
@@ -167,6 +170,7 @@ class MealServiceTest {
     }
 
     @Test
+    @DisplayName("Check if delete meal")
     void shouldDeleteMealIfExists() {
         //given + when
         mealService.deleteMealByName("goodName");
@@ -176,6 +180,7 @@ class MealServiceTest {
     }
 
     @Test
+    @DisplayName("Check if exception is thrown when trying to create meal with existed in database name")
     void shouldThrowEntityAlreadyFoundExceptionDuringCreatingMealIfMealOfGivenNameExists() {
         //given + when
         given(mealMapper.existsByName("RiceAndChicken")).willReturn(true);
@@ -186,6 +191,7 @@ class MealServiceTest {
     }
 
     @Test
+    @DisplayName("Check if all meal is created")
     void shouldCreateMealWithProperIngredientsIfMealDidNotExistBefore() {
         //given
         given(mealMapper.existsByName("RiceAndChicken")).willReturn(false);
@@ -204,6 +210,7 @@ class MealServiceTest {
     }
 
     @Test
+    @DisplayName("Check if all meal is updated")
     void shouldUpdateMeal() {
         //given
         given(mealMapper.updateMeal(meal2)).willReturn(meal2);
@@ -219,6 +226,7 @@ class MealServiceTest {
     }
 
     @Test
+    @DisplayName("Check if all image is added to meal")
     void shouldCreateNewImageWhenNameOfMealIsCorrect() {
         //given
          given(mealMapper.getMealByName("RiceAndChicken")).willReturn(meal1);
@@ -231,6 +239,7 @@ class MealServiceTest {
     }
 
     @Test
+    @DisplayName("Check if all proteins from meal are calculated")
     void shouldCalculateProteinsCorrectly() {
         //given
         int totalProteinsExpectation = ingredient1.getProduct()
@@ -244,6 +253,7 @@ class MealServiceTest {
     }
 
     @Test
+    @DisplayName("Check if all carbohydrates from meal are calculated")
     void shouldCalculateCarbohydratesCorrectly() {
         //given
         int totalCarbohydratesExpectation = ingredient1.getProduct()
@@ -257,6 +267,7 @@ class MealServiceTest {
     }
 
     @Test
+    @DisplayName("Check if all fats from meal are calculated")
     void shouldCalculateFatsCorrectly() {
         //given
         int totalFatsExpectation = ingredient1.getProduct()
@@ -271,6 +282,7 @@ class MealServiceTest {
     }
 
     @Test
+    @DisplayName("Check if all macronutrients from meal are calculated and set")
     void shouldSetProperMealMacronutrients(){
         //given
         meal1.setMealMacronutrients(new MealMacronutrients(0, 0,0));
@@ -290,6 +302,7 @@ class MealServiceTest {
     }
 
     @Test
+    @DisplayName("Check if meal price are calculated")
     void shouldCalculatePriceProperly(){
         //given
         double oldPrice = meal1.getPrice();
@@ -304,6 +317,7 @@ class MealServiceTest {
     }
 
     @Test
+    @DisplayName("Check if total calories from meal are calculated")
     void shouldCalculateTotalCaloriesProperly(){
         //given
         int oldTotalCalories = meal1.getTotalCalories();
@@ -318,6 +332,7 @@ class MealServiceTest {
     }
 
     @Test
+    @DisplayName("Check if all image is deleted from meal when it exists")
     void shouldDeleteImageFromMealIfMealDoesExist() {
         //given
         given(mealService.existsByName("photoed Meal")).willReturn(true);
@@ -328,6 +343,7 @@ class MealServiceTest {
     }
 
     @Test
+    @DisplayName("Check if all exeption is thrown when trying to delete image from nonexistent meal")
     void shouldThrowResourceNotFoundExceptionWhenMealDoesNotExist(){
         //given + when
         given(mealService.existsByName("name")).willReturn(false);
@@ -337,6 +353,7 @@ class MealServiceTest {
     }
 
     @Test
+    @DisplayName("Check if proper for algorithm names are returned")
     void shouldReturnNamesOfMatchingMeals() {
         //given
         int perfectCaloricValue = 500;
