@@ -41,19 +41,19 @@ Go to :
 - > authController : /home/sign-in
 - > There are three account with corresponding roles : mealoouser, mealoomoderator and mealooadmin with password : password123
 - > Select a token for the appropriate account : </br>
-   USER :
+
 <details> 
-  <summary> Token</summary>
+  <summary> User token </summary>
 Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZWFsb291c2VyIiwiaWF0IjoxNjAyMjIwNTg1LCJleHAiOjE2MDIzMDY5ODV9.hZEUe8R4hm4STH4Sn_nTjZ1ipPY_GH3xzSyFq_ReWm-708MAk3dJHcluFdHNb_jSrhjTQaFL-AWj_WUB3ZBrlg
 </details>
    MODERATOR :
 <details> 
-  <summary> Token</summary>
+  <summary> Moderator token </summary>
 Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZWFsb29tb2RlcmF0b3IiLCJpYXQiOjE2MDIyMjE1NzksImV4cCI6MTYwMjMwNzk3OX0.peiU5BdDjJrEoT7qWG_fpMFVqGnXmbweLNERim7P-mH_mVdNbUCMp_2Xp4Sm7NlG0fE-_b8lq1hoyYt4HG_V-A
 </details>
    ADMIN :
 <details> 
-  <summary> Token</summary>
+  <summary> Admin token </summary>
 Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZWFsb29hZG1pbiIsImlhdCI6MTYwMjIyMTYwOCwiZXhwIjoxNjAyMzA4MDA4fQ.a3q6fD1PFJ_RDafDYEuqT_HXOVwYzoHVM4ZrFOMRw1OLqcj_QNo80lnoENiWmKnkw2GT_1LYsTj3JpSGxe7jWw
 </details>
 - > Now you have access to some methods according to roles, if you want to have full access log as a mealooadmin
