@@ -20,7 +20,7 @@ import java.util.Collections;
 public class SwaggerConfig {
 
 
-    private final String TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZWFsb29hZG1pbiIsImlhdCI6MTYwMjMxMDI4MiwiZXhwIjoxNjAzMTc0MjgyfQ.8Cmu_wE1bIZssgRiGZhfs39WGHhOE3E7qeYw6o1trT9y4eBc84PwM5Pq3g9NYoP4eTAsCXl7gRn6kTPFMuAJVg"";
+    private final String TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZWFsb29hZG1pbiIsImlhdCI6MTYwMjMxMDI4MiwiZXhwIjoxNjAzMTc0MjgyfQ.8Cmu_wE1bIZssgRiGZhfs39WGHhOE3E7qeYw6o1trT9y4eBc84PwM5Pq3g9NYoP4eTAsCXl7gRn6kTPFMuAJVg";
 
     @Bean
     public Docket docket() {
