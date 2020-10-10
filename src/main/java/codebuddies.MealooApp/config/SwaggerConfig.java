@@ -58,6 +58,7 @@ public class SwaggerConfig {
         return Lists.newArrayList(
                 new SecurityReference("JWT", authorizationScopes));
     }
+
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder().title("Mealoo App").version("1.0.0").build();
     }
