@@ -1,8 +1,8 @@
 package codebuddies.MealooApp.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -18,7 +18,6 @@ import java.util.Collections;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-
 
     private final String TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZWFsb29hZG1pbiIsImlhdCI6MTYwMjMxMDI4MiwiZXhwIjoxNjAzMTc0MjgyfQ.8Cmu_wE1bIZssgRiGZhfs39WGHhOE3E7qeYw6o1trT9y4eBc84PwM5Pq3g9NYoP4eTAsCXl7gRn6kTPFMuAJVg";
 
