@@ -19,8 +19,46 @@ It also serves as a food diary where users can create their own meals.
  and change weight according to his demands.
  
  ## Code examples
- * Registration user:
- ![Registration](./img/registration.jpg)
+ 
+ * Registration user: <br> 
+ 
+ ![Registration](./img/registration.PNG)
+ 
+ * Login user : <br>
+ 
+ ![Login](./img/login.PNG)
+ 
+ * Show user : <br>
+ 
+ ![Show-user](./img/show-user.PNG)
+ 
+ * Calculate BMI index and caloric demand : <br>
+ 
+ ![Calculate-bmi-and-caloric-demand](./img/calculate-bmi-and-caloric-demand.PNG)
+ 
+ * All meals : <br>
+ 
+ ![All-meals](./img/all-meals.PNG)
+ 
+ * Add meal : <br>
+ 
+ ![Add-meal](./img/add-meal.PNG)
+ 
+ * Add image : <br>
+ 
+ ![Add-image](./img/add-image.PNG)
+ 
+ * Create new diary : <br>
+ 
+ ![Create-new-diary](./img/create-new-diary.PNG)
+ 
+ * Generate diary with meals by caloric demand and number of meals : <br>
+ 
+ ![Generate-diary-v1](./img/generate-meals-by-algorithm-v1.PNG)
+ 
+  * Generate diary with meals by caloric demand and number of meals and wieght goal: <br>
+ 
+ ![Generate-diary-v2](./img/generate-meals-by-algorithm-v2.PNG)
  
 ### Features
 
