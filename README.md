@@ -5,6 +5,7 @@ It also serves as a food diary where users can create their own meals.
 
 ## Table of contents
 * General info
+* Code examples
 * Features
 * Technologies 
 * Setup
@@ -16,6 +17,10 @@ It also serves as a food diary where users can create their own meals.
  will have possibility to create own diary or generate them, based on requirements . <br>
      Thanks to BMI calculator, caloric demand calculator and meals algorithm, the user will be able to get tasty meals
  and change weight according to his demands.
+ 
+ ## Code examples
+ * Registration user:
+ ![Registration](./img/registration.jpg)
  
 ### Features
 
